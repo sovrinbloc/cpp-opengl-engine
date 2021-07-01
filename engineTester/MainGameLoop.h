@@ -17,8 +17,8 @@ public:
         Loader loader = Loader();
         Renderer renderer = Renderer();
         Shader shader = Shader(
-                "/Users/josephalai/Projects/games/cpp-mc/engine/renderEngine/shaders/vertex_shader.glsl",
-                "/Users/josephalai/Projects/games/cpp-mc/engine/renderEngine/shaders/fragment_shader.glsl");
+                "/Users/josephalai/Projects/games/cpp-mc/engine/shaders/vertex_shader.glsl",
+                "/Users/josephalai/Projects/games/cpp-mc/engine/shaders/fragment_shader.glsl");
 
 
         std::vector<GLfloat> vertices = {
@@ -28,9 +28,9 @@ public:
                 0.5f, 0.5f, 0.0f,
         };
 
-        std::vector<GLint> indices {
-            0, 1, 3,
-            3, 1, 2
+        std::vector<GLint> indices{
+                0, 1, 3,
+                3, 1, 2
         };
 
         RawModel model = loader.loadToVAO(vertices, indices);
@@ -44,6 +44,7 @@ public:
         }
 
         loader.cleanUp();
+        shader.cleanUp();
         DisplayManager::closeDisplay();
     }
 };
