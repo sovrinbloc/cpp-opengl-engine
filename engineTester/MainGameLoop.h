@@ -8,7 +8,7 @@
 #include "../renderEngine/DisplayManager.h"
 #include "../renderEngine/Loader.h"
 #include "../renderEngine/Renderer.h"
-#include "../renderEngine/Shader.h"
+#include "../renderEngine/ShaderProgram.h"
 
 class MainGameLoop {
 public:
@@ -16,7 +16,7 @@ public:
         DisplayManager::createDisplay();
         Loader loader = Loader();
         Renderer renderer = Renderer();
-        Shader shader = Shader(
+        ShaderProgram shader = ShaderProgram(
                 "/Users/josephalai/Projects/games/cpp-mc/engine/shaders/vertex_shader.glsl",
                 "/Users/josephalai/Projects/games/cpp-mc/engine/shaders/fragment_shader.glsl");
 

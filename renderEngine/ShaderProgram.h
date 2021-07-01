@@ -17,12 +17,12 @@ typedef enum {
     GeometryShader
 } ShaderType;
 
-class ShaderFile {
+class Shader {
 public:
     unsigned int shaderId;
     char *file;
 
-    ShaderFile(std::string file, ShaderType type) {
+    Shader(std::string file, ShaderType type) {
         loadShader(file, type);
     }
 
@@ -88,21 +88,21 @@ private:
     }
 };
 
-class Shader {
+class ShaderProgram {
 public:
     unsigned int programID;
-    ShaderFile *vertexShader;
-    ShaderFile *fragmentShader;
-    ShaderFile *geometryShader;
+    Shader *vertexShader;
+    Shader *fragmentShader;
+    Shader *geometryShader;
 
     // constructor generates the shader on the fly
     // ------------------------------------------------------------------------
-    Shader(const char *vertexPath, const char *fragmentPath, const char *geometryPath = nullptr) {
-        vertexShader = new ShaderFile(vertexPath, VertexShader);
-        fragmentShader = new ShaderFile(fragmentPath, FragmentShader);
+    ShaderProgram(const char *vertexPath, const char *fragmentPath, const char *geometryPath = nullptr) {
+        vertexShader = new Shader(vertexPath, VertexShader);
+        fragmentShader = new Shader(fragmentPath, FragmentShader);
         geometryShader = nullptr;
         if (geometryPath != nullptr) {
-            geometryShader = new ShaderFile(geometryPath, GeometryShader);
+            geometryShader = new Shader(geometryPath, GeometryShader);
         }
         this->bindAttributes();
     }
