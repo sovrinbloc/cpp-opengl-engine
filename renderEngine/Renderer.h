@@ -7,7 +7,8 @@
 #define GL_SILENCE_DEPRECATION
 #define GLFW_INCLUDE_GLCOREARB
 #include <GLFW/glfw3.h>
-#include "RawModel.h"
+#include "../models/RawModel.h"
+#include "../models/TexturedModel.h"
 class Renderer {
 public:
     void prepare() {
@@ -17,10 +18,11 @@ public:
         glClear(GL_COLOR_BUFFER_BIT);
     }
 
-    void render(RawModel model) {
-        glBindVertexArray(model.getVaoID());
+    void render(TexturedModel *texturedModel) {
+        RawModel *model = texturedModel->getRawModel();
+        glBindVertexArray(model->getVaoID());
         glEnableVertexAttribArray(0);
-        glDrawElements(GL_TRIANGLES, model.getVertexCount(), GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, model->getVertexCount(), GL_UNSIGNED_INT, 0);
         glDisableVertexAttribArray(0);
         glBindVertexArray(0);
     }

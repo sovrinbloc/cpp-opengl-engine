@@ -4,38 +4,46 @@
 
 #ifndef ENGINE_LOADER_H
 #define ENGINE_LOADER_H
-#define GL_SILENCE_DEPRECATION
-template< typename T, size_t N >
-size_t ArraySize( T (&)[ N ] )
-{ return N; }
 
+#define GL_SILENCE_DEPRECATION
 #include <vector>
-#include "RawModel.h"
+#include "../models/RawModel.h"
+#include "../textures/Texture.h"
 #define GLFW_INCLUDE_GLCOREARB
 #include <GLFW/glfw3.h>
 
 class Loader {
 public:
-    RawModel loadToVAO(std::vector<GLfloat> positions, std::vector<GLint> indices, GLuint attributeNumber) {
+    RawModel *loadToVAO(std::vector<GLfloat> positions, std::vector<GLint> indices, GLuint attributeNumber) {
         int vaoID = this->createVAO();
         this->bindIndicesBuffer(indices);
         this->storeDataInAttributeList(attributeNumber, positions);
         this->unbindVAO();
-        return RawModel(vaoID, indices.size());
+        return new RawModel(vaoID, indices.size());
     }
-    
+
+    Texture *loadTexture(std::string fileName) {
+        Texture *tex = new Texture(fileName, PNG);
+        textures.push_back(tex->id);
+        return tex;
+    }
+
     void cleanUp() {
-        for (unsigned int & vao : vaos) {
+        for (unsigned int &vao : vaos) {
             glDeleteVertexArrays(1, &vao);
         }
-        for (unsigned int & vbo : vbos) {
+        for (unsigned int &vbo : vbos) {
             glDeleteBuffers(1, &vbo);
+        }
+        for (unsigned int &tex : textures) {
+            glDeleteTextures(1, &tex);
         }
     }
 
 private:
     std::vector<GLuint> vaos;
     std::vector<GLuint> vbos;
+    std::vector<GLuint> textures;
 
     GLuint createVAO() {
         GLuint vaoID;
@@ -45,7 +53,7 @@ private:
         return vaoID;
     }
 
-    void storeDataInAttributeList(int attributeNumber, std::vector<GLfloat> positions){
+    void storeDataInAttributeList(int attributeNumber, std::vector<GLfloat> positions) {
         GLuint vboID;
         glGenBuffers(1, &vboID);
         this->vbos.push_back(vboID);
@@ -62,9 +70,10 @@ private:
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(indices[0]), &indices.front(), GL_STATIC_DRAW);
     }
 
-    void unbindVAO(){
+    void unbindVAO() {
         glBindVertexArray(0);
     }
 
 };
+
 #endif //ENGINE_LOADER_H

@@ -5,19 +5,23 @@
 #ifndef CRAFTPROJ_MAINGAMELOOP_H
 #define CRAFTPROJ_MAINGAMELOOP_H
 
+#include "../libraries/utils/filesystem.h"
 #include "../renderEngine/DisplayManager.h"
 #include "../renderEngine/Loader.h"
 #include "../renderEngine/Renderer.h"
 #include "../shaders/StaticShader.h"
+#include "../textures/ModelTexture.h"
+#include "../models/TexturedModel.h"
+
 
 class MainGameLoop {
 public:
     static void main() {
         DisplayManager::createDisplay();
+
         StaticShader shader = StaticShader();
         Loader loader = Loader();
         Renderer renderer = Renderer();
-
 
         std::vector<GLfloat> vertices = {
                 -0.5f, 0.5f, 0.0f,
@@ -31,13 +35,16 @@ public:
                 3, 1, 2
         };
 
-        RawModel model = loader.loadToVAO(vertices, indices, shader.attribute);
+        RawModel *model = loader.loadToVAO(vertices, indices, shader.attribute);
+        auto *texture = new ModelTexture(new Texture(FileSystem::Path("/res/image.png"), PNG));
+        auto *texturedModel = new TexturedModel(model, texture);
+
 
         while (DisplayManager::stayOpen()) {
             // game logic
             renderer.prepare();
             shader.start();
-            renderer.render(model);
+            renderer.render(texturedModel);
             shader.stop();
             DisplayManager::updateDisplay();
         }

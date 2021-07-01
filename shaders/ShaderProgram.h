@@ -1,11 +1,11 @@
 #ifndef SHADER_H
 #define SHADER_H
 #define GL_SILENCE_DEPRECATION
-
+#include "../libraries/utils/filesystem.h"
 
 #include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
 
+#include <glm/glm.hpp>
 #include <string>
 #include <fstream>
 #include <sstream>
@@ -98,8 +98,11 @@ public:
     // constructor generates the shader on the fly
     // ------------------------------------------------------------------------
     ShaderProgram(const char *vertexPath, const char *fragmentPath, const char *geometryPath = nullptr) {
-        vertexShader = new Shader(vertexPath, VertexShader);
-        fragmentShader = new Shader(fragmentPath, FragmentShader);
+        std::string pathVertex = FileSystem::Path(vertexPath);
+        std::string pathFragment = FileSystem::Path(fragmentPath);
+
+        vertexShader = new Shader(pathVertex, VertexShader);
+        fragmentShader = new Shader(pathFragment, FragmentShader);
         geometryShader = nullptr;
         if (geometryPath != nullptr) {
             geometryShader = new Shader(geometryPath, GeometryShader);

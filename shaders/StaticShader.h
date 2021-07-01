@@ -6,14 +6,16 @@
 #define ENGINE_STATICSHADER_H
 
 #include "ShaderProgram.h"
+
+static const char *VertexPath = "/shaders/vertex_shader.glsl";
+static const char *FragmentPath = "/shaders/fragment_shader.glsl";
+
 class StaticShader : public ShaderProgram {
 private:
-     const char *VERTEX_FILE = "/Users/josephalai/Projects/games/cpp-mc/engine/shaders/vertex_shader.glsl";
-     const char *FRAGMENT_FILE = "/Users/josephalai/Projects/games/cpp-mc/engine/shaders/fragment_shader.glsl";
-     std::string variableName = "aPos";
+    std::string variableName = "aPos";
 public:
     GLuint attribute;
-    StaticShader(const char *vertexPath = "/Users/josephalai/Projects/games/cpp-mc/engine/shaders/vertex_shader.glsl", const char *fragmentPath = "/Users/josephalai/Projects/games/cpp-mc/engine/shaders/fragment_shader.glsl", const char *geometryPath = nullptr) : ShaderProgram(vertexPath, fragmentPath, geometryPath) {
+    StaticShader(const char *vertexPath = VertexPath, const char *fragmentPath = FragmentPath, const char *geometryPath = nullptr) : ShaderProgram(vertexPath, fragmentPath, geometryPath) {
         ShaderProgram(vertexPath, fragmentPath);
         attribute = getAttribute(variableName);
     }
