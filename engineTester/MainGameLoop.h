@@ -8,7 +8,7 @@
 #include "../renderEngine/DisplayManager.h"
 #include "../renderEngine/Loader.h"
 #include "../renderEngine/Renderer.h"
-#include "../renderEngine/ShaderProgram.h"
+#include "../shaders/ShaderProgram.h"
 
 class MainGameLoop {
 public:
@@ -40,6 +40,7 @@ public:
             renderer.prepare();
             shader.use();
             renderer.render(model);
+            shader.stop();
             DisplayManager::updateDisplay();
         }
 
