@@ -11,8 +11,8 @@ private:
      std::string VERTEX_FILE = "src/shaders/vertex_shader.glsl";
      std::string FRAGMENT_FILE = "src/shaders/fragment_shader.glsl";
 public:
-    StaticShader(const char *vertexPath, const char *fragmentPath, const char *geometryPath) : ShaderProgram(vertexPath, fragmentPath, geometryPath) {
-        ShaderProgram(VERTEX_FILE.c_str(), FRAGMENT_FILE.c_str());
+    explicit StaticShader(const char *vertexPath = "/Users/josephalai/Projects/games/cpp-mc/engine/shaders/vertex_shader.glsl", const char *fragmentPath = "/Users/josephalai/Projects/games/cpp-mc/engine/shaders/fragment_shader.glsl", const char *geometryPath = nullptr) : ShaderProgram(vertexPath, fragmentPath, geometryPath) {
+        ShaderProgram(vertexPath, fragmentPath);
     }
 
 };
