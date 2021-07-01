@@ -21,16 +21,19 @@ public:
                 "/Users/josephalai/Projects/games/cpp-mc/engine/renderEngine/shaders/fragment_shader.glsl");
 
 
-        float vertices[] = {
+        std::vector<GLfloat> vertices = {
                 -0.5f, 0.5f, 0.0f,
                 -0.5f, -0.5f, 0.0f,
                 0.5f, -0.5f, 0.0f,
-                0.5f, -0.5f, 0.0f,
                 0.5f, 0.5f, 0.0f,
-                -0.5f, 0.5f, 0.0f
         };
 
-        RawModel model = loader.loadToVAO(vertices);
+        std::vector<GLint> indices {
+            0, 1, 3,
+            3, 1, 2
+        };
+
+        RawModel model = loader.loadToVAO(vertices, indices);
 
         while (DisplayManager::stayOpen()) {
             // game logic
