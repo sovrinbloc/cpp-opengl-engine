@@ -16,10 +16,10 @@ size_t ArraySize( T (&)[ N ] )
 
 class Loader {
 public:
-    RawModel loadToVAO(std::vector<GLfloat> positions, std::vector<GLint> indices) {
+    RawModel loadToVAO(std::vector<GLfloat> positions, std::vector<GLint> indices, GLuint attributeNumber) {
         int vaoID = this->createVAO();
         this->bindIndicesBuffer(indices);
-        this->storeDataInAttributeList(0, positions);
+        this->storeDataInAttributeList(attributeNumber, positions);
         this->unbindVAO();
         return RawModel(vaoID, indices.size());
     }

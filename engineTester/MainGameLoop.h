@@ -14,9 +14,9 @@ class MainGameLoop {
 public:
     static void main() {
         DisplayManager::createDisplay();
+        StaticShader shader = StaticShader();
         Loader loader = Loader();
         Renderer renderer = Renderer();
-        StaticShader shader = StaticShader();
 
 
         std::vector<GLfloat> vertices = {
@@ -31,19 +31,19 @@ public:
                 3, 1, 2
         };
 
-        RawModel model = loader.loadToVAO(vertices, indices);
+        RawModel model = loader.loadToVAO(vertices, indices, shader.attribute);
 
         while (DisplayManager::stayOpen()) {
             // game logic
             renderer.prepare();
-            shader.use();
+            shader.start();
             renderer.render(model);
             shader.stop();
             DisplayManager::updateDisplay();
         }
 
-        loader.cleanUp();
         shader.cleanUp();
+        loader.cleanUp();
         DisplayManager::closeDisplay();
     }
 };

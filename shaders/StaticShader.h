@@ -8,12 +8,14 @@
 #include "ShaderProgram.h"
 class StaticShader : public ShaderProgram {
 private:
-     std::string VERTEX_FILE = "src/shaders/vertex_shader.glsl";
-     std::string FRAGMENT_FILE = "src/shaders/fragment_shader.glsl";
+     const char *VERTEX_FILE = "/Users/josephalai/Projects/games/cpp-mc/engine/shaders/vertex_shader.glsl";
+     const char *FRAGMENT_FILE = "/Users/josephalai/Projects/games/cpp-mc/engine/shaders/fragment_shader.glsl";
+     std::string variableName = "aPos";
 public:
-    explicit StaticShader(const char *vertexPath = "/Users/josephalai/Projects/games/cpp-mc/engine/shaders/vertex_shader.glsl", const char *fragmentPath = "/Users/josephalai/Projects/games/cpp-mc/engine/shaders/fragment_shader.glsl", const char *geometryPath = nullptr) : ShaderProgram(vertexPath, fragmentPath, geometryPath) {
+    GLuint attribute;
+    StaticShader(const char *vertexPath = "/Users/josephalai/Projects/games/cpp-mc/engine/shaders/vertex_shader.glsl", const char *fragmentPath = "/Users/josephalai/Projects/games/cpp-mc/engine/shaders/fragment_shader.glsl", const char *geometryPath = nullptr) : ShaderProgram(vertexPath, fragmentPath, geometryPath) {
         ShaderProgram(vertexPath, fragmentPath);
+        attribute = getAttribute(variableName);
     }
-
 };
 #endif //ENGINE_STATICSHADER_H

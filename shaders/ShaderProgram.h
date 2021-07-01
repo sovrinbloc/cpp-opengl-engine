@@ -104,10 +104,6 @@ public:
         if (geometryPath != nullptr) {
             geometryShader = new Shader(geometryPath, GeometryShader);
         }
-        this->bindAttributes();
-    }
-
-    void bindAttributes() {
         // shader Program
         programID = glCreateProgram();
         glAttachShader(programID, vertexShader->shaderId);
@@ -117,17 +113,17 @@ public:
 
         glLinkProgram(programID);
         checkCompileErrors(programID, "PROGRAM");
+    }
 
-        // delete the shaders as they're linked into our program now and no longer necessery
-        glDeleteShader(vertexShader->shaderId);
-        glDeleteShader(fragmentShader->shaderId);
-        if (geometryShader != nullptr)
-            glDeleteShader(geometryShader->shaderId);
+    void bindAttributes();
+
+    GLuint getAttribute(std::string variableName) {
+        return glGetAttribLocation(programID, variableName.c_str());
     }
 
     // activate the shader
     // ------------------------------------------------------------------------
-    void use() {
+    void start() {
         glUseProgram(programID);
     }
 
@@ -137,6 +133,11 @@ public:
 
     void cleanUp() {
         stop();
+        // delete the shaders as they're linked into our program now and no longer necessery
+        glDeleteShader(vertexShader->shaderId);
+        glDeleteShader(fragmentShader->shaderId);
+        if (geometryShader != nullptr)
+            glDeleteShader(geometryShader->shaderId);
         glDetachShader(programID, vertexShader->shaderId);
         glDetachShader(programID, fragmentShader->shaderId);
         if (geometryShader != nullptr)
