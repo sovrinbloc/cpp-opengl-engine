@@ -22,7 +22,7 @@ public:
         return this->rawModel;
     }
 
-    ModelTexture *getTexture() {
+    ModelTexture *getModelTexture() {
         return this->texture;
     }
 };

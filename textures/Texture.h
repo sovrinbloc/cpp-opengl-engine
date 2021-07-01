@@ -14,10 +14,10 @@ typedef enum {
 
 class Texture {
 public:
-    GLuint id{};
+    GLuint id;
     int bound;
     Texture(std::string filename, ImageType type) {
-        this->id = false;
+        this->id = 0;
         this->bound = false;
         switch (type) {
             case JPG:

@@ -14,10 +14,11 @@
 
 class Loader {
 public:
-    RawModel *loadToVAO(std::vector<GLfloat> positions, std::vector<GLint> indices, GLuint attributeNumber) {
+    RawModel *loadToVAO(std::vector<GLfloat> positions, std::vector<GLfloat> textureCoords, std::vector<GLint> indices) {
         int vaoID = this->createVAO();
         this->bindIndicesBuffer(indices);
-        this->storeDataInAttributeList(attributeNumber, positions);
+        this->storeDataInAttributeList(0, 3, positions);
+        this->storeDataInAttributeList(1, 2, textureCoords);
         this->unbindVAO();
         return new RawModel(vaoID, indices.size());
     }
@@ -53,13 +54,13 @@ private:
         return vaoID;
     }
 
-    void storeDataInAttributeList(int attributeNumber, std::vector<GLfloat> positions) {
+    void storeDataInAttributeList(int attributeNumber, int coordinateSize, std::vector<GLfloat> positions) {
         GLuint vboID;
         glGenBuffers(1, &vboID);
         this->vbos.push_back(vboID);
         glBindBuffer(GL_ARRAY_BUFFER, vboID);
         glBufferData(GL_ARRAY_BUFFER, positions.size() * sizeof(positions[0]), &positions.front(), GL_STATIC_DRAW);
-        glVertexAttribPointer(attributeNumber, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *) 0);
+        glVertexAttribPointer(attributeNumber, coordinateSize, GL_FLOAT, GL_FALSE, coordinateSize * sizeof(float), (void *) 0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 

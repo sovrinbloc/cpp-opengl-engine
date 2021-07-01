@@ -5,17 +5,8 @@
 #ifndef ENGINE_MODELTEXTURE_H
 #define ENGINE_MODELTEXTURE_H
 #include "Texture.h"
-class ModelTexture {
-private:
-    Texture *texture;
-
+class ModelTexture : public Texture{
 public:
-    ModelTexture(Texture *texture) {
-        this->texture = texture;
-    }
-
-    Texture *getTexture() {
-        return this->texture;
-    }
+    ModelTexture(std::string filename, ImageType type) : Texture(filename, type) {}
 };
 #endif //ENGINE_MODELTEXTURE_H

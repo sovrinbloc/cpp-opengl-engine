@@ -35,8 +35,15 @@ public:
                 3, 1, 2
         };
 
-        RawModel *model = loader.loadToVAO(vertices, indices, shader.attribute);
-        auto *texture = new ModelTexture(new Texture(FileSystem::Path("/res/image.png"), PNG));
+        std::vector<GLfloat> textureCoords = {
+                0.0f, 0.0f,
+                0.0f, 1.0f,
+                1.0f, 1.0f,
+                1.0f, 0.0f,
+        };
+
+        RawModel *model = loader.loadToVAO(vertices, textureCoords, indices);
+        auto *texture = new ModelTexture(FileSystem::Path("/res/image.png"), PNG);
         auto *texturedModel = new TexturedModel(model, texture);
 
 

@@ -12,12 +12,14 @@ static const char *FragmentPath = "/shaders/fragment_shader.glsl";
 
 class StaticShader : public ShaderProgram {
 private:
-    std::string variableName = "aPos";
+    std::string position = "position";
+    std::string texture = "textureCoords";
 public:
     GLuint attribute;
     StaticShader(const char *vertexPath = VertexPath, const char *fragmentPath = FragmentPath, const char *geometryPath = nullptr) : ShaderProgram(vertexPath, fragmentPath, geometryPath) {
         ShaderProgram(vertexPath, fragmentPath);
-        attribute = getAttribute(variableName);
+        bindAttribute(0, position);
+        bindAttribute(1, texture);
     }
 };
 #endif //ENGINE_STATICSHADER_H

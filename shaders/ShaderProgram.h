@@ -120,6 +120,10 @@ public:
 
     void bindAttributes();
 
+    void bindAttribute(int attribute, std::string variableName) {
+        glBindAttribLocation(this->programID, attribute, variableName.c_str());
+    }
+
     GLuint getAttribute(std::string variableName) {
         return glGetAttribLocation(programID, variableName.c_str());
     }
