@@ -3,7 +3,7 @@ project(engine)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(engine main.cpp renderEngine/DisplayManager.h engineTester/MainGameLoop.h InputManager.h Camera.h models/RawModel.h renderEngine/Loader.h renderEngine/Renderer.h textures/Texture.h shaders/ShaderProgram.h shaders/StaticShader.h libraries/images/stb_image.h textures/ModelTexture.h models/TexturedModel.h toolbox/FileSystem.h toolbox/Maths.h)
+add_executable(engine main.cpp renderEngine/DisplayManager.h engineTester/MainGameLoop.h InputManager.h Camera.h models/RawModel.h renderEngine/Loader.h renderEngine/Renderer.h textures/Texture.h shaders/ShaderProgram.h shaders/StaticShader.h libraries/images/stb_image.h textures/ModelTexture.h models/TexturedModel.h toolbox/FileSystem.h toolbox/Maths.h entities/Entity.h)
 
 include_directories(deps/GLFW)
 add_subdirectory(deps/glfw)

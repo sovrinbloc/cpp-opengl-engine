@@ -15,12 +15,13 @@
 #include "../toolbox/Maths.h"
 
 using namespace glm;
+
 class MainGameLoop {
 public:
     static void main() {
         DisplayManager::createDisplay();
 
-        StaticShader shader = StaticShader();
+        auto *shader = new StaticShader();
         Loader loader = Loader();
         Renderer renderer = Renderer();
 
@@ -44,24 +45,23 @@ public:
         };
 
         RawModel *model = loader.loadToVAO(vertices, textureCoords, indices);
+
         auto *texture = new ModelTexture(FileSystem::Path("/res/image.png"), PNG);
-        auto *texturedModel = new TexturedModel(model, texture);
+
+        auto *staticModel = new TexturedModel(model, texture);
+
+        auto *entity = new Entity(staticModel, glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0), 1);
 
         while (DisplayManager::stayOpen()) {
             // game logic
             renderer.prepare();
-            shader.start();
-            shader.transformation(Maths::createTransformation(
-                    vec3(0.5f, -0.7f, 0.0f),
-                    vec3(0.5f, 0.1f, 0.0f),
-                    0.25f
-                    ));
-            renderer.render(texturedModel);
-            shader.stop();
+            shader->start();
+            renderer.render(entity, shader);
+            shader->stop();
             DisplayManager::updateDisplay();
         }
 
-        shader.cleanUp();
+        shader->cleanUp();
         loader.cleanUp();
         DisplayManager::closeDisplay();
     }

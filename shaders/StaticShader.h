@@ -19,7 +19,7 @@ public:
     GLuint attribute;
     StaticShader() : ShaderProgram(VertexPath, FragmentPath,nullptr) {
         initialize();
-        transformation();
+        loadTransformation();
     }
 
     void bindAttributes() {
@@ -27,7 +27,7 @@ public:
         this->bindAttribute(1, texture);
     }
 
-    void transformation(glm::mat4 matrix = glm::mat4(1.0f)) {
+    void loadTransformation(glm::mat4 matrix = glm::mat4(1.0f)) {
         setMat4(transformationMatrix.c_str(), matrix);
     }
 

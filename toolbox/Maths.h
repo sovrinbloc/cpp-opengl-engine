@@ -8,7 +8,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 class Maths {
 public:
-    static glm::mat4 createTransformation(glm::vec3 translation = glm::vec3(1.0f), glm::vec3 rotation = glm::vec3(0.0f), float scale = 1.0f) {
+    static glm::mat4 createTransformationMatrix(glm::vec3 translation = glm::vec3(1.0f), glm::vec3 rotation = glm::vec3(0.0f), float scale = 1.0f) {
         glm::mat4 matrix (1.0f);
         matrix = glm::translate(matrix, translation);
         matrix = glm::rotate(matrix, glm::radians(rotation.x), glm::vec3(1, 0, 0));
