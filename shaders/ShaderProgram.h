@@ -107,7 +107,6 @@ public:
         }
     }
 
-    virtual void bindAttributes() = 0;
 
     void initialize() {
         // shader Program
@@ -224,6 +223,10 @@ public:
     void setMat4(const std::string &name, const glm::mat4 &mat) const {
         glUniformMatrix4fv(glGetUniformLocation(programID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
     }
+
+protected:
+    // implementation inside child class
+    virtual void bindAttributes() = 0;
 
 private:
 
