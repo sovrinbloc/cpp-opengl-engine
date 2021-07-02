@@ -7,6 +7,7 @@
 
 #define GL_SILENCE_DEPRECATION
 #define GLFW_INCLUDE_GLCOREARB
+
 #include <GLFW/glfw3.h>
 #include <cstdio>
 
@@ -23,9 +24,9 @@ public:
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        #ifdef __APPLE__
+#ifdef __APPLE__
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-        #endif
+#endif
 
         window = glfwCreateWindow(SRC_WIDTH, SRC_HEIGHT, "LearnOpenGL", nullptr, nullptr);
         if (window == nullptr) {
@@ -36,19 +37,18 @@ public:
         glfwMakeContextCurrent(window);
         glfwSetFramebufferSizeCallback(window, (GLFWframebuffersizefun) framebuffer_size_callback);
 
-        #ifndef __APPLE__
+#ifndef __APPLE__
         if (glewInit() != GLEW_OK) {
             return -1;
         }
-        #endif
+#endif
 
         // configure global opengl state
         // -----------------------------
         glEnable(GL_DEPTH_TEST);
     }
+
     static void updateDisplay() {
-
-
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);
@@ -74,8 +74,7 @@ public:
 
 private:
 
-    static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-    {
+    static void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
         // make sure the viewport matches the new window dimensions; note that width and
         // height will be significantly larger than specified on retina displays.
         glViewport(0, 0, width, height);

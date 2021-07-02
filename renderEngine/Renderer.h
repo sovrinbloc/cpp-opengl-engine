@@ -8,9 +8,10 @@
 #define GLFW_INCLUDE_GLCOREARB
 
 #include <GLFW/glfw3.h>
+#include "../entities/Camera.h"
+#include "../entities/Entity.h"
 #include "../models/RawModel.h"
 #include "../models/TexturedModel.h"
-#include "../entities/Entity.h"
 #include "../shaders/StaticShader.h"
 #include "../toolbox/Maths.h"
 
@@ -25,7 +26,7 @@ private:
     float ScreenHeight = 600.0f;
 public:
 
-    Renderer(float screenWidth, float screenHeight) : ScreenWidth(screenWidth), ScreenHeight(screenHeight) {
+    Renderer(float screenWidth = 800.0f, float screenHeight = 600.0f) : ScreenWidth(screenWidth), ScreenHeight(screenHeight) {
         this->projectionMatrix = Maths::createProjectionMatrix(FOVY, screenWidth, screenHeight, NEAR_PLANE, FAR_PLANE);
     }
 
@@ -45,7 +46,7 @@ public:
      *
      * @param texturedModel
      */
-    void render(Entity *entity, StaticShader *shader) {
+    void render(Camera *camera, Entity *entity, StaticShader *shader) {
         TexturedModel *model = entity->getModel();
         RawModel *rawModel = model->getRawModel();
         glBindVertexArray(rawModel->getVaoID());
@@ -55,6 +56,7 @@ public:
                                                                            entity->getScale());
         shader->loadTransformationMatrix(transformationMatrix);
         shader->loadProjectionMatrix(projectionMatrix);
+        shader->loadViewMatrix(camera->GetViewMatrix());
 
         // bind texture
         model->getModelTexture()->bindTexture();

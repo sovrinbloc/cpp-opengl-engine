@@ -17,7 +17,7 @@ private:
 
 public:
 
-    Entity(TexturedModel *model, glm::vec3 position, glm::vec3 rotation, float scale) : model(model), position(position), rotation(rotation), scale(scale){}
+    Entity(TexturedModel *model, glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 rotation = glm::vec3(0), float scale = 1.0f) : model(model), position(position), rotation(rotation), scale(scale){}
 
     TexturedModel *getModel() {
         return this->model;
@@ -66,39 +66,6 @@ public:
     float setTransformation(glm::vec3 translate = glm::vec3(1.0f), glm::vec3 rotate = glm::vec3(0.0f), float scalar = 1.0f) {
         this->position = translate; this->rotation = rotate; this->scale = scalar;
     }
-
-//    void setFovy(float fovy) {
-//
-//    }
-//
-//    float getFovy() {
-//
-//    }
-//
-//    void setNear(float zNear) {
-//
-//    }
-//
-//    float getNear() {
-//
-//    }
-//
-//    void setFar(float zFar) {
-//
-//    }
-//
-//    float getFar() {
-//
-//    }
-//
-//    void setAspect(float aspect) {
-//
-//    }
-//
-//    float getAspect() {
-//
-//    }
-
 };
 
 #endif //ENGINE_ENTITY_H

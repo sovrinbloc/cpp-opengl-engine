@@ -16,6 +16,7 @@ private:
     std::string texture = "textureCoords";
     std::string transformationMatrix = "transformationMatrix";
     std::string projectionMatrix = "projectionMatrix";
+    std::string viewMatrix = "viewMatrix";
 public:
     GLuint attribute;
     StaticShader() : ShaderProgram(VertexPath, FragmentPath,nullptr) {
@@ -34,6 +35,10 @@ public:
 
     void loadProjectionMatrix(glm::mat4 matrix = glm::mat4(1.0f)) {
         this->setMat4(projectionMatrix.c_str(), matrix);
+    }
+
+    void loadViewMatrix(glm::mat4 matrix = glm::mat4(1.0f)) {
+        this->setMat4(viewMatrix.c_str(), matrix);
     }
 
 protected:

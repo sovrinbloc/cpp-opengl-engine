@@ -21,9 +21,18 @@ public:
     static void main() {
         DisplayManager::createDisplay();
 
-        auto *shader = new StaticShader();
-        Loader loader = Loader();
-        Renderer renderer = Renderer(DisplayManager::getWidth(), DisplayManager::getHeight());
+        StaticShader *shader;
+        Loader *loader;
+        Renderer *renderer;
+        Camera *camera;
+
+        shader = new StaticShader();
+
+        loader = new Loader();
+
+        renderer = new Renderer(DisplayManager::getWidth(), DisplayManager::getHeight());
+
+        camera = new Camera();
 
         std::vector<GLfloat> vertices = {
                 -0.5f, 0.5f, 0.0f,
@@ -44,26 +53,31 @@ public:
                 1.0f, 0.0f,
         };
 
-        RawModel *model = loader.loadToVAO(vertices, textureCoords, indices);
+        RawModel *model;
+        ModelTexture *texture;
+        TexturedModel *staticModel;
+        Entity *entity;
 
-        auto *texture = new ModelTexture(FileSystem::Path("/res/image.png"), PNG);
+        model = loader->loadToVAO(vertices, textureCoords, indices);
 
-        auto *staticModel = new TexturedModel(model, texture);
+        texture = new ModelTexture(FileSystem::Path("/res/image.png"), PNG);
 
-        auto *entity = new Entity(staticModel, glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0), 1);
+        staticModel = new TexturedModel(model, texture);
+
+        entity = new Entity(staticModel, glm::vec3(-0.50f, 0.0f, 0.0f), glm::vec3(0), 1);
 
         while (DisplayManager::stayOpen()) {
             // game logic
             entity->increasePosition(glm::vec3(0.0f, 0.0f, -0.01f));
-            renderer.prepare();
+            renderer->prepare();
             shader->start();
-            renderer.render(entity, shader);
+            renderer->render(camera, entity, shader);
             shader->stop();
             DisplayManager::updateDisplay();
         }
 
         shader->cleanUp();
-        loader.cleanUp();
+        loader->cleanUp();
         DisplayManager::closeDisplay();
     }
 };
