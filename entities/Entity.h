@@ -43,7 +43,7 @@ public:
         return this->rotation;
     }
 
-    void increaseRotation(glm::vec3 rotate) {
+    void rotate(glm::vec3 rotate) {
         this->rotation += rotate;
     }
 

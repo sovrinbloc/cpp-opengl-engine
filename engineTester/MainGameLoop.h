@@ -128,6 +128,7 @@ public:
         while (DisplayManager::stayOpen()) {
             // game logic
             entity->increasePosition(glm::vec3(0.0f, 0.0f, -0.01f));
+            entity->rotate(glm::vec3(0.0f, 0.1f, 0.3f));
             renderer->prepare();
             shader->start();
             renderer->render(cameraInput, entity, shader);
