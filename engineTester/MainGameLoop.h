@@ -13,6 +13,7 @@
 #include "../textures/ModelTexture.h"
 #include "../models/TexturedModel.h"
 #include "../toolbox/Maths.h"
+#include "../entities/CameraInput.h"
 
 using namespace glm;
 
@@ -24,7 +25,8 @@ public:
         StaticShader *shader;
         Loader *loader;
         Renderer *renderer;
-        Camera *camera;
+        Camera *viewCamera;
+        CameraInput *cameraInput;
 
         shader = new StaticShader();
 
@@ -32,7 +34,9 @@ public:
 
         renderer = new Renderer(DisplayManager::getWidth(), DisplayManager::getHeight());
 
-        camera = new Camera();
+        viewCamera = new Camera();
+
+        cameraInput = new CameraInput(viewCamera);
 
         std::vector<GLfloat> vertices = {
                 -0.5f, 0.5f, 0.0f,
@@ -71,7 +75,7 @@ public:
             entity->increasePosition(glm::vec3(0.0f, 0.0f, -0.01f));
             renderer->prepare();
             shader->start();
-            renderer->render(camera, entity, shader);
+            renderer->render(cameraInput, entity, shader);
             shader->stop();
             DisplayManager::updateDisplay();
         }

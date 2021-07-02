@@ -8,7 +8,7 @@
 #define GLFW_INCLUDE_GLCOREARB
 
 #include <GLFW/glfw3.h>
-#include "../entities/Camera.h"
+#include "../entities/CameraInput.h"
 #include "../entities/Entity.h"
 #include "../models/RawModel.h"
 #include "../models/TexturedModel.h"
@@ -26,7 +26,8 @@ private:
     float ScreenHeight = 600.0f;
 public:
 
-    Renderer(float screenWidth = 800.0f, float screenHeight = 600.0f) : ScreenWidth(screenWidth), ScreenHeight(screenHeight) {
+    Renderer(float screenWidth = 800.0f, float screenHeight = 600.0f) : ScreenWidth(screenWidth),
+                                                                        ScreenHeight(screenHeight) {
         this->projectionMatrix = Maths::createProjectionMatrix(FOVY, screenWidth, screenHeight, NEAR_PLANE, FAR_PLANE);
     }
 
@@ -46,17 +47,23 @@ public:
      *
      * @param texturedModel
      */
-    void render(Camera *camera, Entity *entity, StaticShader *shader) {
+    void render(CameraInput *cameraInput, Entity *entity, StaticShader *shader) {
         TexturedModel *model = entity->getModel();
         RawModel *rawModel = model->getRawModel();
+        Camera *viewCamera = cameraInput->getCamera();
+
         glBindVertexArray(rawModel->getVaoID());
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
         glm::mat4 transformationMatrix = Maths::createTransformationMatrix(entity->getPosition(), entity->getRotation(),
                                                                            entity->getScale());
+
+        // checks for input on the keyboard.
+        cameraInput->move();
+
         shader->loadTransformationMatrix(transformationMatrix);
         shader->loadProjectionMatrix(projectionMatrix);
-        shader->loadViewMatrix(camera->GetViewMatrix());
+        shader->loadViewMatrix(viewCamera->GetViewMatrix());
 
         // bind texture
         model->getModelTexture()->bindTexture();

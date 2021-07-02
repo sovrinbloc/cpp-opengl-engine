@@ -7,7 +7,7 @@
 #include "definitions.h"
 #define GLFW_INCLUDE_GLCOREARB
 #include <GLFW/glfw3.h>
-#include "entities/Camera.h"
+#include "Camera.h"
 
 double lastX = SRC_WIDTH / 2.0f;
 double lastY = SRC_HEIGHT / 2.0f;

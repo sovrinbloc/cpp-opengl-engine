@@ -71,6 +71,10 @@ public:
         return SRC_HEIGHT;
     }
 
+    static GLFWwindow *getWindow() {
+        return window;
+    }
+
 
 private:
 
