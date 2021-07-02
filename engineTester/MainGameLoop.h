@@ -13,7 +13,6 @@
 #include "../textures/ModelTexture.h"
 #include "../models/TexturedModel.h"
 
-
 class MainGameLoop {
 public:
     static void main() {
@@ -45,7 +44,6 @@ public:
         RawModel *model = loader.loadToVAO(vertices, textureCoords, indices);
         auto *texture = new ModelTexture(FileSystem::Path("/res/image.png"), PNG);
         auto *texturedModel = new TexturedModel(model, texture);
-
 
         while (DisplayManager::stayOpen()) {
             // game logic

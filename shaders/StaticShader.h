@@ -16,10 +16,9 @@ private:
     std::string texture = "textureCoords";
 public:
     GLuint attribute;
-    StaticShader(const char *vertexPath = VertexPath, const char *fragmentPath = FragmentPath, const char *geometryPath = nullptr) : ShaderProgram(vertexPath, fragmentPath, geometryPath) {
-        ShaderProgram(vertexPath, fragmentPath);
-        bindAttribute(0, position);
-        bindAttribute(1, texture);
+    StaticShader() : ShaderProgram(VertexPath, FragmentPath,nullptr) {
+        this->bindAttribute(0, position);
+        this->bindAttribute(1, texture);
     }
 };
 #endif //ENGINE_STATICSHADER_H

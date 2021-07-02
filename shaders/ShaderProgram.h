@@ -91,10 +91,6 @@ private:
 class ShaderProgram {
 public:
     unsigned int programID;
-    Shader *vertexShader;
-    Shader *fragmentShader;
-    Shader *geometryShader;
-
     // constructor generates the shader on the fly
     // ------------------------------------------------------------------------
     ShaderProgram(const char *vertexPath, const char *fragmentPath, const char *geometryPath = nullptr) {
@@ -116,6 +112,18 @@ public:
 
         glLinkProgram(programID);
         checkCompileErrors(programID, "PROGRAM");
+    }
+
+    Shader *getVertexShader() {
+        return this->vertexShader;
+    }
+
+    Shader *getFragmentShader() {
+        return this->fragmentShader;
+    }
+
+    Shader *getGeometryShader() {
+        return this->geometryShader;
     }
 
     void bindAttributes();
@@ -211,6 +219,11 @@ public:
     }
 
 private:
+
+    Shader *vertexShader;
+    Shader *fragmentShader;
+    Shader *geometryShader;
+
     // utility function for checking shader compilation/linking errors.
     // ------------------------------------------------------------------------
     void checkCompileErrors(GLuint shader, std::string type) {

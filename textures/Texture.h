@@ -40,6 +40,7 @@ public:
      * @brief binds the texture to true
      */
     void bindTexture() {
+        glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, this->id);
         bound = true;
     }
@@ -53,6 +54,7 @@ private:
      */
     void loadJpgTexture(const char *file_name) {
         glGenTextures(1, &this->id);
+        glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, this->id);
         // set the texture wrapping/filtering options (on the currently bound texture object)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -89,6 +91,7 @@ private:
         }
 
         glGenTextures(1, &this->id);
+        glActiveTexture(GL_TEXTURE0);
 
         glBindTexture(GL_TEXTURE_2D, this->id);
 
