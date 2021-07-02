@@ -14,16 +14,25 @@ class StaticShader : public ShaderProgram {
 private:
     std::string position = "position";
     std::string texture = "textureCoords";
+    std::string transformationMatrix = "transformationMatrix";
 public:
     GLuint attribute;
     StaticShader() : ShaderProgram(VertexPath, FragmentPath,nullptr) {
         initialize();
+        transformation();
     }
 
     void bindAttributes() {
         this->bindAttribute(0, position);
         this->bindAttribute(1, texture);
     }
+
+    void transformation(glm::mat4 matrix = glm::mat4(1.0f)) {
+        setMat4(transformationMatrix.c_str(), matrix);
+    }
+
+protected:
+    void getAllUniformLocations() {}
 
 };
 #endif //ENGINE_STATICSHADER_H

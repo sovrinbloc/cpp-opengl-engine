@@ -5,14 +5,16 @@
 #ifndef CRAFTPROJ_MAINGAMELOOP_H
 #define CRAFTPROJ_MAINGAMELOOP_H
 
-#include "../libraries/utils/filesystem.h"
+#include "../toolbox/FileSystem.h"
 #include "../renderEngine/DisplayManager.h"
 #include "../renderEngine/Loader.h"
 #include "../renderEngine/Renderer.h"
 #include "../shaders/StaticShader.h"
 #include "../textures/ModelTexture.h"
 #include "../models/TexturedModel.h"
+#include "../toolbox/Maths.h"
 
+using namespace glm;
 class MainGameLoop {
 public:
     static void main() {
@@ -49,6 +51,11 @@ public:
             // game logic
             renderer.prepare();
             shader.start();
+            shader.transformation(Maths::createTransformation(
+                    vec3(0.5f, -0.7f, 0.0f),
+                    vec3(0.5f, 0.1f, 0.0f),
+                    0.25f
+                    ));
             renderer.render(texturedModel);
             shader.stop();
             DisplayManager::updateDisplay();

@@ -2,7 +2,7 @@
 #define SHADER_H
 #define GL_SILENCE_DEPRECATION
 
-#include "../libraries/utils/filesystem.h"
+#include "../toolbox/FileSystem.h"
 
 #include <GLFW/glfw3.h>
 
@@ -120,6 +120,8 @@ public:
 
         glLinkProgram(programID);
         checkCompileErrors(programID, "PROGRAM");
+
+        getAllUniformLocations();
     }
 
     Shader *getVertexShader() {
@@ -225,8 +227,14 @@ public:
     }
 
 protected:
+
+    int getUniformLocation(std::string uniformName) {
+        return glGetUniformLocation(this->programID, uniformName.c_str());
+    }
     // implementation inside child class
     virtual void bindAttributes() = 0;
+
+    virtual void getAllUniformLocations() = 0;
 
 private:
 
