@@ -16,5 +16,9 @@ public:
         matrix = glm::rotate(matrix, glm::radians(rotation.z), glm::vec3(0, 0, 1));
         return glm::scale(matrix, glm::vec3(scale));
     }
+
+    static glm::mat4 createProjectionMatrix(float fovy = 45.0f, float width = 800.0f, float height = 600.0f, float zNear = 0.1f, float zFar = 100.0f) {
+        return glm::perspective(glm::radians(fovy), (float) width / (float) height, zNear,zFar);
+    }
 };
 #endif //ENGINE_MATHS_H

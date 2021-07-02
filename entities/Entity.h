@@ -67,6 +67,38 @@ public:
         this->position = translate; this->rotation = rotate; this->scale = scalar;
     }
 
+//    void setFovy(float fovy) {
+//
+//    }
+//
+//    float getFovy() {
+//
+//    }
+//
+//    void setNear(float zNear) {
+//
+//    }
+//
+//    float getNear() {
+//
+//    }
+//
+//    void setFar(float zFar) {
+//
+//    }
+//
+//    float getFar() {
+//
+//    }
+//
+//    void setAspect(float aspect) {
+//
+//    }
+//
+//    float getAspect() {
+//
+//    }
+
 };
 
 #endif //ENGINE_ENTITY_H

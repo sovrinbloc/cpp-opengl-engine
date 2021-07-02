@@ -23,7 +23,7 @@ public:
 
         auto *shader = new StaticShader();
         Loader loader = Loader();
-        Renderer renderer = Renderer();
+        Renderer renderer = Renderer(DisplayManager::getWidth(), DisplayManager::getHeight());
 
         std::vector<GLfloat> vertices = {
                 -0.5f, 0.5f, 0.0f,
@@ -54,6 +54,7 @@ public:
 
         while (DisplayManager::stayOpen()) {
             // game logic
+            entity->increasePosition(glm::vec3(0.0f, 0.0f, -0.01f));
             renderer.prepare();
             shader->start();
             renderer.render(entity, shader);

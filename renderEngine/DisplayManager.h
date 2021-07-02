@@ -42,6 +42,9 @@ public:
         }
         #endif
 
+        // configure global opengl state
+        // -----------------------------
+        glEnable(GL_DEPTH_TEST);
     }
     static void updateDisplay() {
 
@@ -58,6 +61,14 @@ public:
 
     static void closeDisplay() {
         glfwTerminate();
+    }
+
+    static float getWidth() {
+        return SRC_WIDTH;
+    }
+
+    static float getHeight() {
+        return SRC_HEIGHT;
     }
 
 

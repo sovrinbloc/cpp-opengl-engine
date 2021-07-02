@@ -15,11 +15,12 @@ private:
     std::string position = "position";
     std::string texture = "textureCoords";
     std::string transformationMatrix = "transformationMatrix";
+    std::string projectionMatrix = "projectionMatrix";
 public:
     GLuint attribute;
     StaticShader() : ShaderProgram(VertexPath, FragmentPath,nullptr) {
-        initialize();
-        loadTransformation();
+        this->initialize();
+        this->loadTransformationMatrix();
     }
 
     void bindAttributes() {
@@ -27,8 +28,12 @@ public:
         this->bindAttribute(1, texture);
     }
 
-    void loadTransformation(glm::mat4 matrix = glm::mat4(1.0f)) {
-        setMat4(transformationMatrix.c_str(), matrix);
+    void loadTransformationMatrix(glm::mat4 matrix = glm::mat4(1.0f)) {
+        this->setMat4(transformationMatrix.c_str(), matrix);
+    }
+
+    void loadProjectionMatrix(glm::mat4 matrix = glm::mat4(1.0f)) {
+        this->setMat4(projectionMatrix.c_str(), matrix);
     }
 
 protected:
