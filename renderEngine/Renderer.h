@@ -52,15 +52,23 @@ public:
         RawModel *rawModel = model->getRawModel();
         Camera *viewCamera = cameraInput->getCamera();
 
+        // bind the current vao
         glBindVertexArray(rawModel->getVaoID());
+
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
+
+        // creates the matrices to be passed into the shader
         glm::mat4 transformationMatrix = Maths::createTransformationMatrix(entity->getPosition(), entity->getRotation(),
                                                                            entity->getScale());
+
+        this->projectionMatrix = Maths::createProjectionMatrix(viewCamera->Zoom, ScreenWidth, ScreenHeight, NEAR_PLANE, FAR_PLANE);
+
 
         // checks for input on the keyboard.
         cameraInput->move();
 
+        // loads the matrices into the shader
         shader->loadTransformationMatrix(transformationMatrix);
         shader->loadProjectionMatrix(projectionMatrix);
         shader->loadViewMatrix(viewCamera->GetViewMatrix());

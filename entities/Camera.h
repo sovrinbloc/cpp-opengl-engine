@@ -96,7 +96,7 @@ public:
 
     // processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
     void ProcessMouseScroll(float yoffset) {
-        this->Zoom -= (float)yoffset;
+        this->Zoom += (float)yoffset;
         if (this->Zoom < 1.0f)
             this->Zoom = 1.0f;
         if (this->Zoom > 45.0f)
