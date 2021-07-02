@@ -1,6 +1,7 @@
 #ifndef SHADER_H
 #define SHADER_H
 #define GL_SILENCE_DEPRECATION
+
 #include "../libraries/utils/filesystem.h"
 
 #include <GLFW/glfw3.h>
@@ -91,6 +92,7 @@ private:
 class ShaderProgram {
 public:
     unsigned int programID;
+
     // constructor generates the shader on the fly
     // ------------------------------------------------------------------------
     ShaderProgram(const char *vertexPath, const char *fragmentPath, const char *geometryPath = nullptr) {
@@ -103,8 +105,15 @@ public:
         if (geometryPath != nullptr) {
             geometryShader = new Shader(geometryPath, GeometryShader);
         }
+    }
+
+    virtual void bindAttributes() = 0;
+
+    void initialize() {
         // shader Program
         programID = glCreateProgram();
+
+        bindAttributes();
         glAttachShader(programID, vertexShader->shaderId);
         glAttachShader(programID, fragmentShader->shaderId);
         if (this->geometryShader != nullptr)
@@ -125,8 +134,6 @@ public:
     Shader *getGeometryShader() {
         return this->geometryShader;
     }
-
-    void bindAttributes();
 
     void bindAttribute(int attribute, std::string variableName) {
         glBindAttribLocation(this->programID, attribute, variableName.c_str());

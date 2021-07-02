@@ -17,8 +17,13 @@ private:
 public:
     GLuint attribute;
     StaticShader() : ShaderProgram(VertexPath, FragmentPath,nullptr) {
+        initialize();
+    }
+
+    void bindAttributes() {
         this->bindAttribute(0, position);
         this->bindAttribute(1, texture);
     }
+
 };
 #endif //ENGINE_STATICSHADER_H
