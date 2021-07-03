@@ -77,7 +77,7 @@ public:
             indices.push_back(mesh->mFaces[i].mIndices[2]);
         }
 
-        vector<GLfloat> outVertices, outUvs;
+        vector<GLfloat> outVertices, outUvs, outNormals;
         vector<GLint> outIndices(indices.begin(), indices.end());
         for (int i = 0; i < vertices.size(); i++) {
             outVertices.push_back(vertices[i].x);
@@ -85,9 +85,12 @@ public:
             outVertices.push_back(vertices[i].z);
             outUvs.push_back(uvs[i].x);
             outUvs.push_back(uvs[i].y);
+            outNormals.push_back(normals[i].x);
+            outNormals.push_back(normals[i].y);
+            outNormals.push_back(normals[i].z);
         }
         // The "scene" pointer will be deleted automatically by "importer"
-        return loader->loadToVAO(outVertices, outUvs, outIndices);
+        return loader->loadToVAO(outVertices, outUvs, outNormals, outIndices);
     }
 
 
@@ -139,6 +142,7 @@ public:
                 processVertex(vertexIndex[2], uvIndex[2], normalIndex[2], &vertices, &indices);
             }
         }
+        std::fclose(file);
 
         removeUnusedVertices(&vertices);
 
@@ -148,19 +152,8 @@ public:
 
         float furthest = convertDataToArrays(&vertices, &textures, &normals, &verticesArray,
                                              &texturesArray, &normalsArray);
-        int *indicesArray = convertIndicesListToArray(indices);
         ModelData data(&verticesArray, &texturesArray, &normalsArray, &indices, furthest);
-
-        vector<float> outVertices, outNormals, outTextures;
-        for (float vertex : verticesArray) {
-            outVertices.push_back(vertex);
-        }
-        for (float tex : texturesArray) {
-            outTextures.push_back(tex);
-        }
-
-        std::fclose(file);
-        return loader->loadToVAO(outVertices, outTextures, indices);
+        return loader->loadToVAO(&data);
     }
 
     static void processVertex(float vertex, float uv, float normal, vector<Vertex*> *vertices, vector<int> *indices) {
@@ -240,11 +233,6 @@ public:
 
         }
     }
-
-
-//    void processVertex(string vertexData[], std::vector<int> indices, std::vector<glm::vec2> textures, std::vector<glm::vec3> normals,)
-
-private:
 };
 #endif //ENGINE_OBJLOADER_H
 

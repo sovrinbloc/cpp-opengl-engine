@@ -44,6 +44,9 @@ public:
         ModelTexture *texture;
         TexturedModel *staticModel;
         Entity *entity;
+        Light *light;
+
+        light = new Light(glm::vec3(0.0, 0.0, -20), glm::vec3(1, 1, 1));
 
         model = OBJLoader::loadObjModel("/res/stall/stall.obj", loader);
 
@@ -59,6 +62,7 @@ public:
             entity->rotate(glm::vec3(0.0f, 0.1f, 0.3f));
             renderer->prepare();
             shader->start();
+            shader->loadLight(light);
             renderer->render(cameraInput, entity, shader);
             shader->stop();
             DisplayManager::updateDisplay();

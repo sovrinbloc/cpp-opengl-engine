@@ -57,13 +57,13 @@ public:
 
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
+        glEnableVertexAttribArray(2);
 
         // creates the matrices to be passed into the shader
         glm::mat4 transformationMatrix = Maths::createTransformationMatrix(entity->getPosition(), entity->getRotation(),
                                                                            entity->getScale());
 
         this->projectionMatrix = Maths::createProjectionMatrix(viewCamera->Zoom, ScreenWidth, ScreenHeight, NEAR_PLANE, FAR_PLANE);
-
 
         // checks for input on the keyboard.
         cameraInput->move();
@@ -76,14 +76,13 @@ public:
         shader->loadProjectionMatrix(projectionMatrix);
         shader->loadViewMatrix(viewCamera->GetViewMatrix());
 
-
-
         // draw elements
         glDrawElements(GL_TRIANGLES, rawModel->getVertexCount(), GL_UNSIGNED_INT, 0);
 
         // clean up
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
+        glDisableVertexAttribArray(2);
         glBindVertexArray(0);
     }
 

@@ -8,8 +8,8 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "../libraries/images/stb_image.h"
 typedef enum {
-    JPG,
-    PNG,
+    JPG = 1,
+    PNG = 2,
 } ImageType;
 
 class Texture {

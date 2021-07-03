@@ -6,28 +6,34 @@
 #define ENGINE_STATICSHADER_H
 
 #include "ShaderProgram.h"
+#include "../entities/Light.h"
 
 static const char *VertexPath = "/shaders/vertex_shader.glsl";
 static const char *FragmentPath = "/shaders/fragment_shader.glsl";
 
 class StaticShader : public ShaderProgram {
 private:
+    // attribute names
     const std::string position = "position";
     const std::string texture = "textureCoords";
+    const std::string normal = "normal";
+
+    // uniform names
     const std::string transformationMatrix = "transformationMatrix";
     const std::string projectionMatrix = "projectionMatrix";
     const std::string viewMatrix = "viewMatrix";
     const std::string lightPosition = "lightPosition";
     const std::string lightColor = "lightColor";
-    
-    int transformationMatrixLoc;
-    int projectionMatrixLoc;
-    int viewMatrixLoc;
-    int lightPositionLoc;
-    int lightColorLoc;
+
+    int location_transformationMatrix;
+    int location_projectionMatrix;
+    int location_viewMatrix;
+    int location_lightPosition;
+    int location_lightColor;
 public:
     GLuint attribute;
-    StaticShader() : ShaderProgram(VertexPath, FragmentPath,nullptr) {
+
+    StaticShader() : ShaderProgram(VertexPath, FragmentPath, nullptr) {
         this->initialize();
         this->loadTransformationMatrix();
     }
@@ -35,36 +41,36 @@ public:
     void bindAttributes() {
         this->bindAttribute(0, position);
         this->bindAttribute(1, texture);
+        this->bindAttribute(2, normal);
     }
 
     void loadTransformationMatrix(glm::mat4 matrix = glm::mat4(1.0f)) {
-        this->setMat4(transformationMatrixLoc, matrix);
+        this->setMat4(location_transformationMatrix, matrix);
     }
 
     void loadProjectionMatrix(glm::mat4 matrix = glm::mat4(1.0f)) {
-        this->setMat4(projectionMatrixLoc, matrix);
+        this->setMat4(location_projectionMatrix, matrix);
     }
 
     void loadViewMatrix(glm::mat4 matrix = glm::mat4(1.0f)) {
-        this->setMat4(viewMatrixLoc, matrix);
+        this->setMat4(location_viewMatrix, matrix);
     }
 
-    void loadLightPosition(glm::vec3 pos = glm::vec3(1.0f)) {
-        this->setVec3(lightPositionLoc, pos);
+    void loadLight(Light *light) {
+        this->setVec3(location_lightPosition, light->getPosition());
+        this->setVec3(location_lightColor, light->getColor());
     }
 
-    void loadLightColor(glm::vec3 color = glm::vec3(1.0f)) {
-        this->setVec3(lightColorLoc, color);
-    }
 
 protected:
     void getAllUniformLocations() {
-        transformationMatrixLoc = getUniformLocation(transformationMatrix);
-        projectionMatrixLoc = getUniformLocation(projectionMatrix);
-        viewMatrixLoc = getUniformLocation(viewMatrix);
-        lightPositionLoc = getUniformLocation(lightPosition);
-        lightColorLoc = getUniformLocation(lightColor);
+        location_transformationMatrix = getUniformLocation(transformationMatrix);
+        location_projectionMatrix = getUniformLocation(projectionMatrix);
+        location_viewMatrix = getUniformLocation(viewMatrix);
+        location_lightPosition = getUniformLocation(lightPosition);
+        location_lightColor = getUniformLocation(lightColor);
     }
 
 };
+
 #endif //ENGINE_STATICSHADER_H

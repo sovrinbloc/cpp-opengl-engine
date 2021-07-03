@@ -11,7 +11,7 @@ private:
     vec3 position;
     vec3 color;
 public:
-    Light(const vec3 &position, const vec3 &color) : position(position), color(color) {}
+    Light(const vec3 position = vec3(1.2f, 1.0f, 2.0f), const vec3 color = vec3(1.0f, 1.0f, 1.0f)) : position(position), color(color) {}
 
     const vec3 &getPosition() const {
         return position;
