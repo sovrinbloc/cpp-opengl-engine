@@ -47,7 +47,7 @@ public:
 
         model = OBJLoader::loadObjModel("/res/stall/stall.obj", loader);
 
-        texture = new ModelTexture(FileSystem::Path("/res/container.png"), PNG);
+        texture = new ModelTexture(FileSystem::Path("/res/stall/stallTexture.png"), PNG);
 
         staticModel = new TexturedModel(model, texture);
 

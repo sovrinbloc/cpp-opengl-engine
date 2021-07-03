@@ -9,3 +9,6 @@ cmake_*
 engine
 .DS_Store
 Makefile
+*.zip
+*.log
+lib/*

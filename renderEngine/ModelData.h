@@ -8,14 +8,14 @@
 class ModelData {
 
 private:
-    float *vertices;
-    float *textureCoords;
-    float *normals;
-    int *indices;
+    std::vector<float> *vertices;
+    std::vector<float> *textureCoords;
+    std::vector<float> *normals;
+    std::vector<int> *indices;
     float furthestPoint;
 
 public:
-    ModelData(float vertices[], float textureCoords[], float normals[], int indices[],
+    ModelData(std::vector<float> *vertices, std::vector<float> *textureCoords, std::vector<float> *normals, std::vector<int> *indices,
               float furthestPoint) {
         this->vertices = vertices;
         this->textureCoords = textureCoords;
@@ -24,19 +24,19 @@ public:
         this->furthestPoint = furthestPoint;
     }
 
-    float *getVertices() {
+    std::vector<float> *getVertices() {
         return vertices;
     }
 
-    float *getTextureCoords() {
+    std::vector<float> *getTextureCoords() {
         return textureCoords;
     }
 
-    float *getNormals() {
+    std::vector<float> *getNormals() {
         return normals;
     }
 
-    int *getIndices() {
+    std::vector<int> *getIndices() {
         return indices;
     }
 

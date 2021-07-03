@@ -3,7 +3,7 @@ project(engine)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(engine main.cpp renderEngine/DisplayManager.h engineTester/MainGameLoop.h entities/InputManager.h entities/Camera.h models/RawModel.h renderEngine/Loader.h renderEngine/Renderer.h textures/Texture.h shaders/ShaderProgram.h shaders/StaticShader.h libraries/images/stb_image.h textures/ModelTexture.h models/TexturedModel.h toolbox/FileSystem.h toolbox/Maths.h entities/Entity.h entities/CameraInput.h renderEngine/ObjLoader.h renderEngine/Vertex.h renderEngine/ModelData.h)
+add_executable(engine main.cpp renderEngine/DisplayManager.h engineTester/MainGameLoop.h entities/InputManager.h entities/Camera.h models/RawModel.h renderEngine/Loader.h renderEngine/Renderer.h textures/Texture.h shaders/ShaderProgram.h shaders/StaticShader.h libraries/images/stb_image.h textures/ModelTexture.h models/TexturedModel.h toolbox/FileSystem.h toolbox/Maths.h entities/Entity.h entities/CameraInput.h renderEngine/ObjLoader.h renderEngine/Vertex.h renderEngine/ModelData.h toolbox/Debug.h)
 
 include_directories(deps/GLFW)
 add_subdirectory(deps/glfw)
@@ -16,7 +16,9 @@ include_directories(deps/assimp-4)
 add_subdirectory(deps/assimp-4)
 include_directories(deps/assimp-4/include)
 
-target_link_libraries(engine glfw ${GLFW_LIBRARIES} ${PNG_LIBRARY} assimp)
+add_subdirectory(deps/quill)
+
+target_link_libraries(engine glfw ${GLFW_LIBRARIES} ${PNG_LIBRARY} assimp quill)
 include_directories(deps/glm/glm)
 target_link_libraries(engine  glm)
 add_subdirectory(deps/glm EXCLUDE_FROM_ALL)
