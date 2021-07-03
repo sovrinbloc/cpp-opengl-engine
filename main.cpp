@@ -1,7 +1,7 @@
 #include <iostream>
 #include "engineTester/MainGameLoop.h"
-
-int main(int argc, char *argv[]) {
+//#include "renderEngine/ObjLoader.h"
+int main() {
     std::cout << "GL Started!" << std::endl;
     MainGameLoop::main();
     return 0;

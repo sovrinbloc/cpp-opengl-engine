@@ -68,13 +68,15 @@ public:
         // checks for input on the keyboard.
         cameraInput->move();
 
+        // bind texture
+        model->getModelTexture()->bindTexture();
+
         // loads the matrices into the shader
         shader->loadTransformationMatrix(transformationMatrix);
         shader->loadProjectionMatrix(projectionMatrix);
         shader->loadViewMatrix(viewCamera->GetViewMatrix());
 
-        // bind texture
-        model->getModelTexture()->bindTexture();
+
 
         // draw elements
         glDrawElements(GL_TRIANGLES, rawModel->getVertexCount(), GL_UNSIGNED_INT, 0);

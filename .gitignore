@@ -7,3 +7,5 @@ Testing/*
 cmake_*
 *.cbp
 engine
+.DS_Store
+Makefile
