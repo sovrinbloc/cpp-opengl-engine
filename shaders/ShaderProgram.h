@@ -168,7 +168,7 @@ public:
         glDeleteProgram(programID);
     }
 
-    // utility uniform functions
+    // utility uniform functions with a string.
     // ------------------------------------------------------------------------
     void setBool(const std::string &name, bool value) const {
         glUniform1i(glGetUniformLocation(programID, name.c_str()), (int) value);
@@ -224,6 +224,66 @@ public:
     // ------------------------------------------------------------------------
     void setMat4(const std::string &name, const glm::mat4 &mat) const {
         glUniformMatrix4fv(glGetUniformLocation(programID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+    }
+
+    // this utilizes the location instead of the string name. it makes it a lot cheaper.
+
+    // utility uniform functions
+    // ------------------------------------------------------------------------
+    void setBool(GLuint location, bool value) const {
+        glUniform1i(location, (int) value);
+    }
+
+    // ------------------------------------------------------------------------
+    void setInt(GLuint location, int value) const {
+        glUniform1i(location, value);
+    }
+
+    // ------------------------------------------------------------------------
+    void setFloat(GLuint location, float value) const {
+        glUniform1f(location, value);
+    }
+
+    // ------------------------------------------------------------------------
+    void setVec2(GLuint location, const glm::vec2 &value) const {
+        glUniform2fv(location, 1, &value[0]);
+    }
+
+    void setVec2(GLuint location, float x, float y) const {
+        glUniform2f(location, x, y);
+    }
+
+    // ------------------------------------------------------------------------
+    void setVec3(GLuint location, const glm::vec3 &value) const {
+        glUniform3fv(location, 1, &value[0]);
+    }
+
+    void setVec3(GLuint location, float x, float y, float z) const {
+        glUniform3f(location, x, y, z);
+    }
+
+    // ------------------------------------------------------------------------
+    void setVec4(GLuint location, const glm::vec4 &value) const {
+        glUniform4fv(location, 1, &value[0]);
+    }
+
+    void setVec4(GLuint location, float x, float y, float z, float w) {
+        glUniform4f(location, x, y, z, w);
+    }
+
+    // ------------------------------------------------------------------------
+    void setMat2(GLuint location, const glm::mat2 &mat) const {
+        glUniformMatrix2fv(location, 1, GL_FALSE, &mat[0][0]);
+    }
+
+    // ------------------------------------------------------------------------
+    void setMat3(GLuint location, const glm::mat3 &mat) const {
+        glUniformMatrix3fv(location, 1, GL_FALSE, &mat[0][0]);
+    }
+
+    // ------------------------------------------------------------------------
+    void setMat4(GLuint location, const glm::mat4 &mat) const {
+        glUniformMatrix4fv(location, 1, GL_FALSE, &mat[0][0]);
     }
 
 protected:

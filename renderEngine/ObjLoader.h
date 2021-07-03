@@ -159,7 +159,6 @@ public:
             outTextures.push_back(tex);
         }
 
-
         std::fclose(file);
         return loader->loadToVAO(outVertices, outTextures, indices);
     }

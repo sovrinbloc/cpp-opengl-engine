@@ -14,6 +14,4 @@ static quill::Logger *getLogger(std::string output="logger.log") {
     return logger;
 }
 
-
-
 #endif //ENGINE_DEBUG_H

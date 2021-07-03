@@ -7,6 +7,7 @@ out vec2 pass_textureCoords;
 uniform mat4 transformationMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
+uniform vec3 lightPosition;
 void main()
 {
     pass_textureCoords = textureCoords;
