@@ -31,7 +31,7 @@ public:
 
         shader = new StaticShader();
         loader = new Loader();
-        renderer = new Renderer(DisplayManager::getWidth(), DisplayManager::getHeight());
+        renderer = new Renderer(shader);
         viewCamera = new Camera();
         cameraInput = new CameraInput(viewCamera);
 

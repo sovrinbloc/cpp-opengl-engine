@@ -24,11 +24,12 @@ private:
     glm::mat4 projectionMatrix;
     float ScreenWidth = 800.0f;
     float ScreenHeight = 600.0f;
+    StaticShader *shader;
 public:
 
-    Renderer(float screenWidth = 800.0f, float screenHeight = 600.0f) : ScreenWidth(screenWidth),
-                                                                        ScreenHeight(screenHeight) {
-        this->projectionMatrix = Maths::createProjectionMatrix(FOVY, screenWidth, screenHeight, NEAR_PLANE, FAR_PLANE);
+    Renderer(StaticShader *shader)  {
+        this->shader = shader;
+        this->projectionMatrix = Maths::createProjectionMatrix(FOVY, ScreenWidth, ScreenHeight, NEAR_PLANE, FAR_PLANE);
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
     }
