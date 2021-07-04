@@ -23,9 +23,7 @@ private:
 
     std::map<TexturedModel *, std::vector<Entity*>> *entities;
 public:
-    MasterRenderer() {
-        shader = new StaticShader();
-        renderer = new Renderer(shader);
+    MasterRenderer() : shader(new StaticShader()), renderer( new Renderer(shader)) {
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
         shader->loadProjectionMatrix(Maths::createProjectionMatrix(FOVY, ScreenWidth, ScreenHeight, NEAR_PLANE, FAR_PLANE));

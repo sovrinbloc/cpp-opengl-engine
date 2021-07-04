@@ -6,6 +6,7 @@
 #define CRAFTPROJ_MAINGAMELOOP_H
 
 #include "../toolbox/FileSystem.h"
+#include "../toolbox/Utils.h"
 #include "../renderEngine/DisplayManager.h"
 #include "../renderEngine/Loader.h"
 #include "../renderEngine/Renderer.h"
@@ -54,17 +55,17 @@ public:
         std::vector<Entity *> allEntities;
 
         for (int i = 0; i < 200; ++i) {
-            float x = static_cast <float> (rand()) / static_cast <float> (RAND_MAX) * 100 - 50;
-            float y = static_cast <float> (rand()) / static_cast <float> (RAND_MAX) * 100 - 50;
-            float z = static_cast <float> (rand()) / static_cast <float> (RAND_MAX) * -300;
+            float x = randomFloat() * 100 - 50;
+            float y = randomFloat() * 100 - 50;
+            float z = randomFloat() * -300;
 
             float rx, ry, rz, scale;
-            rx = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-            ry = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-            rz = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+            rx = randomFloat();
+            ry = randomFloat();
+            rz = randomFloat();
             glm::vec3 rot(rx, ry, rz);
             rot = rot * 180.0f;
-            scale = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+            scale = randomFloat();
             allEntities.push_back(new Entity(staticModel, glm::vec3(x, y, z), rot, scale));
         }
 
