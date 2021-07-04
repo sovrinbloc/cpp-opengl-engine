@@ -2,8 +2,8 @@
 // Created by Joseph Alai on 6/30/21.
 //
 
-#ifndef ENGINE_RENDERER_H
-#define ENGINE_RENDERER_H
+#ifndef ENGINE_ENTITYRENDERER_H
+#define ENGINE_ENTITYRENDERER_H
 #define GL_SILENCE_DEPRECATION
 #define GLFW_INCLUDE_GLCOREARB
 
@@ -17,26 +17,16 @@
 #include "../shaders/StaticShader.h"
 #include "../toolbox/Maths.h"
 
-class Renderer {
+class EntityRenderer {
 private:
     StaticShader *shader;
 
 public:
 
-    Renderer(StaticShader *shader) {
+    EntityRenderer(StaticShader *shader) {
         this->shader = shader;
     }
 
-    /**
-     * @brief prepares and clears buffer and screen for each iteration of loop
-     */
-    void prepare() {
-        // render
-        // ------
-        glClearColor(0, 0, 0, 0);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    }
 
     // this is not fixxed. this needs to be finished
     void render(std::map<TexturedModel *, std::vector<Entity *>> *entities) {
@@ -94,4 +84,4 @@ private:
     }
 };
 
-#endif //ENGINE_RENDERER_H
+#endif //ENGINE_ENTITYRENDERER_H

@@ -1,19 +1,16 @@
 //
-// Created by Joseph Alai on 6/30/21.
+// Created by Joseph Alai on 7/4/21.
 //
 
-#ifndef ENGINE_STATICSHADER_H
-#define ENGINE_STATICSHADER_H
+#ifndef ENGINE_TERRAINSHADER_H
+#define ENGINE_TERRAINSHADER_H
+#include "../shaders/ShaderProgram.h"
 
-#include "ShaderProgram.h"
-#include "../entities/Light.h"
+static const char *TerrainVertexPath = "/shaders/terrain_vertex_shader.glsl";
+static const char *TerrainFragmentPath = "/shaders/terrain_fragment_shader.glsl";
 
-static const char *VertexPath = "/shaders/vertex_shader.glsl";
-static const char *FragmentPath = "/shaders/fragment_shader.glsl";
-
-class StaticShader : public ShaderProgram {
-private:
-    // attribute names
+class TerrainShader : public ShaderProgram {
+// attribute names
     const std::string position = "position";
     const std::string texture = "textureCoords";
     const std::string normal = "normal";
@@ -43,7 +40,7 @@ private:
 public:
     GLuint attribute;
 
-    StaticShader() : ShaderProgram(VertexPath, FragmentPath, nullptr) {
+    TerrainShader() : ShaderProgram(TerrainVertexPath, TerrainFragmentPath, nullptr) {
         this->initialize();
         this->loadTransformationMatrix();
     }
@@ -96,7 +93,5 @@ protected:
 
         location_viewPosition = getUniformLocation(viewPosition);
     }
-
 };
-
-#endif //ENGINE_STATICSHADER_H
+#endif //ENGINE_TERRAINSHADER_H

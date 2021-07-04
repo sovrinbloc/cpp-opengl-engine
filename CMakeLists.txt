@@ -3,7 +3,7 @@ project(engine)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(engine main.cpp renderEngine/DisplayManager.h engineTester/MainGameLoop.h entities/InputManager.h entities/Camera.h models/RawModel.h renderEngine/Loader.h renderEngine/Renderer.h textures/Texture.h shaders/ShaderProgram.h shaders/StaticShader.h libraries/images/stb_image.h textures/ModelTexture.h models/TexturedModel.h toolbox/FileSystem.h toolbox/Maths.h entities/Entity.h entities/CameraInput.h renderEngine/ObjLoader.h renderEngine/Vertex.h renderEngine/ModelData.h toolbox/Debug.h entities/Light.h renderEngine/MasterRenderer.h toolbox/Utils.h)
+add_executable(engine main.cpp renderEngine/DisplayManager.h engineTester/MainGameLoop.h entities/InputManager.h entities/Camera.h models/RawModel.h renderEngine/Loader.h renderEngine/EntityRenderer.h textures/Texture.h shaders/ShaderProgram.h shaders/StaticShader.h libraries/images/stb_image.h textures/ModelTexture.h models/TexturedModel.h toolbox/FileSystem.h toolbox/Maths.h entities/Entity.h entities/CameraInput.h renderEngine/ObjLoader.h renderEngine/Vertex.h renderEngine/ModelData.h toolbox/Debug.h entities/Light.h renderEngine/MasterRenderer.h toolbox/Utils.h terrain/Terrain.h shaders/TerrainShader.h renderEngine/TerrainRenderer.h)
 
 include_directories(deps/GLFW)
 add_subdirectory(deps/glfw)

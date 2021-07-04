@@ -9,7 +9,7 @@
 #include "../toolbox/Utils.h"
 #include "../renderEngine/DisplayManager.h"
 #include "../renderEngine/Loader.h"
-#include "../renderEngine/Renderer.h"
+#include "../renderEngine/EntityRenderer.h"
 #include "../shaders/StaticShader.h"
 #include "../textures/ModelTexture.h"
 #include "../models/TexturedModel.h"
@@ -31,7 +31,7 @@ public:
         StaticShader *shader;
 
         loader = new Loader();
-        viewCamera = new Camera();
+        viewCamera = new Camera(glm::vec3(0.0f, 4.5f, 0.0f));
         cameraInput = new CameraInput(viewCamera);
 
         RawModel *model;
@@ -69,15 +69,22 @@ public:
             allEntities.push_back(new Entity(staticModel, glm::vec3(x, y, z), rot, scale));
         }
 
+        Terrain *terrain, *terrain2, *terrain3, *terrain4;
+        terrain = new Terrain(-1, -1, loader, new ModelTexture(FileSystem::Path("/res/grass.png"), PNG));
+        terrain2 = new Terrain(0, -1, loader, new ModelTexture(FileSystem::Path("/res/grass.png"), PNG));
+
+
 
         MasterRenderer *renderer;
-        renderer = new MasterRenderer();
+        renderer = new MasterRenderer(cameraInput);
         while (DisplayManager::stayOpen()) {
             // game logic
+            renderer->processTerrain(terrain);
+            renderer->processTerrain(terrain2);
             for (Entity *booth : allEntities) {
                 renderer->processEntity(booth);
             }
-            renderer->render(light, cameraInput);
+            renderer->render(light);
             DisplayManager::updateDisplay();
         }
 
