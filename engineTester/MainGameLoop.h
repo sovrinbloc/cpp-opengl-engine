@@ -40,7 +40,7 @@ public:
         Entity *entity;
         Light *light;
 
-        light = new Light(glm::vec3(0.0, 0.0, -20), glm::vec3(1, 1, 1));
+        light = new Light(glm::vec3(0.0, 124.0, -20), glm::vec3(1, 1, 1));
         model = OBJLoader::loadObjModel("/res/stall/stall.obj", loader);
         texture = new ModelTexture(FileSystem::Path("/res/stall/stallTexture.png"), PNG);
         staticModel = new TexturedModel(model, texture);

@@ -56,7 +56,7 @@ public:
     void prepare() {
         // render
         // ------
-        glClearColor(0, 0, 0, 0);
+        glClearColor(.529, .808, .98, 1);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     }
