@@ -15,6 +15,7 @@
 #include "../toolbox/Maths.h"
 #include "../entities/CameraInput.h"
 #include "../renderEngine/ObjLoader.h"
+#include "../renderEngine/MasterRenderer.h"
 
 using namespace glm;
 
@@ -23,15 +24,12 @@ public:
     static void main() {
         DisplayManager::createDisplay();
 
-        StaticShader *shader;
         Loader *loader;
-        Renderer *renderer;
         Camera *viewCamera;
         CameraInput *cameraInput;
+        StaticShader *shader;
 
-        shader = new StaticShader();
         loader = new Loader();
-        renderer = new Renderer(shader);
         viewCamera = new Camera();
         cameraInput = new CameraInput(viewCamera);
 
@@ -53,18 +51,36 @@ public:
 
         entity = new Entity(staticModel, glm::vec3(-0.50f, 0.0f, 0.0f), glm::vec3(0), 0.1);
 
+        std::vector<Entity *> allEntities;
+
+        for (int i = 0; i < 200; ++i) {
+            float x = static_cast <float> (rand()) / static_cast <float> (RAND_MAX) * 100 - 50;
+            float y = static_cast <float> (rand()) / static_cast <float> (RAND_MAX) * 100 - 50;
+            float z = static_cast <float> (rand()) / static_cast <float> (RAND_MAX) * -300;
+
+            float rx, ry, rz, scale;
+            rx = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+            ry = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+            rz = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+            glm::vec3 rot(rx, ry, rz);
+            rot = rot * 180.0f;
+            scale = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+            allEntities.push_back(new Entity(staticModel, glm::vec3(x, y, z), rot, scale));
+        }
+
+
+        MasterRenderer *renderer;
+        renderer = new MasterRenderer();
         while (DisplayManager::stayOpen()) {
             // game logic
-            entity->rotate(glm::vec3(0.0f, 0.1f, 0.0f));
-            renderer->prepare();
-            shader->start();
-            shader->loadLight(light);
-            renderer->render(cameraInput, entity, shader);
-            shader->stop();
+            for (Entity *booth : allEntities) {
+                renderer->processEntity(booth);
+            }
+            renderer->render(light, cameraInput);
             DisplayManager::updateDisplay();
         }
 
-        shader->cleanUp();
+        renderer->cleanUp();
         loader->cleanUp();
         DisplayManager::closeDisplay();
     }

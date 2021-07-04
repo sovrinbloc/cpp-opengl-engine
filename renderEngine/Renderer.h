@@ -7,6 +7,8 @@
 #define GL_SILENCE_DEPRECATION
 #define GLFW_INCLUDE_GLCOREARB
 
+#include <map>
+#include <set>
 #include <GLFW/glfw3.h>
 #include "../entities/CameraInput.h"
 #include "../entities/Entity.h"
@@ -15,23 +17,16 @@
 #include "../shaders/StaticShader.h"
 #include "../toolbox/Maths.h"
 
-static const float FOVY = 45.0f;
-static const float NEAR_PLANE = 0.1f;
-static const float FAR_PLANE = 1000;
-
 class Renderer {
 private:
     glm::mat4 projectionMatrix;
-    float ScreenWidth = 800.0f;
-    float ScreenHeight = 600.0f;
+
     StaticShader *shader;
+
 public:
 
     Renderer(StaticShader *shader)  {
         this->shader = shader;
-        this->projectionMatrix = Maths::createProjectionMatrix(FOVY, ScreenWidth, ScreenHeight, NEAR_PLANE, FAR_PLANE);
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_BACK);
     }
 
     /**
@@ -45,11 +40,67 @@ public:
 
     }
 
+    // this is not fixxed. this needs to be finished
+    void render(std::map<TexturedModel *, std::vector<Entity*>> *entities) {
+        std::map<TexturedModel *, std::vector<Entity*>>::iterator it = entities->begin();
+        TexturedModel *model;
+        while (it != entities->end()) {
+            model = it->first;
+            prepareTexturedModel(model);
+//            std::vector<Entity *>batch = (*entities)[model];
+            std::vector<Entity *>batch = entities->find(model)->second;
+            batch = entities->find(model)->second;
+            for (Entity *entity : batch) {
+                prepareInstance(entity);
+                // draw elements
+                glDrawElements(GL_TRIANGLES, model->getRawModel()->getVertexCount(), GL_UNSIGNED_INT, 0);
+
+            }
+            unbindTexturedModel();
+            it++;
+        }
+
+    }
+
+private:
+    void prepareTexturedModel(TexturedModel *model) {
+        RawModel *rawModel = model->getRawModel();
+
+        // bind the current vao
+        glBindVertexArray(rawModel->getVaoID());
+
+        glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(1);
+        glEnableVertexAttribArray(2);
+
+        ModelTexture *texture = model->getModelTexture();
+        shader->loadShineVariables(texture->getShineDamper(), texture->getReflectivity(), texture->getAmbient());
+        glActiveTexture(GL_TEXTURE0);
+        // bind texture
+        model->getModelTexture()->bindTexture();
+
+    }
+
+    void unbindTexturedModel() {
+        // clean up
+        glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(1);
+        glDisableVertexAttribArray(2);
+        glBindVertexArray(0);
+    }
+
+    void prepareInstance(Entity *entity) {
+        // creates the matrices to be passed into the shader
+        glm::mat4 transformationMatrix = Maths::createTransformationMatrix(entity->getPosition(), entity->getRotation(),
+                                                                           entity->getScale());
+        shader->loadTransformationMatrix(transformationMatrix);
+    }
+public:
+
     /**
      * @brief draws actual textures and shapes on the screen
      *
      * @param texturedModel
-     */
     void render(CameraInput *cameraInput, Entity *entity, StaticShader *shader) {
         TexturedModel *model = entity->getModel();
         RawModel *rawModel = model->getRawModel();
@@ -65,22 +116,23 @@ public:
         // creates the matrices to be passed into the shader
         glm::mat4 transformationMatrix = Maths::createTransformationMatrix(entity->getPosition(), entity->getRotation(),
                                                                            entity->getScale());
+        shader->loadTransformationMatrix(transformationMatrix);
 
         this->projectionMatrix = Maths::createProjectionMatrix(viewCamera->Zoom, ScreenWidth, ScreenHeight, NEAR_PLANE, FAR_PLANE);
 
         // checks for input on the keyboard.
         cameraInput->move();
 
-        // bind texture
-        model->getModelTexture()->bindTexture();
-
         // loads the matrices into the shader
-        shader->loadTransformationMatrix(transformationMatrix);
         shader->loadProjectionMatrix(projectionMatrix);
         shader->loadViewMatrix(viewCamera->GetViewMatrix());
         shader->loadViewPosition(viewCamera);
         ModelTexture *texture = model->getModelTexture();
+
         shader->loadShineVariables(texture->getShineDamper(), texture->getReflectivity(), texture->getAmbient());
+        glActiveTexture(GL_TEXTURE0);
+        // bind texture
+        model->getModelTexture()->bindTexture();
 
         // draw elements
         glDrawElements(GL_TRIANGLES, rawModel->getVertexCount(), GL_UNSIGNED_INT, 0);
@@ -91,11 +143,8 @@ public:
         glDisableVertexAttribArray(2);
         glBindVertexArray(0);
     }
+     **/
 
-    void updatePerspective(float width, float height) {
-        this->ScreenWidth = width;
-        this->ScreenHeight = height;
-    }
 
 };
 
