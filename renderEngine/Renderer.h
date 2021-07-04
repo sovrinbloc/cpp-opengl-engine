@@ -29,6 +29,8 @@ public:
     Renderer(float screenWidth = 800.0f, float screenHeight = 600.0f) : ScreenWidth(screenWidth),
                                                                         ScreenHeight(screenHeight) {
         this->projectionMatrix = Maths::createProjectionMatrix(FOVY, screenWidth, screenHeight, NEAR_PLANE, FAR_PLANE);
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
     }
 
     /**
@@ -77,7 +79,7 @@ public:
         shader->loadViewMatrix(viewCamera->GetViewMatrix());
         shader->loadViewPosition(viewCamera);
         ModelTexture *texture = model->getModelTexture();
-        shader->loadShineVariables(texture->getShineDamper(), texture->getShineDamper());
+        shader->loadShineVariables(texture->getShineDamper(), texture->getReflectivity(), texture->getAmbient());
 
         // draw elements
         glDrawElements(GL_TRIANGLES, rawModel->getVertexCount(), GL_UNSIGNED_INT, 0);

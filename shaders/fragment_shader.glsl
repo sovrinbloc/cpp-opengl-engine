@@ -16,14 +16,18 @@ uniform vec3 viewPosition;
 
 uniform float reflectivity;
 uniform float shineDamper;
+uniform float ambientStrength;
 
 void main()
 {
+
+    vec3 ambient = ambientStrength * lightColor;
+
     vec3 unitNormal = normalize(surfaceNormal);
     vec3 unitLightVector = normalize(toLightVector);
 
     float nDot1 = dot(unitNormal, unitLightVector);
-    float brightness = max(nDot1, 0.0);
+    float brightness = max(nDot1, 0.2);
     vec3 diffuse = brightness *  lightColor;
 
     vec3 unitVectorToCamera = normalize(viewPosition - vec3(worldPosition));
@@ -36,9 +40,6 @@ void main()
     vec3 specular = dampedFactor * reflectivity * lightColor;
 
 
-    out_color = vec4(diffuse, 1.0) * texture(textureSampler, pass_textureCoords) + vec4(specular, 1.0);
-
-
-
+    out_color = vec4(diffuse, 1.0) * texture(textureSampler, pass_textureCoords) + vec4(ambient, 1.0) + vec4(specular, 1.0);
 
 }

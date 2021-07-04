@@ -25,6 +25,7 @@ private:
     const std::string lightPosition = "lightPosition";
     const std::string lightColor = "lightColor";
     const std::string shineDamper = "shineDamper";
+    const std::string ambientStrength = "ambientStrength";
     const std::string reflectivity = "reflectivity";
 
     const std::string viewPosition = "viewPosition"; // for camera
@@ -36,6 +37,7 @@ private:
     GLint location_lightColor;
     GLint location_shineDamper;
     GLint location_reflectivity;
+    GLint location_ambientStrength;
 
     GLint location_viewPosition; // for location
 public:
@@ -69,9 +71,10 @@ public:
         this->setVec3(location_lightColor, light->getColor());
     }
 
-    void loadShineVariables(float damper, float reflect) {
+    void loadShineVariables(float damper, float reflect, float ambientStrength) {
         this->setFloat(location_shineDamper, damper);
         this->setFloat(location_reflectivity, reflect);
+        this->setFloat(location_ambientStrength, ambientStrength);
     }
 
     void loadViewPosition(Camera *camera) {
@@ -89,6 +92,7 @@ protected:
         location_lightColor = getUniformLocation(lightColor);
         location_shineDamper = getUniformLocation(shineDamper);
         location_reflectivity = getUniformLocation(reflectivity);
+        location_ambientStrength = getUniformLocation(ambientStrength);
 
         location_viewPosition = getUniformLocation(viewPosition);
     }

@@ -6,6 +6,7 @@
 #define ENGINE_LIGHT_H
 #include "glm/glm.hpp"
 using namespace glm;
+
 class Light {
 private:
     vec3 position;

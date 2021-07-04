@@ -53,14 +53,15 @@ public:
         staticModel = new TexturedModel(model, texturedModel);
         ModelTexture *texture = staticModel->getModelTexture();
         texture->setShineDamper(10);
-        texture->setReflectivity(1);
+        texture->setReflectivity(0.5f);
+        texture->setAmbient(0.1);
 
 
         entity = new Entity(staticModel, glm::vec3(-0.50f, 0.0f, 0.0f), glm::vec3(0), 0.1);
 
         while (DisplayManager::stayOpen()) {
             // game logic
-            entity->increasePosition(glm::vec3(0.0f, 0.0f, -0.01f));
+//            entity->increasePosition(glm::vec3(0.0f, 0.0f, -0.01f));
             entity->rotate(glm::vec3(0.0f, 0.1f, 0.3f));
             renderer->prepare();
             shader->start();

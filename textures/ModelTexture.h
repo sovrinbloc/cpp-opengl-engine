@@ -5,14 +5,24 @@
 #ifndef ENGINE_MODELTEXTURE_H
 #define ENGINE_MODELTEXTURE_H
 #include "Texture.h"
+
 class ModelTexture : public Texture{
 public:
     ModelTexture(std::string filename, ImageType type) : Texture(filename, type) {}
 
 private:
     float shineDamper = 1;
-    float reflectivity = 0;
+    float reflectivity = 0.5;
+    float ambient = 0.1;
 public:
+    float getAmbient() {
+        return ambient;
+    }
+
+    void setAmbient(float ambient) {
+        this->ambient = ambient;
+    }
+
     float getShineDamper() const {
         return shineDamper;
     }
@@ -26,7 +36,7 @@ public:
     }
 
     void setReflectivity(float reflectivity) {
-        ModelTexture::reflectivity = reflectivity;
+        this->reflectivity = reflectivity;
     }
 
 };
