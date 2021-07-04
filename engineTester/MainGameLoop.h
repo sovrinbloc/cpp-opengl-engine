@@ -30,28 +30,22 @@ public:
         CameraInput *cameraInput;
 
         shader = new StaticShader();
-
         loader = new Loader();
-
         renderer = new Renderer(DisplayManager::getWidth(), DisplayManager::getHeight());
-
         viewCamera = new Camera();
-
         cameraInput = new CameraInput(viewCamera);
 
         RawModel *model;
-        ModelTexture *texturedModel;
+        ModelTexture *texture;
         TexturedModel *staticModel;
         Entity *entity;
         Light *light;
 
         light = new Light(glm::vec3(0.0, 0.0, -20), glm::vec3(1, 1, 1));
-
         model = OBJLoader::loadObjModel("/res/stall/stall.obj", loader);
+        texture = new ModelTexture(FileSystem::Path("/res/stall/stallTexture.png"), PNG);
+        staticModel = new TexturedModel(model, texture);
 
-        texturedModel = new ModelTexture(FileSystem::Path("/res/stall/stallTexture.png"), PNG);
-        staticModel = new TexturedModel(model, texturedModel);
-        ModelTexture *texture = staticModel->getModelTexture();
         texture->setShineDamper(10);
         texture->setReflectivity(0.5f);
         texture->setAmbient(0.1);
@@ -61,8 +55,7 @@ public:
 
         while (DisplayManager::stayOpen()) {
             // game logic
-//            entity->increasePosition(glm::vec3(0.0f, 0.0f, -0.01f));
-            entity->rotate(glm::vec3(0.0f, 0.1f, 0.3f));
+            entity->rotate(glm::vec3(0.0f, 0.1f, 0.0f));
             renderer->prepare();
             shader->start();
             shader->loadLight(light);
