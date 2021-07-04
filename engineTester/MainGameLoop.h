@@ -28,7 +28,6 @@ public:
         Loader *loader;
         Camera *viewCamera;
         CameraInput *cameraInput;
-        StaticShader *shader;
 
         loader = new Loader();
         viewCamera = new Camera(glm::vec3(0.0f, 4.5f, 0.0f));
@@ -37,7 +36,6 @@ public:
         RawModel *model;
         ModelTexture *texture;
         TexturedModel *staticModel;
-        Entity *entity;
         Light *light;
 
         light = new Light(glm::vec3(0.0, 124.0, -20), glm::vec3(1, 1, 1));
@@ -49,8 +47,6 @@ public:
         texture->setReflectivity(0.5f);
         texture->setAmbient(0.1);
 
-
-        entity = new Entity(staticModel, glm::vec3(-0.50f, 0.0f, 0.0f), glm::vec3(0), 0.1);
 
         std::vector<Entity *> allEntities;
 
@@ -69,7 +65,7 @@ public:
             allEntities.push_back(new Entity(staticModel, glm::vec3(x, y, z), rot, scale));
         }
 
-        Terrain *terrain, *terrain2, *terrain3, *terrain4;
+        Terrain *terrain, *terrain2;
         terrain = new Terrain(-1, -1, loader, new ModelTexture(FileSystem::Path("/res/grass.png"), PNG));
         terrain2 = new Terrain(0, -1, loader, new ModelTexture(FileSystem::Path("/res/grass.png"), PNG));
 
