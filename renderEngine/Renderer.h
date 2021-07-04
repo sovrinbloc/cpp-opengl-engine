@@ -75,6 +75,9 @@ public:
         shader->loadTransformationMatrix(transformationMatrix);
         shader->loadProjectionMatrix(projectionMatrix);
         shader->loadViewMatrix(viewCamera->GetViewMatrix());
+        shader->loadViewPosition(viewCamera);
+        ModelTexture *texture = model->getModelTexture();
+        shader->loadShineVariables(texture->getShineDamper(), texture->getShineDamper());
 
         // draw elements
         glDrawElements(GL_TRIANGLES, rawModel->getVertexCount(), GL_UNSIGNED_INT, 0);

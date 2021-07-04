@@ -12,3 +12,5 @@ Makefile
 *.zip
 *.log
 lib/*
+*.blend1
+*.mtl

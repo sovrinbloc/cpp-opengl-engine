@@ -30,7 +30,7 @@ public:
             string path,
             Loader *loader
     ) {
-        std::vector<unsigned short> indices;
+        std::vector<int> indices;
         std::vector<glm::vec3> vertices;
         std::vector<glm::vec2> uvs;
         std::vector<glm::vec3> normals;
@@ -89,6 +89,9 @@ public:
             outNormals.push_back(normals[i].y);
             outNormals.push_back(normals[i].z);
         }
+
+        ModelData data(&outVertices, &outUvs, &outNormals, &indices, 0);
+        return loader->loadToVAO(&data);
         // The "scene" pointer will be deleted automatically by "importer"
         return loader->loadToVAO(outVertices, outUvs, outNormals, outIndices);
     }

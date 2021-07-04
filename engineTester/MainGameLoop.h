@@ -39,9 +39,8 @@ public:
 
         cameraInput = new CameraInput(viewCamera);
 
-
         RawModel *model;
-        ModelTexture *texture;
+        ModelTexture *texturedModel;
         TexturedModel *staticModel;
         Entity *entity;
         Light *light;
@@ -50,9 +49,12 @@ public:
 
         model = OBJLoader::loadObjModel("/res/stall/stall.obj", loader);
 
-        texture = new ModelTexture(FileSystem::Path("/res/stall/stallTexture.png"), PNG);
+        texturedModel = new ModelTexture(FileSystem::Path("/res/stall/stallTexture.png"), PNG);
+        staticModel = new TexturedModel(model, texturedModel);
+        ModelTexture *texture = staticModel->getModelTexture();
+        texture->setShineDamper(10);
+        texture->setReflectivity(1);
 
-        staticModel = new TexturedModel(model, texture);
 
         entity = new Entity(staticModel, glm::vec3(-0.50f, 0.0f, 0.0f), glm::vec3(0), 0.1);
 

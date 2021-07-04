@@ -24,12 +24,20 @@ private:
     const std::string viewMatrix = "viewMatrix";
     const std::string lightPosition = "lightPosition";
     const std::string lightColor = "lightColor";
+    const std::string shineDamper = "shineDamper";
+    const std::string reflectivity = "reflectivity";
 
-    int location_transformationMatrix;
-    int location_projectionMatrix;
-    int location_viewMatrix;
-    int location_lightPosition;
-    int location_lightColor;
+    const std::string viewPosition = "viewPosition"; // for camera
+
+    GLint location_transformationMatrix;
+    GLint location_projectionMatrix;
+    GLint location_viewMatrix;
+    GLint location_lightPosition;
+    GLint location_lightColor;
+    GLint location_shineDamper;
+    GLint location_reflectivity;
+
+    GLint location_viewPosition; // for location
 public:
     GLuint attribute;
 
@@ -61,6 +69,16 @@ public:
         this->setVec3(location_lightColor, light->getColor());
     }
 
+    void loadShineVariables(float damper, float reflect) {
+        this->setFloat(location_shineDamper, damper);
+        this->setFloat(location_reflectivity, reflect);
+    }
+
+    void loadViewPosition(Camera *camera) {
+        this->setVec3(location_viewPosition, camera->Position);
+    }
+
+
 
 protected:
     void getAllUniformLocations() {
@@ -69,6 +87,10 @@ protected:
         location_viewMatrix = getUniformLocation(viewMatrix);
         location_lightPosition = getUniformLocation(lightPosition);
         location_lightColor = getUniformLocation(lightColor);
+        location_shineDamper = getUniformLocation(shineDamper);
+        location_reflectivity = getUniformLocation(reflectivity);
+
+        location_viewPosition = getUniformLocation(viewPosition);
     }
 
 };

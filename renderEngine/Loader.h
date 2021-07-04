@@ -67,7 +67,7 @@ private:
         return vaoID;
     }
 
-    void storeDataInAttributeList(int attributeNumber, int coordinateSize, std::vector<GLfloat> positions) {
+    void storeDataInAttributeList(GLuint attributeNumber, int coordinateSize, std::vector<GLfloat> positions) {
         GLuint vboID;
         glGenBuffers(1, &vboID);
         this->vbos.push_back(vboID);

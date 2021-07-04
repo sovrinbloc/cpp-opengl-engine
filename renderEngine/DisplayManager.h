@@ -46,6 +46,7 @@ public:
         // configure global opengl state
         // -----------------------------
         glEnable(GL_DEPTH_TEST);
+        return 1;
     }
 
     static void updateDisplay() {

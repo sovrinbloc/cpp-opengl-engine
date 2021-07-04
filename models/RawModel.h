@@ -8,13 +8,13 @@
 class RawModel {
 private:
     int vaoID;
-    int vertexCount;
+    long vertexCount;
 public:
-    RawModel(int vaoID, int vertexCount) {
+    RawModel(int vaoID, long vertexCount) {
         this->vaoID = vaoID;
         this->vertexCount = vertexCount;
     }
-    int getVaoID() {
+    GLuint getVaoID() {
         return this->vaoID;
     }
     int getVertexCount() {
