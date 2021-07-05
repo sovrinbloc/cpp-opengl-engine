@@ -14,7 +14,25 @@ private:
     float shineDamper = 1;
     float reflectivity = 0.5;
     float ambient = 0.1;
+    bool hasTransparency = false;
+    bool useFakeLighting = false;
 public:
+    bool isUseFakeLighting() const {
+        return useFakeLighting;
+    }
+
+    void setUseFakeLighting(bool useFakeLighting) {
+        ModelTexture::useFakeLighting = useFakeLighting;
+    }
+
+    bool isHasTransparency() const {
+        return hasTransparency;
+    }
+
+    void setHasTransparency(bool hasTransparency) {
+        ModelTexture::hasTransparency = hasTransparency;
+    }
+
     float getAmbient() {
         return ambient;
     }

@@ -11,6 +11,7 @@
 #include "../entities/CameraInput.h"
 #include "../entities/Camera.h"
 #include "../toolbox/Maths.h"
+#include "RenderStyle.h"
 #include "EntityRenderer.h"
 #include "TerrainRenderer.h"
 
@@ -38,8 +39,7 @@ public:
                                                camera(cameraInput), projectionMatrix(
                     Maths::createProjectionMatrix(FOVY, ScreenWidth, ScreenHeight, NEAR_PLANE, FAR_PLANE)),
                     terrainShader(new TerrainShader()){
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_BACK);
+        RenderStyle::enableCulling();
         entities = new std::map<TexturedModel *, std::vector<Entity *>>;
         terrains  = new std::vector<Terrain *>;
         terrainRenderer = new TerrainRenderer(terrainShader, this->projectionMatrix);

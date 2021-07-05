@@ -16,6 +16,7 @@
 #include "../models/TexturedModel.h"
 #include "../shaders/StaticShader.h"
 #include "../toolbox/Maths.h"
+#include "RenderStyle.h"
 
 class EntityRenderer {
 private:
@@ -27,8 +28,11 @@ public:
         this->shader = shader;
     }
 
-
-    // this is not fixxed. this needs to be finished
+    /**
+     * @brief accepts a map[model]std::vector<Entity *>, and traverses through
+     *        it, and draws them -- so as not to copy objects.
+     * @param entities
+     */
     void render(std::map<TexturedModel *, std::vector<Entity *>> *entities) {
         std::map<TexturedModel *, std::vector<Entity *>>::iterator it = entities->begin();
         TexturedModel *model;
@@ -46,10 +50,15 @@ public:
             unbindTexturedModel();
             it++;
         }
-
     }
 
 private:
+    /**
+     * @brief binds the attribute arrays of the model. disables
+     *        or enables culling based on the transparency of the texture,
+     *        loads the shine variables, and binds the texture.
+     * @param model
+     */
     void prepareTexturedModel(TexturedModel *model) {
         RawModel *rawModel = model->getRawModel();
 
@@ -61,14 +70,23 @@ private:
         glEnableVertexAttribArray(2);
 
         ModelTexture *texture = model->getModelTexture();
+
+        if (texture->isHasTransparency()) {
+            RenderStyle::disableCulling();
+        }
+
+        shader->loadFakeLightingVariable(texture->isUseFakeLighting());
         shader->loadShineVariables(texture->getShineDamper(), texture->getReflectivity(), texture->getAmbient());
         glActiveTexture(GL_TEXTURE0);
         // bind texture
         model->getModelTexture()->bindTexture();
-
     }
 
+    /**
+     * @brief unbinds the texture model after it's use.
+     */
     void unbindTexturedModel() {
+        RenderStyle::enableCulling();
         // clean up
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
@@ -76,6 +94,10 @@ private:
         glBindVertexArray(0);
     }
 
+    /**
+     * @brief sets the initial transformation (view) matrix.
+     * @param entity
+     */
     void prepareInstance(Entity *entity) {
         // creates the matrices to be passed into the shader
         glm::mat4 transformationMatrix = Maths::createTransformationMatrix(entity->getPosition(), entity->getRotation(),

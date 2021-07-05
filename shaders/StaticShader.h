@@ -27,6 +27,7 @@ private:
     const std::string shineDamper = "shineDamper";
     const std::string ambientStrength = "ambientStrength";
     const std::string reflectivity = "reflectivity";
+    const std::string useFakeLighting = "useFakeLighting";
 
     const std::string viewPosition = "viewPosition"; // for camera
 
@@ -38,8 +39,9 @@ private:
     GLint location_shineDamper;
     GLint location_reflectivity;
     GLint location_ambientStrength;
+    GLint location_useFakeLighting;
 
-    GLint location_viewPosition; // for location
+    GLint location_viewPosition; // for camera
 public:
     GLuint attribute;
 
@@ -77,6 +79,10 @@ public:
         this->setFloat(location_ambientStrength, ambientStrength);
     }
 
+    void loadFakeLightingVariable(bool useFakeLighting) {
+        this->setBool(location_viewPosition, useFakeLighting);
+    }
+
     void loadViewPosition(Camera *camera) {
         this->setVec3(location_viewPosition, camera->Position);
     }
@@ -93,6 +99,7 @@ protected:
         location_shineDamper = getUniformLocation(shineDamper);
         location_reflectivity = getUniformLocation(reflectivity);
         location_ambientStrength = getUniformLocation(ambientStrength);
+        location_useFakeLighting = getUniformLocation(useFakeLighting);
 
         location_viewPosition = getUniformLocation(viewPosition);
     }

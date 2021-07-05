@@ -33,36 +33,46 @@ public:
         viewCamera = new Camera(glm::vec3(0.0f, 4.5f, 0.0f));
         cameraInput = new CameraInput(viewCamera);
 
-        RawModel *model;
-        ModelTexture *texture;
-        TexturedModel *staticModel;
+        RawModel *grassModel, *treeModel;
+        ModelTexture *grassTexture, *treeTexture;
+        TexturedModel *staticGrass, *staticTree;
         Light *light;
 
         light = new Light(glm::vec3(0.0, 124.0, -20), glm::vec3(1, 1, 1));
-        model = OBJLoader::loadObjModel("/res/stall/stall.obj", loader);
-        texture = new ModelTexture(FileSystem::Path("/res/stall/stallTexture.png"), PNG);
-        staticModel = new TexturedModel(model, texture);
 
-        texture->setShineDamper(10);
-        texture->setReflectivity(0.5f);
-        texture->setAmbient(0.1);
+        grassModel = OBJLoader::loadObjModel("/res/tut/grassModel.obj", loader);
+        grassTexture = new ModelTexture(FileSystem::Path("/res/tut/grassTexture.png"), PNG);
+        staticGrass = new TexturedModel(grassModel, grassTexture);
+        grassTexture->setHasTransparency(true);
+//        grassTexture->setUseFakeLighting(true);
 
+        treeModel = OBJLoader::loadObjModel("/res/tut/lowPolyTree.obj", loader);
+        treeTexture = new ModelTexture(FileSystem::Path("/res/tut/lowPolyTree.png"), PNG);
+        staticTree = new TexturedModel(treeModel, treeTexture);
+
+        grassTexture->setShineDamper(10);
+        grassTexture->setReflectivity(0.5f);
+        grassTexture->setAmbient(0.1);
+
+        treeTexture->setShineDamper(100);
+        treeTexture->setReflectivity(0.1f);
+        treeTexture->setAmbient(0.1);
 
         std::vector<Entity *> allEntities;
 
-        for (int i = 0; i < 200; ++i) {
+        for (int i = 0; i < 50; ++i) {
             float x = randomFloat() * 100 - 50;
-            float y = randomFloat() * 100 - 50;
+            float y = randomFloat() * 0;
             float z = randomFloat() * -300;
 
             float rx, ry, rz, scale;
-            rx = randomFloat();
-            ry = randomFloat();
-            rz = randomFloat();
+            rx = 0;
+            ry = 0;
+            rz = 0;
             glm::vec3 rot(rx, ry, rz);
             rot = rot * 180.0f;
-            scale = randomFloat();
-            allEntities.push_back(new Entity(staticModel, glm::vec3(x, y, z), rot, scale));
+            allEntities.push_back(new Entity(staticGrass, glm::vec3(x, y, z), rot));
+            allEntities.push_back(new Entity(staticTree, glm::vec3(x * 1.5, y, z * 1.5), rot, randomFloat()));
         }
 
         Terrain *terrain, *terrain2;
