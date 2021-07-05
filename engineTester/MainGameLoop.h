@@ -33,9 +33,9 @@ public:
         viewCamera = new Camera(glm::vec3(0.0f, 4.5f, 0.0f));
         cameraInput = new CameraInput(viewCamera);
 
-        RawModel *grassModel, *treeModel;
-        ModelTexture *grassTexture, *treeTexture;
-        TexturedModel *staticGrass, *staticTree;
+        RawModel *grassModel, *treeModel, *stallModel;
+        ModelTexture *grassTexture, *treeTexture, *stallTexture;
+        TexturedModel *staticGrass, *staticTree, *staticStall;
         Light *light;
 
         light = new Light(glm::vec3(0.0, 124.0, -20), glm::vec3(1, 1, 1));
@@ -50,6 +50,10 @@ public:
         treeTexture = new ModelTexture(FileSystem::Path("/res/tut/lowPolyTree.png"), PNG);
         staticTree = new TexturedModel(treeModel, treeTexture);
 
+        stallModel = OBJLoader::loadObjModel("/res/stall/stall.obj", loader);
+        stallTexture = new ModelTexture(FileSystem::Path("/res/stall/stallTexture.png"), PNG);
+        staticStall = new TexturedModel(stallModel, stallTexture);
+
         grassTexture->setShineDamper(10);
         grassTexture->setReflectivity(0.5f);
         grassTexture->setAmbient(0.1);
@@ -58,7 +62,12 @@ public:
         treeTexture->setReflectivity(0.1f);
         treeTexture->setAmbient(0.1);
 
+        stallTexture->setShineDamper(100);
+        stallTexture->setReflectivity(0.1f);
+        stallTexture->setAmbient(0.1);
+
         std::vector<Entity *> allEntities;
+        allEntities.push_back(new Entity(staticStall, glm::vec3(1.0f, 0.0f, -82.4f), glm::vec3(0.0f, 180.0f, 0.0f)));
 
         for (int i = 0; i < 50; ++i) {
             float x = randomFloat() * 100 - 50;
