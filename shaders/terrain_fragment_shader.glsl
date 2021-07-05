@@ -5,6 +5,7 @@ in vec3 surfaceNormal;
 in vec3 toLightVector;
 
 in vec4 worldPosition;
+in float visibility;
 
 out vec4 out_color;
 
@@ -17,6 +18,7 @@ uniform vec3 viewPosition;
 uniform float reflectivity;
 uniform float  shineDamper;
 uniform float ambientStrength;
+uniform vec3 skyColor;
 
 void main()
 {
@@ -41,5 +43,6 @@ void main()
 
 
     out_color = vec4(diffuse, 1.0) * texture(textureSampler, pass_textureCoords) + vec4(ambient, 1.0) + vec4(specular, 1.0);
+    out_color = mix(vec4(skyColor, 1.0), out_color, visibility);
 
 }

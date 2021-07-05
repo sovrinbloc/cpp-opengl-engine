@@ -28,6 +28,7 @@ private:
     const std::string ambientStrength = "ambientStrength";
     const std::string reflectivity = "reflectivity";
     const std::string useFakeLighting = "useFakeLighting";
+    const std::string skyColor = "skyColor";
 
     const std::string viewPosition = "viewPosition"; // for camera
 
@@ -40,6 +41,7 @@ private:
     GLint location_reflectivity;
     GLint location_ambientStrength;
     GLint location_useFakeLighting;
+    GLint location_skyColor;
 
     GLint location_viewPosition; // for camera
 public:
@@ -80,7 +82,11 @@ public:
     }
 
     void loadFakeLightingVariable(bool useFakeLighting) {
-        this->setBool(location_viewPosition, useFakeLighting);
+        this->setBool(location_useFakeLighting, useFakeLighting);
+    }
+
+    void loadSkyColorVariable(glm::vec3 skyColor) {
+        this->setVec3(location_skyColor, skyColor);
     }
 
     void loadViewPosition(Camera *camera) {
@@ -100,6 +106,7 @@ protected:
         location_reflectivity = getUniformLocation(reflectivity);
         location_ambientStrength = getUniformLocation(ambientStrength);
         location_useFakeLighting = getUniformLocation(useFakeLighting);
+        location_skyColor = getUniformLocation(skyColor);
 
         location_viewPosition = getUniformLocation(viewPosition);
     }

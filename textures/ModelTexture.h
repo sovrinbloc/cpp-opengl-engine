@@ -22,7 +22,7 @@ public:
     }
 
     void setUseFakeLighting(bool useFakeLighting) {
-        ModelTexture::useFakeLighting = useFakeLighting;
+        this->useFakeLighting = useFakeLighting;
     }
 
     bool isHasTransparency() const {

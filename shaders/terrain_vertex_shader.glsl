@@ -7,6 +7,7 @@ out vec2 pass_textureCoords;
 out vec3 surfaceNormal;
 out vec3 toLightVector;
 out vec4 worldPosition;
+out float visibility;
 
 uniform mat4 transformationMatrix; // model matrix
 uniform mat4 viewMatrix; // view matrix
@@ -14,12 +15,20 @@ uniform mat4 projectionMatrix; // projection matrix
 
 uniform vec3 lightPosition;
 
+const float density = 0.007;
+const float gradient = 1.5;
+
 void main()
 {
     worldPosition = transformationMatrix * vec4(position, 1.0);
-    gl_Position = projectionMatrix * viewMatrix * worldPosition;
+    vec4 positionRelativeToCam = viewMatrix * worldPosition;
+    gl_Position = projectionMatrix * positionRelativeToCam;
     pass_textureCoords = textureCoords * 40.0;
 
     surfaceNormal = (transformationMatrix * vec4(normal, 0.0)).xyz;
     toLightVector = lightPosition - worldPosition.xyz;
+
+    float distance = length(positionRelativeToCam.xyz);
+    visibility = exp(-pow((distance * density), gradient));
+    visibility = clamp(visibility, 0.0, 1.0);
 }

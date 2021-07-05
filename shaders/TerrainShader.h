@@ -24,6 +24,7 @@ class TerrainShader : public ShaderProgram {
     const std::string shineDamper = "shineDamper";
     const std::string ambientStrength = "ambientStrength";
     const std::string reflectivity = "reflectivity";
+    const std::string skyColor = "skyColor";
 
     const std::string viewPosition = "viewPosition"; // for camera
 
@@ -35,6 +36,7 @@ class TerrainShader : public ShaderProgram {
     GLint location_shineDamper;
     GLint location_reflectivity;
     GLint location_ambientStrength;
+    GLint location_skyColor;
 
     GLint location_viewPosition; // for location
 public:
@@ -74,6 +76,10 @@ public:
         this->setFloat(location_ambientStrength, ambientStrength);
     }
 
+    void loadSkyColorVariable(glm::vec3 skyColor) {
+        this->setVec3(location_skyColor, skyColor);
+    }
+
     void loadViewPosition(Camera *camera) {
         this->setVec3(location_viewPosition, camera->Position);
     }
@@ -90,6 +96,7 @@ protected:
         location_shineDamper = getUniformLocation(shineDamper);
         location_reflectivity = getUniformLocation(reflectivity);
         location_ambientStrength = getUniformLocation(ambientStrength);
+        location_skyColor = getUniformLocation(skyColor);
 
         location_viewPosition = getUniformLocation(viewPosition);
     }

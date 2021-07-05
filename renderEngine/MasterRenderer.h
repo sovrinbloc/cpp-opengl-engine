@@ -57,6 +57,8 @@ public:
         // render
         // ------
         glClearColor(.529, .808, .98, 1);
+        shader->loadSkyColorVariable(glm::vec3(.529, .808, .98));
+        terrainShader->loadSkyColorVariable(glm::vec3(.529, .808, .98));
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     }
@@ -66,6 +68,7 @@ public:
 
         this->prepare();
         shader->start();
+        shader->loadSkyColorVariable(glm::vec3(.529, .808, .98));
         shader->loadLight(sun);
         shader->loadViewPosition(CameraInput::getCamera());
         shader->loadViewMatrix(CameraInput::getCamera()->GetViewMatrix());
@@ -75,6 +78,7 @@ public:
         shader->stop();
 
         terrainShader->start();
+        terrainShader->loadSkyColorVariable(glm::vec3(.529, .808, .98));
         terrainShader->loadLight(sun);
         terrainShader->loadViewPosition(CameraInput::getCamera());
         terrainShader->loadViewMatrix(CameraInput::getCamera()->GetViewMatrix());

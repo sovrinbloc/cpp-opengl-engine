@@ -44,7 +44,7 @@ public:
         grassTexture = new ModelTexture(FileSystem::Path("/res/tut/grassTexture.png"), PNG);
         staticGrass = new TexturedModel(grassModel, grassTexture);
         grassTexture->setHasTransparency(true);
-//        grassTexture->setUseFakeLighting(true);
+        grassTexture->setUseFakeLighting(true);
 
         treeModel = OBJLoader::loadObjModel("/res/tut/lowPolyTree.obj", loader);
         treeTexture = new ModelTexture(FileSystem::Path("/res/tut/lowPolyTree.png"), PNG);
