@@ -9,7 +9,6 @@
 #include <iostream>
 #include "../shaders/StaticShader.h"
 #include "../entities/CameraInput.h"
-#include "../entities/Camera.h"
 #include "../toolbox/Maths.h"
 #include "RenderStyle.h"
 #include "EntityRenderer.h"
@@ -37,7 +36,7 @@ private:
 public:
     MasterRenderer(CameraInput *cameraInput) : shader(new StaticShader()), renderer(new EntityRenderer(shader)),
                                                camera(cameraInput), projectionMatrix(
-                    Maths::createProjectionMatrix(FOVY, ScreenWidth, ScreenHeight, NEAR_PLANE, FAR_PLANE)),
+                    Maths::createProjectionMatrix(FOVY, SRC_WIDTH, SRC_HEIGHT, NEAR_PLANE, FAR_PLANE)),
                     terrainShader(new TerrainShader()){
         RenderStyle::enableCulling();
         entities = new std::map<TexturedModel *, std::vector<Entity *>>;
@@ -118,8 +117,8 @@ public:
     }
 
     void updatePerspective(float width, float height) {
-        ScreenWidth = width;
-        ScreenHeight = height;
+        SRC_WIDTH = width;
+        SRC_HEIGHT = height;
     }
 
 

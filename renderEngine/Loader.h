@@ -28,12 +28,12 @@ public:
 
     RawModel *loadToVAO(ModelData *data) {
         int vaoID = this->createVAO();
-        this->bindIndicesBuffer(*data->getIndices());
-        this->storeDataInAttributeList(0, 3, *data->getVertices());
-        this->storeDataInAttributeList(1, 2, *data->getTextureCoords());
-        this->storeDataInAttributeList(2, 3, *data->getNormals());
+        this->bindIndicesBuffer(data->getIndices());
+        this->storeDataInAttributeList(0, 3, data->getVertices());
+        this->storeDataInAttributeList(1, 2, data->getTextureCoords());
+        this->storeDataInAttributeList(2, 3, data->getNormals());
         this->unbindVAO();
-        return new RawModel(vaoID, (*data->getIndices()).size());
+        return new RawModel(vaoID, (data->getIndices()).size());
     }
 
     Texture *loadTexture(std::string fileName) {

@@ -9,7 +9,6 @@
 #define GLFW_INCLUDE_GLCOREARB
 
 #include <GLFW/glfw3.h>
-#include <cstdio>
 
 GLint SRC_WIDTH = 800;
 GLint SRC_HEIGHT = 600;
@@ -28,7 +27,7 @@ public:
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
-        window = glfwCreateWindow(SRC_WIDTH, SRC_HEIGHT, "LearnOpenGL", nullptr, nullptr);
+        window = glfwCreateWindow(SRC_WIDTH, SRC_HEIGHT, "ENGINE: Manifest (Alpha & Omega)", nullptr, nullptr);
         if (window == nullptr) {
             printf("Failed to create GLFW window\n");
             glfwTerminate();

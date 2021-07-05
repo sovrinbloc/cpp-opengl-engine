@@ -4,9 +4,10 @@
 
 #ifndef CRAFT_UTIL_H
 #define CRAFT_UTIL_H
-#include "png.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "../libraries/images/stb_image.h"
+#include "png.h"
+
 typedef enum {
     JPG = 1,
     PNG = 2,

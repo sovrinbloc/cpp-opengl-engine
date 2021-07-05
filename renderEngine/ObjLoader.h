@@ -18,7 +18,6 @@
 #include <assimp/Importer.hpp>      // C++ importer interface
 #include <assimp/scene.h>           // Output data structure
 #include <assimp/postprocess.h>     // Post processing flags
-#include <unordered_map>
 
 //#include "../toolbox/Debug.h" // quill debugging
 
@@ -90,14 +89,14 @@ public:
             outNormals.push_back(normals[i].z);
         }
 
-        ModelData data(&outVertices, &outUvs, &outNormals, &indices, 0);
+        ModelData data(outVertices, outUvs, outNormals, indices, 0);
         return loader->loadToVAO(&data);
         // The "scene" pointer will be deleted automatically by "importer"
         return loader->loadToVAO(outVertices, outUvs, outNormals, outIndices);
     }
 
 
-    static RawModel *loadObjModel(std::string filename, Loader *loader) {
+    static ModelData loadObjModel(std::string filename) {
         std::vector<Vertex*> vertices;
         std::vector<glm::vec3> normals;
         std::vector<glm::vec2> textures;
@@ -106,7 +105,6 @@ public:
         FILE *file = std::fopen(FileSystem::Path(std::move(filename)).c_str(), "r");
         if (file == nullptr) {
             printf("Impossible to open the file !\n");
-            return nullptr;
         }
 
         while (true) {
@@ -138,7 +136,6 @@ public:
 
                 if (matches != 9) {
                     printf("File can't be read by our simple parser : ( Try exporting with other options\n");
-                    return nullptr;
                 }
                 processVertex(vertexIndex[0], uvIndex[0], normalIndex[0], &vertices, &indices);
                 processVertex(vertexIndex[1], uvIndex[1], normalIndex[1], &vertices, &indices);
@@ -155,8 +152,9 @@ public:
 
         float furthest = convertDataToArrays(&vertices, &textures, &normals, &verticesArray,
                                              &texturesArray, &normalsArray);
-        ModelData data(&verticesArray, &texturesArray, &normalsArray, &indices, furthest);
-        return loader->loadToVAO(&data);
+        ModelData data(verticesArray, texturesArray, normalsArray, indices, furthest);
+        return data;
+//        return loader->loadToVAO(&data);
     }
 
     static void processVertex(float vertex, float uv, float normal, vector<Vertex*> *vertices, vector<int> *indices) {

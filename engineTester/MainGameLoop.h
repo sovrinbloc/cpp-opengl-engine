@@ -10,10 +10,8 @@
 #include "../renderEngine/DisplayManager.h"
 #include "../renderEngine/Loader.h"
 #include "../renderEngine/EntityRenderer.h"
-#include "../shaders/StaticShader.h"
 #include "../textures/ModelTexture.h"
 #include "../models/TexturedModel.h"
-#include "../toolbox/Maths.h"
 #include "../entities/CameraInput.h"
 #include "../renderEngine/ObjLoader.h"
 #include "../renderEngine/MasterRenderer.h"
@@ -40,17 +38,20 @@ public:
 
         light = new Light(glm::vec3(0.0, 124.0, -20), glm::vec3(1, 1, 1));
 
-        grassModel = OBJLoader::loadObjModel("/res/tut/grassModel.obj", loader);
+        ModelData grassData = OBJLoader::loadObjModel("/res/tut/grassModel.obj");
+        grassModel = loader->loadToVAO(&grassData);
         grassTexture = new ModelTexture(FileSystem::Path("/res/tut/grassTexture.png"), PNG);
         staticGrass = new TexturedModel(grassModel, grassTexture);
         grassTexture->setHasTransparency(true);
         grassTexture->setUseFakeLighting(true);
 
-        treeModel = OBJLoader::loadObjModel("/res/tut/lowPolyTree.obj", loader);
+        ModelData treeData = OBJLoader::loadObjModel("/res/tut/lowPolyTree.obj");
+        treeModel = loader->loadToVAO(&treeData);
         treeTexture = new ModelTexture(FileSystem::Path("/res/tut/lowPolyTree.png"), PNG);
         staticTree = new TexturedModel(treeModel, treeTexture);
 
-        stallModel = OBJLoader::loadObjModel("/res/stall/stall.obj", loader);
+        ModelData stallData = OBJLoader::loadObjModel("/res/stall/stall.obj");
+        stallModel = loader->loadToVAO(&stallData);
         stallTexture = new ModelTexture(FileSystem::Path("/res/stall/stallTexture.png"), PNG);
         staticStall = new TexturedModel(stallModel, stallTexture);
 
