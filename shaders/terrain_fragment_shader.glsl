@@ -1,4 +1,20 @@
 #version 330 core
+struct Material {
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+    float shininess;
+};
+uniform Material material;
+
+struct Light {
+    vec3 position;
+
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+};
+uniform Light light;
 
 in vec2 pass_textureCoords;
 in vec3 surfaceNormal;
@@ -23,14 +39,14 @@ uniform vec3 skyColor;
 void main()
 {
 
-    vec3 ambient = ambientStrength * lightColor;
+    vec3 ambient = light.ambient * material.ambient;
 
     vec3 unitNormal = normalize(surfaceNormal);
     vec3 unitLightVector = normalize(toLightVector);
 
     float nDot1 = dot(unitNormal, unitLightVector);
     float brightness = max(nDot1, 0.2);
-    vec3 diffuse = brightness *  lightColor;
+    vec3 diffuse = (brightness * material.diffuse) * light.diffuse;
 
     vec3 unitVectorToCamera = normalize(viewPosition - vec3(worldPosition));
     vec3 lightDirection = -unitLightVector;
@@ -38,8 +54,8 @@ void main()
 
     float specularFactor = dot(unitVectorToCamera, reflectedLightDirection);
     specularFactor = max(specularFactor, 0.0);
-    float dampedFactor = pow(specularFactor, shineDamper);
-    vec3 specular = dampedFactor * reflectivity * lightColor;
+    float dampedFactor = pow(specularFactor, material.shininess);
+    vec3 specular = (dampedFactor * material.specular) * light.specular;
 
 
     out_color = vec4(diffuse, 1.0) * texture(textureSampler, pass_textureCoords) + vec4(ambient, 1.0) + vec4(specular, 1.0);

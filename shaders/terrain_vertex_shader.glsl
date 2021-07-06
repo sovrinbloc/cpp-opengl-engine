@@ -1,4 +1,13 @@
 #version 330 core
+struct Light {
+    vec3 position;
+
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+};
+uniform Light light;
+
 layout (location = 0) in vec3 position;
 layout (location = 1) in vec2 textureCoords;
 layout (location = 2) in vec3 normal;
@@ -13,8 +22,6 @@ uniform mat4 transformationMatrix; // model matrix
 uniform mat4 viewMatrix; // view matrix
 uniform mat4 projectionMatrix; // projection matrix
 
-uniform vec3 lightPosition;
-
 const float density = 0.007;
 const float gradient = 1.5;
 
@@ -26,7 +33,7 @@ void main()
     pass_textureCoords = textureCoords * 40.0;
 
     surfaceNormal = (transformationMatrix * vec4(normal, 0.0)).xyz;
-    toLightVector = lightPosition - worldPosition.xyz;
+    toLightVector = light.position - worldPosition.xyz;
 
     float distance = length(positionRelativeToCam.xyz);
     visibility = exp(-pow((distance * density), gradient));

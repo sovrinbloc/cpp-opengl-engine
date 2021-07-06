@@ -24,9 +24,10 @@ private:
     Lighting lighting;
 public:
     Light(const vec3 position = vec3(1.2f, 1.0f, 2.0f), const vec3 color = vec3(1.0f, 1.0f, 1.0f),
-          Lighting lighting = {.ambient =  glm::vec3(1.0f, 0.5f, 0.31f), .diffuse =  glm::vec3(1.0f, 0.5f,
-                                                                                            0.31f), .specular =  glm::vec3(
-                  1.0f, 0.5f, 0.31f)})
+          Lighting lighting = {
+            .ambient =  glm::vec3(0.2f, 0.2f, 0.2f),
+            .diffuse =  glm::vec3(0.5f, 0.5f, 0.5f),
+            .specular =  glm::vec3(1.0f, 1.0f, 1.0f)})
             : position(position), color(color), lighting(lighting) {
         lighting.position = Light::position;
     }
