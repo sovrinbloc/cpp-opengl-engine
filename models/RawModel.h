@@ -14,7 +14,7 @@ public:
         this->vaoID = vaoID;
         this->vertexCount = vertexCount;
     }
-    GLuint getVaoID() {
+    unsigned int getVaoID() {
         return this->vaoID;
     }
     int getVertexCount() {

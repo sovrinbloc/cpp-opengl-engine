@@ -5,12 +5,12 @@
 #ifndef ENGINE_LOADER_H
 #define ENGINE_LOADER_H
 
-#define GL_SILENCE_DEPRECATION
 #include <vector>
 #include "../models/RawModel.h"
 #include "../textures/Texture.h"
 #include "ModelData.h"
 
+#define GL_SILENCE_DEPRECATION
 #define GLFW_INCLUDE_GLCOREARB
 #include <GLFW/glfw3.h>
 
