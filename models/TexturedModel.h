@@ -7,23 +7,29 @@
 
 #include "RawModel.h"
 #include "../textures/ModelTexture.h"
+
+
 class TexturedModel {
 private:
     RawModel *rawModel;
-    ModelTexture *texture;
-
 public:
-    TexturedModel (RawModel *model, ModelTexture *texture) {
-        this->rawModel = model;
-        this->texture = texture;
+    void setRawModel(RawModel *rawModel);
+
+private:
+    ModelTexture *texture;
+public:
+    TexturedModel(RawModel *model, ModelTexture *texture) {
+        TexturedModel::rawModel = model;
+        TexturedModel::texture = texture;
     }
 
     RawModel *getRawModel() {
-        return this->rawModel;
+        return TexturedModel::rawModel;
     }
 
     ModelTexture *getModelTexture() {
-        return this->texture;
+        return TexturedModel::texture;
     }
 };
+
 #endif //ENGINE_TEXTUREDMODEL_H

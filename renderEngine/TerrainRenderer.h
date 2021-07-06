@@ -44,7 +44,6 @@ private:
         glEnableVertexAttribArray(2);
 
         ModelTexture *texture = terrain->getTexture();
-        shader->loadShineVariables(texture->getShineDamper(), texture->getReflectivity(), texture->getAmbient());
         // bind texture
         glActiveTexture(GL_TEXTURE0);
         texture->bindTexture();
@@ -63,6 +62,7 @@ private:
         // creates the matrices to be passed into the shader
         glm::mat4 transformationMatrix = Maths::createTransformationMatrix(glm::vec3(terrain->getX(), 0.0f, terrain->getZ()));
         shader->loadTransformationMatrix(transformationMatrix);
+        shader->loadMaterial(terrain->getMaterial());
     }
 };
 #endif //ENGINE_TERRAINRENDERER_H

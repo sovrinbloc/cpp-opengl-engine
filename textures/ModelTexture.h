@@ -7,9 +7,28 @@
 
 #include "Texture.h"
 
+struct Material {
+    glm::vec3 ambient;
+    glm::vec3 diffuse;
+    glm::vec3 specular;
+    float shininess;
+};
+
 class ModelTexture : public Texture {
 public:
-    ModelTexture(std::string filename, ImageType type) : Texture(filename, type) {}
+    ModelTexture(std::string filename, ImageType type,
+                 Material
+
+                 materials = Material{
+                         .ambient =  glm::vec3(0.1),
+                         .diffuse =  glm::vec3(1.0f, 0.5f, 0.31f),
+                         .specular =  glm::vec3(0.5f, 0.5f, 0.5f),
+                         .shininess = 32.0f}
+    ) :
+            Texture(filename, type
+            ) {
+        this->material = materials;
+    }
 
 private:
     float shineDamper = 1;
@@ -17,7 +36,18 @@ private:
     float ambient = 0.1;
     bool hasTransparency = false;
     bool useFakeLighting = false;
+    Material material;
+
 public:
+
+    Material getMaterial() const {
+        return material;
+    }
+
+    void setMaterial(Material material) {
+        this->material = material;
+    }
+
     bool isUseFakeLighting() const {
         return useFakeLighting;
     }

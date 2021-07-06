@@ -4,15 +4,40 @@
 
 #ifndef ENGINE_LIGHT_H
 #define ENGINE_LIGHT_H
+
 #include "glm/glm.hpp"
+
 using namespace glm;
+
+struct Lighting {
+    vec3 position;
+
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+};
 
 class Light {
 private:
     vec3 position;
     vec3 color;
+    Lighting lighting;
 public:
-    Light(const vec3 position = vec3(1.2f, 1.0f, 2.0f), const vec3 color = vec3(1.0f, 1.0f, 1.0f)) : position(position), color(color) {}
+    Light(const vec3 position = vec3(1.2f, 1.0f, 2.0f), const vec3 color = vec3(1.0f, 1.0f, 1.0f),
+          Lighting lighting = {.ambient =  glm::vec3(1.0f, 0.5f, 0.31f), .diffuse =  glm::vec3(1.0f, 0.5f,
+                                                                                            0.31f), .specular =  glm::vec3(
+                  1.0f, 0.5f, 0.31f)})
+            : position(position), color(color), lighting(lighting) {
+        lighting.position = Light::position;
+    }
+
+    const Lighting &getLighting() const {
+        return lighting;
+    }
+
+    void setLighting(const Lighting &lighting) {
+        Light::lighting = lighting;
+    }
 
     const vec3 &getPosition() const {
         return position;
@@ -30,4 +55,5 @@ public:
         Light::color = color;
     }
 };
+
 #endif //ENGINE_LIGHT_H

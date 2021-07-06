@@ -19,26 +19,38 @@ class TerrainShader : public ShaderProgram {
     const std::string transformationMatrix = "transformationMatrix";
     const std::string projectionMatrix = "projectionMatrix";
     const std::string viewMatrix = "viewMatrix";
-    const std::string lightPosition = "lightPosition";
     const std::string lightColor = "lightColor";
-    const std::string shineDamper = "shineDamper";
-    const std::string ambientStrength = "ambientStrength";
-    const std::string reflectivity = "reflectivity";
     const std::string skyColor = "skyColor";
+    const std::string viewPosition = "viewPosition";
 
-    const std::string viewPosition = "viewPosition"; // for camera
+    const std::string lightAmbient = "light.ambient";
+    const std::string lightDiffuse = "light.diffuse";
+    const std::string lightSpecular = "light.specular";
+    const std::string lightPosition = "light.position";
+
+    const std::string materialShininess = "material.shininess";
+    const std::string materialAmbient = "material.ambient";
+    const std::string materialDiffuse = "material.diffuse";
+    const std::string materialSpecular = "material.specular";
 
     GLint location_transformationMatrix;
     GLint location_projectionMatrix;
     GLint location_viewMatrix;
-    GLint location_lightPosition;
     GLint location_lightColor;
-    GLint location_shineDamper;
-    GLint location_reflectivity;
-    GLint location_ambientStrength;
     GLint location_skyColor;
+    GLint location_viewPosition;
 
-    GLint location_viewPosition; // for location
+
+
+    GLint location_lightAmbient;
+    GLint location_lightDiffuse;
+    GLint location_lightSpecular;
+    GLint location_lightPosition;
+
+    GLint location_materialShininess;
+    GLint location_materialAmbient;
+    GLint location_materialDiffuse;
+    GLint location_materialSpecular;
 public:
     GLuint attribute;
 
@@ -68,12 +80,19 @@ public:
     void loadLight(Light *light) {
         this->setVec3(location_lightPosition, light->getPosition());
         this->setVec3(location_lightColor, light->getColor());
+
+        // for textures and lighting
+        this->setVec3(location_lightAmbient, light->getLighting().ambient);
+        this->setVec3(location_lightDiffuse, light->getLighting().diffuse);
+        this->setVec3(location_lightSpecular, light->getLighting().specular);
+        this->setVec3(location_lightPosition, light->getLighting().position);
     }
 
-    void loadShineVariables(float damper, float reflect, float ambientStrength) {
-        this->setFloat(location_shineDamper, damper);
-        this->setFloat(location_reflectivity, reflect);
-        this->setFloat(location_ambientStrength, ambientStrength);
+    void loadMaterial(Material *material) {
+        this->setFloat(location_materialShininess, material->shininess);
+        this->setVec3(location_materialAmbient, material->ambient);
+        this->setVec3(location_materialDiffuse, material->diffuse);
+        this->setVec3(location_materialSpecular, material->specular);
     }
 
     void loadSkyColorVariable(glm::vec3 skyColor) {
@@ -93,12 +112,20 @@ protected:
         location_viewMatrix = getUniformLocation(viewMatrix);
         location_lightPosition = getUniformLocation(lightPosition);
         location_lightColor = getUniformLocation(lightColor);
-        location_shineDamper = getUniformLocation(shineDamper);
-        location_reflectivity = getUniformLocation(reflectivity);
-        location_ambientStrength = getUniformLocation(ambientStrength);
         location_skyColor = getUniformLocation(skyColor);
 
         location_viewPosition = getUniformLocation(viewPosition);
+
+        // for textures and lighting
+        location_lightAmbient = getUniformLocation(lightAmbient);
+        location_lightDiffuse = getUniformLocation(lightDiffuse);
+        location_lightSpecular = getUniformLocation(lightSpecular);
+        location_lightPosition = getUniformLocation(lightPosition);
+
+        location_materialShininess = getUniformLocation(materialShininess);
+        location_materialAmbient = getUniformLocation(materialAmbient);
+        location_materialDiffuse = getUniformLocation(materialDiffuse);
+        location_materialSpecular = getUniformLocation(materialSpecular);
     }
 };
 #endif //ENGINE_TERRAINSHADER_H

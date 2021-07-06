@@ -4,6 +4,7 @@
 
 #ifndef CRAFTPROJ_MAINGAMELOOP_H
 #define CRAFTPROJ_MAINGAMELOOP_H
+#define PRINTXYZ(VEC){printf("%f, %f, %f\n", VEC[0], VEC[1], VEC[2]);};
 
 #include "../toolbox/FileSystem.h"
 #include "../toolbox/Utils.h"
@@ -55,17 +56,17 @@ public:
         stallTexture = new ModelTexture(FileSystem::Path("/res/stall/stallTexture.png"), PNG);
         staticStall = new TexturedModel(stallModel, stallTexture);
 
-        grassTexture->setShineDamper(10);
-        grassTexture->setReflectivity(0.5f);
-        grassTexture->setAmbient(0.1);
-
-        treeTexture->setShineDamper(100);
-        treeTexture->setReflectivity(0.1f);
-        treeTexture->setAmbient(0.1);
-
-        stallTexture->setShineDamper(100);
-        stallTexture->setReflectivity(0.1f);
-        stallTexture->setAmbient(0.1);
+//        grassTexture->setShineDamper(10);
+//        grassTexture->setReflectivity(0.5f);
+//        grassTexture->setAmbient(0.1);
+//
+//        treeTexture->setShineDamper(100);
+//        treeTexture->setReflectivity(0.1f);
+//        treeTexture->setAmbient(0.1);
+//
+//        stallTexture->setShineDamper(100);
+//        stallTexture->setReflectivity(0.1f);
+//        stallTexture->setAmbient(0.1);
 
         std::vector<Entity *> allEntities;
         allEntities.push_back(new Entity(staticStall, glm::vec3(1.0f, 0.0f, -82.4f), glm::vec3(0.0f, 180.0f, 0.0f)));
@@ -88,8 +89,6 @@ public:
         Terrain *terrain, *terrain2;
         terrain = new Terrain(-1, -1, loader, new ModelTexture(FileSystem::Path("/res/grass.png"), PNG));
         terrain2 = new Terrain(0, -1, loader, new ModelTexture(FileSystem::Path("/res/grass.png"), PNG));
-
-
 
         MasterRenderer *renderer;
         renderer = new MasterRenderer(cameraInput);

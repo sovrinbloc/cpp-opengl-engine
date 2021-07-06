@@ -113,7 +113,6 @@ public:
             newBatch.push_back(entity);
             (*entities)[entityModel] = newBatch;
         }
-        std::vector<Entity *> batch = entities->find(entityModel)->second;
     }
 
     void updatePerspective(float width, float height) {

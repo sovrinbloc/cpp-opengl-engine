@@ -6,6 +6,7 @@
 #define ENGINE_ENTITYRENDERER_H
 #define GL_SILENCE_DEPRECATION
 #define GLFW_INCLUDE_GLCOREARB
+#define PRINTXYZ(VEC){printf("%f, %f, %f\n", VEC[0], VEC[1], VEC[2]);};
 
 #include <map>
 #include <set>
@@ -45,7 +46,6 @@ public:
                 prepareInstance(entity);
                 // draw elements
                 glDrawElements(GL_TRIANGLES, model->getRawModel()->getVertexCount(), GL_UNSIGNED_INT, 0);
-
             }
             unbindTexturedModel();
             it++;
@@ -74,9 +74,7 @@ private:
         if (texture->isHasTransparency()) {
             RenderStyle::disableCulling();
         }
-
         shader->loadFakeLightingVariable(texture->isUseFakeLighting());
-        shader->loadShineVariables(texture->getShineDamper(), texture->getReflectivity(), texture->getAmbient());
         glActiveTexture(GL_TEXTURE0);
         // bind texture
         model->getModelTexture()->bindTexture();
@@ -103,6 +101,7 @@ private:
         glm::mat4 transformationMatrix = Maths::createTransformationMatrix(entity->getPosition(), entity->getRotation(),
                                                                            entity->getScale());
         shader->loadTransformationMatrix(transformationMatrix);
+        shader->loadMaterial(entity->getModel()->getModelTexture()->getMaterial());
     }
 };
 
