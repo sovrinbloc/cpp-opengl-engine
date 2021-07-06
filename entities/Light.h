@@ -29,31 +29,31 @@ public:
             .diffuse =  glm::vec3(1.0f, 1.0f, 1.0f),
             .specular =  glm::vec3(1.0f, 1.0f, 1.0f)})
             : position(position), color(color), lighting(lighting) {
-        lighting.position = Light::position;
+        lighting.position = this->position;
     }
 
-    const Lighting &getLighting() const {
+    Lighting getLighting() const {
         return lighting;
     }
 
     void setLighting(const Lighting &lighting) {
-        Light::lighting = lighting;
+        this->lighting = lighting;
     }
 
-    const vec3 &getPosition() const {
-        return position;
+    vec3 getPosition() {
+        return this->lighting.position;
     }
 
-    void setPosition(const vec3 &position) {
-        Light::position = position;
+    void setPosition(vec3 position) {
+        this->lighting.position = position;
     }
 
-    const vec3 &getColor() const {
+    vec3 getColor() const {
         return color;
     }
 
-    void setColor(const vec3 &color) {
-        Light::color = color;
+    void setColor(vec3 color) {
+        this->color = color;
     }
 };
 
