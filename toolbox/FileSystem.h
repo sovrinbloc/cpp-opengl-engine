@@ -9,14 +9,10 @@
 #include <cstdlib>
 #include <string>
 
-std::string HOME_PATH = realpath(".", NULL);
+extern std::string HOME_PATH;
 class FileSystem {
 public:
-    static std::string Path(std::string in) {
-        return HOME_PATH + in;
-    }
-    static std::string Path(char *in) {
-        return HOME_PATH + in;
-    }
+    static std::string Path(std::string in);
+    static std::string Path(char *in);
 };
 #endif //ENGINE_FILESYSTEM_H
