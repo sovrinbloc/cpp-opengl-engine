@@ -37,7 +37,7 @@ public:
         TexturedModel *staticGrass, *staticTree, *staticStall;
         Light *light;
 
-        light = new Light(glm::vec3(0.0, 124.0, -20), glm::vec3(1, 1, 1));
+        light = new Light(glm::vec3(0.0, 120.0, -80), glm::vec3(1, 1, 1));
 
         ModelData grassData = OBJLoader::loadObjModel("/res/tut/grassModel.obj");
         grassModel = loader->loadToVAO(&grassData);
@@ -55,18 +55,6 @@ public:
         stallModel = loader->loadToVAO(&stallData);
         stallTexture = new ModelTexture(FileSystem::Path("/res/stall/stallTexture.png"), PNG);
         staticStall = new TexturedModel(stallModel, stallTexture);
-
-//        grassTexture->setShineDamper(10);
-//        grassTexture->setReflectivity(0.5f);
-//        grassTexture->setAmbient(0.1);
-//
-//        treeTexture->setShineDamper(100);
-//        treeTexture->setReflectivity(0.1f);
-//        treeTexture->setAmbient(0.1);
-//
-//        stallTexture->setShineDamper(100);
-//        stallTexture->setReflectivity(0.1f);
-//        stallTexture->setAmbient(0.1);
 
         std::vector<Entity *> allEntities;
         allEntities.push_back(new Entity(staticStall, glm::vec3(1.0f, 0.0f, -82.4f), glm::vec3(0.0f, 180.0f, 0.0f)));

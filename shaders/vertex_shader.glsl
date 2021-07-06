@@ -25,8 +25,8 @@ uniform mat4 projectionMatrix; // projection matrix
 
 uniform float useFakeLighting;
 
-const float density = 0.007;
-const float gradient = 1.5;
+const float density = 0.00035;
+const float gradient = 5.0;
 
 
 void main()
