@@ -7,6 +7,8 @@
 #define PATH(IN)(HOME_PATH+IN)
 
 #include <cstdlib>
+#include <string>
+
 std::string HOME_PATH = realpath(".", NULL);
 class FileSystem {
 public:

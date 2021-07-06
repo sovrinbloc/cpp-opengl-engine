@@ -10,58 +10,20 @@
 
 #include <GLFW/glfw3.h>
 
-GLint SRC_WIDTH = 800;
-GLint SRC_HEIGHT = 600;
+extern GLint SRC_WIDTH;
+extern GLint SRC_HEIGHT;
 
-GLFWwindow *window;
+extern GLFWwindow *window;
 
 class DisplayManager {
 public:
-    static int createDisplay() {
-        glfwInit();
+    static int createDisplay();
 
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-#ifdef __APPLE__
-        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
+    static void updateDisplay();
 
-        window = glfwCreateWindow(SRC_WIDTH, SRC_HEIGHT, "ENGINE: Manifest (Alpha & Omega)", nullptr, nullptr);
-        if (window == nullptr) {
-            printf("Failed to create GLFW window\n");
-            glfwTerminate();
-            return -1;
-        }
-        glfwMakeContextCurrent(window);
-        glfwSetFramebufferSizeCallback(window, (GLFWframebuffersizefun) framebuffer_size_callback);
+    static bool stayOpen();
 
-#ifndef __APPLE__
-        if (glewInit() != GLEW_OK) {
-            return -1;
-        }
-#endif
-
-        // configure global opengl state
-        // -----------------------------
-        glEnable(GL_DEPTH_TEST);
-        return 1;
-    }
-
-    static void updateDisplay() {
-        // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
-        // -------------------------------------------------------------------------------
-        glfwSwapBuffers(window);
-        glfwPollEvents();
-    }
-
-    static bool stayOpen() {
-        return !glfwWindowShouldClose(window);
-    }
-
-    static void closeDisplay() {
-        glfwTerminate();
-    }
+    static void closeDisplay();
 
     static float getWidth() {
         return SRC_WIDTH;
@@ -78,11 +40,7 @@ public:
 
 private:
 
-    static void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
-        // make sure the viewport matches the new window dimensions; note that width and
-        // height will be significantly larger than specified on retina displays.
-        glViewport(0, 0, width, height);
-    }
+    static void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 };
 
 #endif //CRAFTPROJ_DISPLAYMANAGER_H

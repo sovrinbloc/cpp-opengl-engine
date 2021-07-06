@@ -9,7 +9,7 @@
 #include <glm/glm.hpp>
 #include <fstream>
 #include <sstream>
-
+#include <iostream>
 typedef enum {
     VertexShader,
     FragmentShader,

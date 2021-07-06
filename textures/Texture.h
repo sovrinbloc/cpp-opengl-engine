@@ -7,6 +7,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "../libraries/images/stb_image.h"
 #include "png.h"
+#include <string>
 
 typedef enum {
     JPG = 1,
