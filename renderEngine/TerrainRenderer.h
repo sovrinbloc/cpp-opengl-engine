@@ -62,7 +62,7 @@ private:
         // creates the matrices to be passed into the shader
         glm::mat4 transformationMatrix = Maths::createTransformationMatrix(glm::vec3(terrain->getX(), 0.0f, terrain->getZ()));
         shader->loadTransformationMatrix(transformationMatrix);
-        shader->loadMaterial(terrain->getMaterial());
+        shader->loadMaterial(terrain->getTexture()->getMaterial());
     }
 };
 #endif //ENGINE_TERRAINRENDERER_H

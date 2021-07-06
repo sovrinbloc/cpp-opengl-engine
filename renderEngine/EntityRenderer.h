@@ -6,7 +6,6 @@
 #define ENGINE_ENTITYRENDERER_H
 #define GL_SILENCE_DEPRECATION
 #define GLFW_INCLUDE_GLCOREARB
-#define PRINTXYZ(VEC){printf("%f, %f, %f\n", VEC[0], VEC[1], VEC[2]);};
 
 #include <map>
 #include <set>

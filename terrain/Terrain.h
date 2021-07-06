@@ -16,7 +16,6 @@ private:
     float z;
     RawModel *model;
     ModelTexture *texture;
-    Material *material;
 
 public:
     float getX() const {
@@ -35,16 +34,6 @@ public:
         this->z = z;
     }
 
-
-    Material *getMaterial() const {
-        return material;
-    }
-
-    void setMaterial(Material *material) {
-        Terrain::material = material;
-    }
-
-
     RawModel *getModel() const {
         return model;
     }
@@ -61,15 +50,11 @@ public:
         this->texture = texture;
     }
 
-    Terrain(int gridX, int gridZ, Loader *loader, ModelTexture *texture, Material materials = Material{.ambient =  glm::vec3(1.0f, 0.5f, 0.31f), .diffuse =  glm::vec3(1.0f,
-                                                                                                                                                                       0.5f,
-                                                                                                                                                                       0.31f), .specular =  glm::vec3(
-            1.0f, 0.5f, 0.31f), .shininess =  32.0f}) {
+    Terrain(int gridX, int gridZ, Loader *loader, ModelTexture *texture) {
         this->texture = texture;
         this->x = (float)gridX * SIZE;
         this->z = (float)gridZ * SIZE;
         this->model = generateTerrain(loader);
-        this->material = &materials;
     }
 
 private:

@@ -88,11 +88,11 @@ public:
         this->setVec3(location_lightPosition, light->getLighting().position);
     }
 
-    void loadMaterial(Material *material) {
-        this->setFloat(location_materialShininess, material->shininess);
-        this->setVec3(location_materialAmbient, material->ambient);
-        this->setVec3(location_materialDiffuse, material->diffuse);
-        this->setVec3(location_materialSpecular, material->specular);
+    void loadMaterial(Material material) {
+        this->setFloat(location_materialShininess, material.shininess);
+        this->setVec3(location_materialAmbient, material.ambient);
+        this->setVec3(location_materialDiffuse, material.diffuse);
+        this->setVec3(location_materialSpecular, material.specular);
     }
 
     void loadSkyColorVariable(glm::vec3 skyColor) {
