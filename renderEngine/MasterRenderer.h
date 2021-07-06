@@ -9,17 +9,12 @@
 #include <iostream>
 #include "../shaders/StaticShader.h"
 #include "../entities/CameraInput.h"
-#include "../toolbox/Maths.h"
-#include "RenderStyle.h"
 #include "EntityRenderer.h"
 #include "TerrainRenderer.h"
 
 static const float FOVY = 45.0f;
 static const float NEAR_PLANE = 0.1f;
 static const float FAR_PLANE = 1000;
-
-float ScreenWidth = 800.0f;
-float ScreenHeight = 600.0f;
 
 class MasterRenderer {
 private:
@@ -34,91 +29,26 @@ private:
     std::vector<Terrain *> *terrains;
 
 public:
-    MasterRenderer(CameraInput *cameraInput) : shader(new StaticShader()), renderer(new EntityRenderer(shader)),
-                                               camera(cameraInput), projectionMatrix(
-                    Maths::createProjectionMatrix(FOVY, SRC_WIDTH, SRC_HEIGHT, NEAR_PLANE, FAR_PLANE)),
-                    terrainShader(new TerrainShader()){
-        RenderStyle::enableCulling();
-        entities = new std::map<TexturedModel *, std::vector<Entity *>>;
-        terrains  = new std::vector<Terrain *>;
-        terrainRenderer = new TerrainRenderer(terrainShader, this->projectionMatrix);
-    }
+    MasterRenderer(CameraInput *cameraInput);
 
-    void cleanUp() {
-        shader->cleanUp();
-        terrainShader->cleanUp();
-    }
+    void cleanUp();
 
     /**
      * @brief prepares and clears buffer and screen for each iteration of loop
      */
-    void prepare() {
-        // render
-        // ------
-        glClearColor(.529, .808, .98, 1);
-        shader->loadSkyColorVariable(glm::vec3(.529, .808, .98));
-        terrainShader->loadSkyColorVariable(glm::vec3(.529, .808, .98));
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    void prepare();
 
-    }
+    void render(Light *sun);
 
-    void render(Light *sun) {
-        camera->move();
+    void processTerrain(Terrain *terrain);
 
-        this->prepare();
-        shader->start();
-        shader->loadSkyColorVariable(glm::vec3(.529, .808, .98));
-        shader->loadLight(sun);
-        shader->loadViewPosition(CameraInput::getCamera());
-        shader->loadViewMatrix(CameraInput::getCamera()->GetViewMatrix());
-        shader->loadProjectionMatrix(this->createProjectionMatrix());
+    glm::mat4 createProjectionMatrix();
 
-        renderer->render(entities);
-        shader->stop();
+    glm::mat4 getProjectionMatrix();
 
-        terrainShader->start();
-        terrainShader->loadSkyColorVariable(glm::vec3(.529, .808, .98));
-        terrainShader->loadLight(sun);
-        terrainShader->loadViewPosition(CameraInput::getCamera());
-        terrainShader->loadViewMatrix(CameraInput::getCamera()->GetViewMatrix());
-        terrainShader->loadProjectionMatrix(this->createProjectionMatrix());
-        terrainRenderer->render(terrains);
-        terrains->clear();
-        terrainShader->stop();
+    void processEntity(Entity *entity);
 
-        entities->clear();
-    }
-
-    void processTerrain(Terrain *terrain) {
-        terrains->push_back(terrain);
-    }
-
-    glm::mat4 createProjectionMatrix() {
-        // my additions
-        return Maths::createProjectionMatrix(camera->getCamera()->Zoom, ScreenWidth, ScreenHeight, NEAR_PLANE,
-                                              FAR_PLANE);
-    }
-
-    glm::mat4 getProjectionMatrix() {
-        return this->projectionMatrix;
-    }
-
-    void processEntity(Entity *entity) {
-        TexturedModel *entityModel = entity->getModel();
-        auto batchIterator = entities->find(entityModel);
-        if (batchIterator != entities->end()) {
-            batchIterator->second.push_back(entity);
-        } else {
-            std::vector<Entity *> newBatch;
-            newBatch.push_back(entity);
-            (*entities)[entityModel] = newBatch;
-        }
-    }
-
-    void updatePerspective(float width, float height) {
-        SRC_WIDTH = width;
-        SRC_HEIGHT = height;
-    }
+    void updatePerspective(float width, float height);
 
 
 };

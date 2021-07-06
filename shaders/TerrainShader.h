@@ -4,10 +4,12 @@
 
 #ifndef ENGINE_TERRAINSHADER_H
 #define ENGINE_TERRAINSHADER_H
-#include "../shaders/ShaderProgram.h"
+#include "../entities/CameraInput.h"
+#include "../textures/ModelTexture.h"
+#include "ShaderProgram.h"
+#include "../entities/Light.h"
 
-static const char *TerrainVertexPath = "/shaders/terrain_vertex_shader.glsl";
-static const char *TerrainFragmentPath = "/shaders/terrain_fragment_shader.glsl";
+
 
 class TerrainShader : public ShaderProgram {
 // attribute names
@@ -54,78 +56,27 @@ class TerrainShader : public ShaderProgram {
 public:
     GLuint attribute;
 
-    TerrainShader() : ShaderProgram(TerrainVertexPath, TerrainFragmentPath, nullptr) {
-        this->initialize();
-        this->loadTransformationMatrix();
-    }
+    TerrainShader();
 
-    void bindAttributes() {
-        this->bindAttribute(0, position);
-        this->bindAttribute(1, texture);
-        this->bindAttribute(2, normal);
-    }
+    void bindAttributes();
 
-    void loadTransformationMatrix(glm::mat4 matrix = glm::mat4(1.0f)) {
-        this->setMat4(location_transformationMatrix, matrix);
-    }
+    void loadTransformationMatrix(glm::mat4 matrix = glm::mat4(1.0f));
 
-    void loadProjectionMatrix(glm::mat4 matrix = glm::mat4(1.0f)) {
-        this->setMat4(location_projectionMatrix, matrix);
-    }
+    void loadProjectionMatrix(glm::mat4 matrix = glm::mat4(1.0f));
 
-    void loadViewMatrix(glm::mat4 matrix = glm::mat4(1.0f)) {
-        this->setMat4(location_viewMatrix, matrix);
-    }
+    void loadViewMatrix(glm::mat4 matrix = glm::mat4(1.0f));
 
-    void loadLight(Light *light) {
-        this->setVec3(location_lightPosition, light->getPosition());
-        this->setVec3(location_lightColor, light->getColor());
+    void loadLight(Light *light);
 
-        // for textures and lighting
-        this->setVec3(location_lightAmbient, light->getLighting().ambient);
-        this->setVec3(location_lightDiffuse, light->getLighting().diffuse);
-        this->setVec3(location_lightSpecular, light->getLighting().specular);
-        this->setVec3(location_lightPosition, light->getLighting().position);
-    }
+    void loadMaterial(Material material);
 
-    void loadMaterial(Material material) {
-        this->setFloat(location_materialShininess, material.shininess);
-        this->setVec3(location_materialAmbient, material.ambient);
-        this->setVec3(location_materialDiffuse, material.diffuse);
-        this->setVec3(location_materialSpecular, material.specular);
-    }
+    void loadSkyColorVariable(glm::vec3 skyColor);
 
-    void loadSkyColorVariable(glm::vec3 skyColor) {
-        this->setVec3(location_skyColor, skyColor);
-    }
-
-    void loadViewPosition(Camera *camera) {
-        this->setVec3(location_viewPosition, camera->Position);
-    }
+    void loadViewPosition(Camera *camera);
 
 
 
 protected:
-    void getAllUniformLocations() override {
-        location_transformationMatrix = getUniformLocation(transformationMatrix);
-        location_projectionMatrix = getUniformLocation(projectionMatrix);
-        location_viewMatrix = getUniformLocation(viewMatrix);
-        location_lightPosition = getUniformLocation(lightPosition);
-        location_lightColor = getUniformLocation(lightColor);
-        location_skyColor = getUniformLocation(skyColor);
-
-        location_viewPosition = getUniformLocation(viewPosition);
-
-        // for textures and lighting
-        location_lightAmbient = getUniformLocation(lightAmbient);
-        location_lightDiffuse = getUniformLocation(lightDiffuse);
-        location_lightSpecular = getUniformLocation(lightSpecular);
-        location_lightPosition = getUniformLocation(lightPosition);
-
-        location_materialShininess = getUniformLocation(materialShininess);
-        location_materialAmbient = getUniformLocation(materialAmbient);
-        location_materialDiffuse = getUniformLocation(materialDiffuse);
-        location_materialSpecular = getUniformLocation(materialSpecular);
-    }
+    void getAllUniformLocations() override ;
 };
 #endif //ENGINE_TERRAINSHADER_H
