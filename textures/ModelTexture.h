@@ -20,13 +20,12 @@ public:
                  Material
 
                  materials = Material{
-                         .ambient =  glm::vec3(0.1),
-                         .diffuse =  glm::vec3(1.0f, 0.5f, 0.31f),
-                         .specular =  glm::vec3(0.5f, 0.5f, 0.5f),
+                         .ambient =  glm::vec3(1.0f),
+                         .diffuse =  glm::vec3(1.0f),
+                         .specular =  glm::vec3(1.0f),
                          .shininess = 32.0f}
     ) :
-            Texture(filename, type
-            ) {
+            Texture(filename, type) {
         this->material = materials;
     }
 
