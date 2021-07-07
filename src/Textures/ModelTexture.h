@@ -5,7 +5,7 @@
 #ifndef ENGINE_MODELTEXTURE_H
 #define ENGINE_MODELTEXTURE_H
 
-#include "Texture.h"
+#include "TextureLoader.h"
 #include "glm/glm.hpp"
 
 struct Material {
@@ -15,7 +15,7 @@ struct Material {
     float shininess;
 };
 
-class ModelTexture : public Texture {
+class ModelTexture : public TextureLoader {
 public:
     ModelTexture(std::string filename, ImageType type,
                  Material

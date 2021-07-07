@@ -26,7 +26,7 @@ public:
 
     static void processVertex(float vertex, float uv, float normal, std::vector<Vertex*> *vertices, std::vector<int> *indices);
 
-     static int *convertIndicesListToArray(std::vector<int> indices);
+    static int *convertIndicesListToArray(std::vector<int> indices);
 
     static float convertDataToArrays(std::vector<Vertex*> *vertices, std::vector<glm::vec2> *textures,
                                      std::vector<glm::vec3> *normals, std::vector<float> *verticesArray, std::vector<float> *texturesArray,

@@ -7,9 +7,8 @@
 
 #include <vector>
 #include "../models/RawModel.h"
-#include "../textures/Texture.h"
+#include "../textures/TextureLoader.h"
 #include "ModelData.h"
-
 #define GL_SILENCE_DEPRECATION
 #define GLFW_INCLUDE_GLCOREARB
 #include <GLFW/glfw3.h>
@@ -20,7 +19,7 @@ public:
 
     RawModel *loadToVAO(ModelData *data);
 
-    Texture *loadTexture(std::string fileName);
+    TextureLoader *loadTexture(std::string fileName);
 
     void cleanUp();
 

@@ -7,6 +7,6 @@
 ModelTexture::ModelTexture(std::string filename, ImageType type,
                            Material materials
 ) :
-        Texture(filename, type) {
+        TextureLoader(filename, type) {
     this->material = materials;
 }

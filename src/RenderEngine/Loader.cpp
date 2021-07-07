@@ -3,7 +3,8 @@
 //
 
 #include "Loader.h"
-
+#include "glm/glm.hpp"
+#include <glm/gtc/type_ptr.hpp>
 RawModel *Loader::loadToVAO(std::vector<GLfloat> positions, std::vector<GLfloat> textureCoords, std::vector<GLfloat> normals, std::vector<GLint> indices) {
     int vaoID = this->createVAO();
     this->bindIndicesBuffer(indices);
@@ -24,8 +25,8 @@ RawModel *Loader::loadToVAO(ModelData *data) {
     return new RawModel(vaoID, (data->getIndices()).size());
 }
 
-Texture *Loader::loadTexture(std::string fileName) {
-    Texture *tex = new Texture(fileName, PNG);
+TextureLoader *Loader::loadTexture(std::string fileName) {
+    TextureLoader *tex = new TextureLoader(fileName, PNG);
     textures.push_back(tex->id);
     return tex;
 }

@@ -15,11 +15,11 @@ typedef enum {
     PNG = 2,
 } ImageType;
 
-class Texture {
+class TextureLoader {
 public:
     GLuint id;
     int bound;
-    Texture(std::string filename, ImageType type) ;
+    TextureLoader(std::string filename, ImageType type) ;
 
     GLuint getId() {
         return this->id;

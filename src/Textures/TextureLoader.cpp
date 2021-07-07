@@ -2,13 +2,13 @@
 // Created by Joseph Alai on 7/6/21.
 //
 
-#include "Texture.h"
+#include "TextureLoader.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "../libraries/images/stb_image.h"
 #include "png.h"
 
 
-Texture::Texture(std::string filename, ImageType type) {
+TextureLoader::TextureLoader(std::string filename, ImageType type) {
     this->id = 0;
     this->bound = false;
     switch (type) {
@@ -24,13 +24,13 @@ Texture::Texture(std::string filename, ImageType type) {
     }
 }
 
-void Texture::bindTexture() {
+void TextureLoader::bindTexture() {
 //        glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, this->id);
     bound = true;
 }
 
-void Texture::loadJpgTexture(const char *file_name) {
+void TextureLoader::loadJpgTexture(const char *file_name) {
     glGenTextures(1, &this->id);
 //        glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, this->id);
@@ -57,7 +57,7 @@ void Texture::loadJpgTexture(const char *file_name) {
  *
  * @param file_name
  */
-void Texture::loadPngTexture(const char *file_name) {
+void TextureLoader::loadPngTexture(const char *file_name) {
     int w;
     int h;
     int comp;
