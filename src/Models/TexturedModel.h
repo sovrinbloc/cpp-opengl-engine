@@ -6,7 +6,7 @@
 #define ENGINE_TEXTUREDMODEL_H
 
 #include "RawModel.h"
-#include "../textures/ModelTexture.h"
+#include "../Textures/ModelTexture.h"
 
 
 class TexturedModel {

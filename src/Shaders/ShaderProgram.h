@@ -2,7 +2,7 @@
 #define SHADER_H
 #define GL_SILENCE_DEPRECATION
 
-#include "../toolbox/FileSystem.h"
+#include "../Toolbox/FileSystem.h"
 #define GLFW_INCLUDE_GLCOREARB
 #include "GLFW/glfw3.h"
 #include <glm/glm.hpp>

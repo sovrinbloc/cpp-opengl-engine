@@ -4,10 +4,10 @@
 
 #ifndef ENGINE_STATICSHADER_H
 #define ENGINE_STATICSHADER_H
-#include "../entities/CameraInput.h"
-#include "../textures/ModelTexture.h"
+#include "../Entities/CameraInput.h"
+#include "../Textures/ModelTexture.h"
 #include "ShaderProgram.h"
-#include "../entities/Light.h"
+#include "../Entities/Light.h"
 
 
 class StaticShader : public ShaderProgram {

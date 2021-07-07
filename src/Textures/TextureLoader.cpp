@@ -4,7 +4,7 @@
 
 #include "TextureLoader.h"
 #define STB_IMAGE_IMPLEMENTATION
-#include "../libraries/images/stb_image.h"
+#include "../Libraries/images/stb_image.h"
 #include "png.h"
 
 

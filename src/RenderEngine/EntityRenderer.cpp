@@ -4,7 +4,7 @@
 
 #include "EntityRenderer.h"
 #include "RenderStyle.h"
-#include "../toolbox/Maths.h"
+#include "../Toolbox/Maths.h"
 EntityRenderer::EntityRenderer(StaticShader *shader) {
     this->shader = shader;
 }

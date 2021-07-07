@@ -5,13 +5,13 @@
 #define PRINTXYZ(VEC){printf("%f, %f, %f\n", VEC[0], VEC[1], VEC[2]);};
 
 #include "MainGameLoop.h"
-#include "../toolbox/FileSystem.h"
-#include "../toolbox/Utils.h"
-#include "../renderEngine/DisplayManager.h"
-#include "../renderEngine/Loader.h"
-#include "../renderEngine/EntityRenderer.h"
-#include "../renderEngine/ObjLoader.h"
-#include "../renderEngine/MasterRenderer.h"
+#include "../Toolbox/FileSystem.h"
+#include "../Toolbox/Utils.h"
+#include "../RenderEngine/DisplayManager.h"
+#include "../RenderEngine/Loader.h"
+#include "../RenderEngine/EntityRenderer.h"
+#include "../RenderEngine/ObjLoader.h"
+#include "../RenderEngine/MasterRenderer.h"
 
 using namespace glm;
 

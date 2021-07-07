@@ -6,8 +6,8 @@
 #define ENGINE_LOADER_H
 
 #include <vector>
-#include "../models/RawModel.h"
-#include "../textures/TextureLoader.h"
+#include "../Models/RawModel.h"
+#include "../Textures/TextureLoader.h"
 #include "ModelData.h"
 #define GL_SILENCE_DEPRECATION
 #define GLFW_INCLUDE_GLCOREARB

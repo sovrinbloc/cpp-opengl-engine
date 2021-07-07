@@ -3,8 +3,6 @@
 //
 
 #include "Loader.h"
-#include "glm/glm.hpp"
-#include <glm/gtc/type_ptr.hpp>
 RawModel *Loader::loadToVAO(std::vector<GLfloat> positions, std::vector<GLfloat> textureCoords, std::vector<GLfloat> normals, std::vector<GLint> indices) {
     int vaoID = this->createVAO();
     this->bindIndicesBuffer(indices);

@@ -6,9 +6,9 @@
 #define ENGINE_ENTITYRENDERER_H
 #include <map>
 
-#include "../models/TexturedModel.h"
-#include "../shaders/StaticShader.h"
-#include "../entities/Entity.h"
+#include "../Models/TexturedModel.h"
+#include "../Shaders/StaticShader.h"
+#include "../Entities/Entity.h"
 
 class EntityRenderer {
 private:

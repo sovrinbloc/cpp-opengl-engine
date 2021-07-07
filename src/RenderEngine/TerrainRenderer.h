@@ -5,8 +5,8 @@
 #ifndef ENGINE_TERRAINRENDERER_H
 #define ENGINE_TERRAINRENDERER_H
 #include "glm/glm.hpp"
-#include "../shaders/TerrainShader.h"
-#include "../terrain/Terrain.h"
+#include "../Shaders/TerrainShader.h"
+#include "../Terrain/Terrain.h"
 
 class TerrainRenderer {
 private:

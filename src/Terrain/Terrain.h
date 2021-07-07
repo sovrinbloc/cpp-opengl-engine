@@ -4,9 +4,9 @@
 
 #ifndef ENGINE_TERRAIN_H
 #define ENGINE_TERRAIN_H
-#include "../models/RawModel.h"
-#include "../textures/ModelTexture.h"
-#include "../renderEngine/Loader.h"
+#include "../Models/RawModel.h"
+#include "../Textures/ModelTexture.h"
+#include "../RenderEngine/Loader.h"
 class Terrain {
 private:
     const float SIZE = 800;

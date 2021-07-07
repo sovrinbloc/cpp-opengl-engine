@@ -7,8 +7,8 @@
 
 #include <map>
 #include <iostream>
-#include "../shaders/StaticShader.h"
-#include "../entities/CameraInput.h"
+#include "../Shaders/StaticShader.h"
+#include "../Entities/CameraInput.h"
 #include "EntityRenderer.h"
 #include "TerrainRenderer.h"
 
@@ -49,7 +49,6 @@ public:
     void processEntity(Entity *entity);
 
     void updatePerspective(float width, float height);
-
 
 };
 

@@ -4,7 +4,7 @@
 
 #include "MasterRenderer.h"
 #include "DisplayManager.h"
-#include "../toolbox/Maths.h"
+#include "../Toolbox/Maths.h"
 #include "RenderStyle.h"
 
 MasterRenderer::MasterRenderer(CameraInput *cameraInput) : shader(new StaticShader()),
@@ -46,8 +46,8 @@ void MasterRenderer::render(Light *sun) {
     shader->loadViewPosition(CameraInput::getCamera());
     shader->loadViewMatrix(CameraInput::getCamera()->GetViewMatrix());
     shader->loadProjectionMatrix(this->createProjectionMatrix());
-
     renderer->render(entities);
+
     shader->stop();
 
     terrainShader->start();

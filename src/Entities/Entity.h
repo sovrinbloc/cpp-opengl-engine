@@ -6,7 +6,7 @@
 #define ENGINE_ENTITY_H
 
 #include "glm/glm.hpp"
-#include "../models/TexturedModel.h"
+#include "../Models/TexturedModel.h"
 
 
 class Entity {

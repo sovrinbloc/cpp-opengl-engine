@@ -3,7 +3,7 @@
 //
 
 #include "TerrainRenderer.h"
-#include "../toolbox/Maths.h"
+#include "../Toolbox/Maths.h"
 
 TerrainRenderer::TerrainRenderer(TerrainShader *shader, glm::mat4 projectionMatrix) {
     this->shader = shader;

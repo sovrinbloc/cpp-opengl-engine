@@ -2,7 +2,7 @@
 // Created by Joseph Alai on 7/6/21.
 //
 #include "CameraInput.h"
-#include "../renderEngine/DisplayManager.h"
+#include "../RenderEngine/DisplayManager.h"
 
 double lastX, lastY;
 float deltaTime;
