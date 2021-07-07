@@ -4,8 +4,8 @@
 
 #include "StaticShader.h"
 
-static const char *VertexPath = "/shaders/vertex_shader.glsl";
-static const char *FragmentPath = "/shaders/fragment_shader.glsl";
+static const char *VertexPath = "/src/Shaders/VertexShader.glsl";
+static const char *FragmentPath = "/src/Shaders/FragmentShader.glsl";
 
 StaticShader::StaticShader() : ShaderProgram(VertexPath, FragmentPath, nullptr) {
     this->initialize();

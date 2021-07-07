@@ -14,4 +14,4 @@ Makefile
 lib/*
 *.blend1
 *.mtl
-res/tut/*
+src/Resources/Models/Tutorial/*

@@ -13,9 +13,8 @@
 using namespace std;
 
 
-RawModel *OBJLoader::loadAssImp(
-        string path,
-        Loader *loader
+ModelData OBJLoader::loadAssImp(
+        string path
 ) {
     std::vector<int> indices;
     std::vector<glm::vec3> vertices;
@@ -29,7 +28,6 @@ RawModel *OBJLoader::loadAssImp(
     if (!scene) {
         fprintf(stderr, importer.GetErrorString());
         getchar();
-        return nullptr;
     }
     const aiMesh *mesh = scene->mMeshes[0]; // In this simple example code we always use the 1rst mesh (in OBJ files there is often only one anyway)
 
@@ -78,9 +76,8 @@ RawModel *OBJLoader::loadAssImp(
     }
 
     ModelData data(outVertices, outUvs, outNormals, indices, 0);
-    return loader->loadToVAO(&data);
+    return data;
     // The "scene" pointer will be deleted automatically by "importer"
-    return loader->loadToVAO(outVertices, outUvs, outNormals, outIndices);
 }
 
 

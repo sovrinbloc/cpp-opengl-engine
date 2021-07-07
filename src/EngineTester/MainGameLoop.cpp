@@ -34,27 +34,27 @@ void MainGameLoop::main() {
     light = new Light(glm::vec3(0.0, 4.5, -10.0f), glm::vec3(1, 1, 1));
 
 
-    ModelData dragonData = OBJLoader::loadObjModel("/res/tut/dragon.obj");
+    ModelData dragonData = OBJLoader::loadObjModel("/src/Resources/Models/Tutorial/dragon.obj");
     dragonModel = loader->loadToVAO(&dragonData);
-    dragonTexture = new ModelTexture(FileSystem::Path("/res/tut/grassTexture.png"), PNG);
+    dragonTexture = new ModelTexture(FileSystem::Path("/src/Resources/Models/Tutorial/grassTexture.png"), PNG);
     staticDragon = new TexturedModel(dragonModel, dragonTexture);
     auto dragonEntity = new Entity(staticDragon, glm::vec3(0.0, 120.0, 80), glm::vec3(0.0f, 180.0f, 0.0f));
 
-    ModelData grassData = OBJLoader::loadObjModel("/res/tut/grassModel.obj");
+    ModelData grassData = OBJLoader::loadObjModel("/src/Resources/Models/Tutorial/grassModel.obj");
     grassModel = loader->loadToVAO(&grassData);
-    grassTexture = new ModelTexture(FileSystem::Path("/res/tut/grassTexture.png"), PNG);
+    grassTexture = new ModelTexture(FileSystem::Path("/src/Resources/Models/Tutorial/grassTexture.png"), PNG);
     staticGrass = new TexturedModel(grassModel, grassTexture);
     grassTexture->setHasTransparency(true);
     grassTexture->setUseFakeLighting(true);
 
-    ModelData treeData = OBJLoader::loadObjModel("/res/tut/lowPolyTree.obj");
+    ModelData treeData = OBJLoader::loadObjModel("/src/Resources/Models/Tutorial/lowPolyTree.obj");
     treeModel = loader->loadToVAO(&treeData);
-    treeTexture = new ModelTexture(FileSystem::Path("/res/tut/lowPolyTree.png"), PNG);
+    treeTexture = new ModelTexture(FileSystem::Path("/src/Resources/Models/Tutorial/lowPolyTree.png"), PNG);
     staticTree = new TexturedModel(treeModel, treeTexture);
 
-    ModelData stallData = OBJLoader::loadObjModel("/res/stall/stall.obj");
+    ModelData stallData = OBJLoader::loadObjModel("/src/Resources/Models/Stall/Stall.obj");
     stallModel = loader->loadToVAO(&stallData);
-    stallTexture = new ModelTexture(FileSystem::Path("/res/stall/stallTexture.png"), PNG, Material{
+    stallTexture = new ModelTexture(FileSystem::Path("/src/Resources/Models/Stall/stallTexture.png"), PNG, Material{
             .ambient =  glm::vec3(1),
             .diffuse =  glm::vec3(1),
             .specular =  glm::vec3(0.3),
@@ -80,8 +80,8 @@ void MainGameLoop::main() {
     }
 
     Terrain *terrain, *terrain2;
-    terrain = new Terrain(-1, -1, loader, new ModelTexture(FileSystem::Path("/res/grass.png"), PNG));
-    terrain2 = new Terrain(0, -1, loader, new ModelTexture(FileSystem::Path("/res/grass.png"), PNG));
+    terrain = new Terrain(-1, -1, loader, new ModelTexture(FileSystem::Path("/src/Resources/Models/Terrain/grass.png"), PNG));
+    terrain2 = new Terrain(0, -1, loader, new ModelTexture(FileSystem::Path("/src/Resources/Models/Terrain/grass.png"), PNG));
 
     MasterRenderer *renderer;
     renderer = new MasterRenderer(cameraInput);
