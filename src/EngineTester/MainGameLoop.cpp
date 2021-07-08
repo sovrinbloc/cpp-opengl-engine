@@ -47,7 +47,7 @@ void MainGameLoop::main() {
     grassTexture->setHasTransparency(true);
     grassTexture->setUseFakeLighting(true);
 
-    ModelData treeData = OBJLoader::loadObjModel("/src/Resources/Models/Tutorial/lowPolyTree.obj");
+    ModelData treeData = OBJLoader::loadObjModel("/src/Resources/InProgress/Tree/tree.obj");
     treeModel = loader->loadToVAO(&treeData);
     treeTexture = new ModelTexture(FileSystem::Path("/src/Resources/Models/Tutorial/lowPolyTree.png"), PNG);
     staticTree = new TexturedModel(treeModel, treeTexture);
@@ -61,8 +61,17 @@ void MainGameLoop::main() {
             .shininess = 32.0f});
     staticStall = new TexturedModel(stallModel, stallTexture);
 
+    treeModel = loader->loadToVAO(&treeData);
+    treeTexture = new ModelTexture(FileSystem::Path("/src/Resources/InProgress/Tree/tree.png"), PNG, Material{
+            .ambient =  glm::vec3(1),
+            .diffuse =  glm::vec3(1),
+            .specular =  glm::vec3(0.3),
+            .shininess = 32.0f});
+    staticTree = new TexturedModel(treeModel, treeTexture);
+
     std::vector<Entity *> allEntities;
     allEntities.push_back(new Entity(staticStall, glm::vec3(1.0f, 0.0f, -82.4f), glm::vec3(0.0f, 180.0f, 0.0f)));
+    allEntities.push_back(new Entity(staticTree, glm::vec3(3.0f, 0.0f, -79.4f), glm::vec3(0.0f, 180.0f, 0.0f)));
 
     for (int i = 0; i < 50; ++i) {
         float x = randomFloat() * 100 - 50;
@@ -76,7 +85,20 @@ void MainGameLoop::main() {
         glm::vec3 rot(rx, ry, rz);
         rot = rot * 180.0f;
         allEntities.push_back(new Entity(staticGrass, glm::vec3(x, y, z), rot));
-        allEntities.push_back(new Entity(staticTree, glm::vec3(x * 1.5, y, z * 1.5), rot, randomFloat()));
+//        allEntities.push_back(new Entity(staticTree, glm::vec3(x * 1.5, y, z * 1.5), rot, randomFloat()));
+    }
+    for (int i = 0; i < 50; ++i) {
+        float x = randomFloat() * 100 - 50;
+        float y = randomFloat() * 0;
+        float z = randomFloat() * -300;
+
+        float rx, ry, rz, scale;
+        rx = 0;
+        ry = randomFloat() * 100 - 50;
+        rz = 0;
+        glm::vec3 rot(rx, ry, rz);
+        rot = rot * 180.0f;
+        allEntities.push_back(new Entity(staticTree, glm::vec3(x, y, z), rot, randomFloat()));
     }
 
     Terrain *terrain, *terrain2;
