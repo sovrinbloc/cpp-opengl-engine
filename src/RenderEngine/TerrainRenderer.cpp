@@ -34,7 +34,7 @@ void TerrainRenderer::prepareTerrain(Terrain *terrain) {
     glEnableVertexAttribArray(1);
     glEnableVertexAttribArray(2);
     bindTextures(terrain);
-    shader->loadMaterial(Material {glm::vec3(1.0f), glm::vec3(1.0f), glm::vec3(1.0f), 1.0f});
+    shader->loadMaterial(terrain->getTexturePack()->getMaterial());
 }
 
 void TerrainRenderer::bindTextures(Terrain *terrain) {

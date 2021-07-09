@@ -19,6 +19,7 @@ private:
     RawModel *model;
     TerrainTexturePack *texturePack;
     TerrainTexture *blendMap;
+    Material material;
 
 public:
     float getX() const {

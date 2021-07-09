@@ -63,17 +63,6 @@ void TerrainShader::connectTextureUnits() {
     this->setInt(location_bTexture, 3);
     this->setInt(location_blendMap, 4);
 }
-//}
-//
-//void TerrainShader::connectTextureUnits(TerrainTexturePack *texturePack, TerrainTexture *blendMap) {
-//    this->setInt(location_backgroundTexture, texturePack->getBackgroundTexture()->getTextureID());
-//    this->setInt(location_rTexture, texturePack->getRTexture()->getTextureID());
-//    this->setInt(location_gTexture, texturePack->getGTexture()->getTextureID());
-//    this->setInt(location_bTexture, texturePack->getBTexture()->getTextureID());
-//    this->setInt(location_blendMap, blendMap->getTextureID());
-//}
-
-
 
 void TerrainShader::getAllUniformLocations() {
     location_transformationMatrix = getUniformLocation(transformationMatrix);
