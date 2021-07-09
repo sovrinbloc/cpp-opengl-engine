@@ -56,6 +56,24 @@ void TerrainShader::loadViewPosition(Camera *camera) {
     this->setVec3(location_viewPosition, camera->Position);
 }
 
+void TerrainShader::connectTextureUnits() {
+    this->setInt(location_backgroundTexture, 0);
+    this->setInt(location_rTexture, 1);
+    this->setInt(location_gTexture, 2);
+    this->setInt(location_bTexture, 3);
+    this->setInt(location_blendMap, 4);
+}
+//}
+//
+//void TerrainShader::connectTextureUnits(TerrainTexturePack *texturePack, TerrainTexture *blendMap) {
+//    this->setInt(location_backgroundTexture, texturePack->getBackgroundTexture()->getTextureID());
+//    this->setInt(location_rTexture, texturePack->getRTexture()->getTextureID());
+//    this->setInt(location_gTexture, texturePack->getGTexture()->getTextureID());
+//    this->setInt(location_bTexture, texturePack->getBTexture()->getTextureID());
+//    this->setInt(location_blendMap, blendMap->getTextureID());
+//}
+
+
 
 void TerrainShader::getAllUniformLocations() {
     location_transformationMatrix = getUniformLocation(transformationMatrix);
@@ -77,4 +95,10 @@ void TerrainShader::getAllUniformLocations() {
     location_materialAmbient = getUniformLocation(materialAmbient);
     location_materialDiffuse = getUniformLocation(materialDiffuse);
     location_materialSpecular = getUniformLocation(materialSpecular);
+
+    location_backgroundTexture = getUniformLocation(backgroundTexture);
+    location_rTexture = getUniformLocation(rTexture);
+    location_gTexture = getUniformLocation(gTexture);
+    location_bTexture = getUniformLocation(bTexture);
+    location_blendMap = getUniformLocation(blendMap);
 }

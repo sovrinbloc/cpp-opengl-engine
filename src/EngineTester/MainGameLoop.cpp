@@ -121,13 +121,22 @@ void MainGameLoop::main() {
         allEntities.push_back(new Entity(staticFluffyTree, glm::vec3(x, y, z), rot, randomFloat() * 2));
     }
 
-    Terrain *terrain, *terrain2;
-    terrain = new Terrain(-1, -1, loader, new ModelTexture(FileSystem::Path("/src/Resources/Models/Terrain/grass.png"), PNG));
-    terrain2 = new Terrain(0, -1, loader, new ModelTexture(FileSystem::Path("/src/Resources/Models/Terrain/grass.png"), PNG));
-
-
     std::vector<Scene *> allScenes;
     Model assimpModel = Model(FileSystem::Path("/src/Resources/Models/Backpack/backpack.obj"));
+
+    TerrainTexture *backgroundTexture = new TerrainTexture(loader->loadTexture(FileSystem::Path("/src/Resources/Models/Terrain/MultiTexture/grass.png"))->getId());
+    TerrainTexture *rTexture = new TerrainTexture(loader->loadTexture(FileSystem::Path("/src/Resources/Models/Terrain/MultiTexture/dirt.png"))->getId());
+    TerrainTexture *gTexture = new TerrainTexture(loader->loadTexture(FileSystem::Path("/src/Resources/Models/Terrain/MultiTexture/blueflowers.png"))->getId());
+    TerrainTexture *bTexture = new TerrainTexture(loader->loadTexture(FileSystem::Path("/src/Resources/Models/Terrain/MultiTexture/brickroad.png"))->getId());
+    TerrainTexturePack *texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
+    TerrainTexture *blendMap = new TerrainTexture(loader->loadTexture(FileSystem::Path("/src/Resources/Models/Terrain/MultiTexture/blendMap.png"))->getId());
+
+    Terrain *terrain, *terrain2;
+    terrain = new Terrain(-1, -1, loader, texturePack, blendMap);
+    terrain2 = new Terrain(0, -1, loader, texturePack, blendMap);
+
+
+
 
     for (int i = 0; i < 5; ++i) {
         float x = randomFloat() * 100 - 50;

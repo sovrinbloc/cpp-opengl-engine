@@ -7,6 +7,8 @@
 #include "../Models/RawModel.h"
 #include "../Textures/ModelTexture.h"
 #include "../RenderEngine/Loader.h"
+#include "../Textures/TerrainTexturePack.h"
+
 class Terrain {
 private:
     const float SIZE = 800;
@@ -15,7 +17,8 @@ private:
     float x;
     float z;
     RawModel *model;
-    ModelTexture *texture;
+    TerrainTexturePack *texturePack;
+    TerrainTexture *blendMap;
 
 public:
     float getX() const {
@@ -42,15 +45,15 @@ public:
         this->model = model;
     }
 
-    ModelTexture *getTexture() const {
-        return texture;
+    TerrainTexturePack *getTexturePack() {
+        return this->texturePack;
     }
 
-    void setTexture(ModelTexture *texture) {
-        this->texture = texture;
+    TerrainTexture *getBlendMap() {
+        return this->blendMap;
     }
 
-    Terrain(int gridX, int gridZ, Loader *loader, ModelTexture *texture);
+    Terrain(int gridX, int gridZ, Loader *loader, TerrainTexturePack *texturePack, TerrainTexture *blendMap);
 
 private:
     RawModel *generateTerrain(Loader *loader);

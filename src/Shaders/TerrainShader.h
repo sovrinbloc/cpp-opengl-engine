@@ -8,7 +8,7 @@
 #include "../Textures/ModelTexture.h"
 #include "ShaderProgram.h"
 #include "../Entities/Light.h"
-
+#include "../Textures/TerrainTexturePack.h"
 
 
 class TerrainShader : public ShaderProgram {
@@ -35,14 +35,18 @@ class TerrainShader : public ShaderProgram {
     const std::string materialDiffuse = "material.diffuse";
     const std::string materialSpecular = "material.specular";
 
+    const std::string backgroundTexture = "backgroundTexture";
+    const std::string rTexture = "rTexture";
+    const std::string gTexture = "gTexture";
+    const std::string bTexture = "bTexture";
+    const std::string blendMap = "blendMap";
+
     GLint location_transformationMatrix;
     GLint location_projectionMatrix;
     GLint location_viewMatrix;
     GLint location_lightColor;
     GLint location_skyColor;
     GLint location_viewPosition;
-
-
 
     GLint location_lightAmbient;
     GLint location_lightDiffuse;
@@ -53,6 +57,12 @@ class TerrainShader : public ShaderProgram {
     GLint location_materialAmbient;
     GLint location_materialDiffuse;
     GLint location_materialSpecular;
+    
+    GLint location_backgroundTexture;
+    GLint location_rTexture;
+    GLint location_gTexture;
+    GLint location_bTexture;
+    GLint location_blendMap;
 public:
     GLuint attribute;
 
@@ -73,6 +83,10 @@ public:
     void loadSkyColorVariable(glm::vec3 skyColor);
 
     void loadViewPosition(Camera *camera);
+
+//    void connectTextureUnits(TerrainTexturePack *texturePack, TerrainTexture *blendMap);
+
+    void connectTextureUnits();
 
 
 

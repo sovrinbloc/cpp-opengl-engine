@@ -23,5 +23,7 @@ private:
     void unbindTexturedModel();
 
     void loadModelMatrix(Terrain *terrain);
+
+    void bindTextures(Terrain *terrain);
 };
 #endif //ENGINE_TERRAINRENDERER_H

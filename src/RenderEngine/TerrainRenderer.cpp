@@ -9,6 +9,7 @@ TerrainRenderer::TerrainRenderer(TerrainShader *shader, glm::mat4 projectionMatr
     this->shader = shader;
     shader->start();
     shader->loadProjectionMatrix(projectionMatrix);
+    shader->connectTextureUnits();
     shader->stop();
 }
 
@@ -32,12 +33,22 @@ void TerrainRenderer::prepareTerrain(Terrain *terrain) {
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
     glEnableVertexAttribArray(2);
+    bindTextures(terrain);
+    shader->loadMaterial(Material {glm::vec3(1.0f), glm::vec3(1.0f), glm::vec3(1.0f), 1.0f});
+}
 
-    ModelTexture *texture = terrain->getTexture();
-    // bind texture
+void TerrainRenderer::bindTextures(Terrain *terrain) {
+    TerrainTexturePack *texturePack = terrain->getTexturePack();
     glActiveTexture(GL_TEXTURE0);
-    texture->bindTexture();
-
+    glBindTexture(GL_TEXTURE_2D, texturePack->getBackgroundTexture()->getTextureID());
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, texturePack->getRTexture()->getTextureID());
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, texturePack->getGTexture()->getTextureID());
+    glActiveTexture(GL_TEXTURE3);
+    glBindTexture(GL_TEXTURE_2D, texturePack->getBTexture()->getTextureID());
+    glActiveTexture(GL_TEXTURE4);
+    glBindTexture(GL_TEXTURE_2D, terrain->getBlendMap()->getTextureID());
 }
 
 void TerrainRenderer::unbindTexturedModel() {
@@ -53,5 +64,4 @@ void TerrainRenderer::loadModelMatrix(Terrain *terrain) {
     glm::mat4 transformationMatrix = Maths::createTransformationMatrix(
             glm::vec3(terrain->getX(), 0.0f, terrain->getZ()));
     shader->loadTransformationMatrix(transformationMatrix);
-    shader->loadMaterial(terrain->getTexture()->getMaterial());
 }

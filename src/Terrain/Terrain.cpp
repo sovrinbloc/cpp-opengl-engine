@@ -4,8 +4,9 @@
 
 #include "Terrain.h"
 
-Terrain::Terrain(int gridX, int gridZ, Loader *loader, ModelTexture *texture) {
-    this->texture = texture;
+Terrain::Terrain(int gridX, int gridZ, Loader *loader, TerrainTexturePack *texturePack, TerrainTexture *blendMap) {
+    this->texturePack = texturePack;
+    this->blendMap = blendMap;
     this->x = (float)gridX * SIZE;
     this->z = (float)gridZ * SIZE;
     this->model = generateTerrain(loader);
