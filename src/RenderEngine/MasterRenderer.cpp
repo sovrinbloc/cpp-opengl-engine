@@ -6,21 +6,28 @@
 #include "DisplayManager.h"
 #include "../Toolbox/Maths.h"
 #include "RenderStyle.h"
+#include "SceneLoader.h"
 
 MasterRenderer::MasterRenderer(CameraInput *cameraInput) : shader(new StaticShader()),
                                                            renderer(new EntityRenderer(shader)),
                                                            camera(cameraInput), projectionMatrix(
                 Maths::createProjectionMatrix(FOVY, SRC_WIDTH, SRC_HEIGHT, NEAR_PLANE, FAR_PLANE)),
-                                                           terrainShader(new TerrainShader()) {
+                                                           terrainShader(new TerrainShader()),
+                                                           modelShader(new ModelShader())
+                                                           {
     RenderStyle::enableCulling();
     entities = new std::map<TexturedModel *, std::vector<Entity *>>;
+    scenes = new std::map<Model *, std::vector<Scene *>>;
     terrains = new std::vector<Terrain *>;
+    models = new std::vector<Model *>;
     terrainRenderer = new TerrainRenderer(terrainShader, this->projectionMatrix);
+    assimpRenderer = new SceneRenderer(modelShader);
 }
 
 void MasterRenderer::cleanUp() {
     shader->cleanUp();
     terrainShader->cleanUp();
+    modelShader->cleanUp();
 }
 
 /**
@@ -50,6 +57,15 @@ void MasterRenderer::render(Light *sun) {
 
     shader->stop();
 
+    modelShader->start();
+
+    modelShader->loadViewPosition(CameraInput::getCamera());
+    modelShader->loadViewMatrix(CameraInput::getCamera()->GetViewMatrix());
+    modelShader->loadProjectionMatrix(this->createProjectionMatrix());
+    assimpRenderer->render(scenes);
+    modelShader->stop();
+
+
     terrainShader->start();
     terrainShader->loadSkyColorVariable(glm::vec3(.529, .808, .98));
     terrainShader->loadLight(sun);
@@ -61,10 +77,15 @@ void MasterRenderer::render(Light *sun) {
     terrainShader->stop();
 
     entities->clear();
+    scenes->clear();
 }
 
 void MasterRenderer::processTerrain(Terrain *terrain) {
     terrains->push_back(terrain);
+}
+
+void MasterRenderer::processModel(Model *model) {
+    models->push_back(model);
 }
 
 glm::mat4 MasterRenderer::createProjectionMatrix() {
@@ -86,6 +107,18 @@ void MasterRenderer::processEntity(Entity *entity) {
         std::vector<Entity *> newBatch;
         newBatch.push_back(entity);
         (*entities)[entityModel] = newBatch;
+    }
+}
+
+void MasterRenderer::processScenes(Scene *scene) {
+    Model *model = scene->getModel();
+    auto batchIterator = scenes->find(model);
+    if (batchIterator != scenes->end()) {
+        batchIterator->second.push_back(scene);
+    } else {
+        std::vector<Scene *> newBatch;
+        newBatch.push_back(scene);
+        (*scenes)[model] = newBatch;
     }
 }
 

@@ -2,11 +2,11 @@
 // Created by Joseph Alai on 7/7/21.
 //
 
-#ifndef ENGINE_ASSIMPMESH_H
-#define ENGINE_ASSIMPMESH_H
+#ifndef ENGINE_MESHDATA_H
+#define ENGINE_MESHDATA_H
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include "../Shaders/StaticShader.h"
+#include "../Shaders/Assimp/ModelShader.h"
 #include <string>
 #include <vector>
 using namespace std;
@@ -32,7 +32,7 @@ struct TextureData {
 
 
 
-class AssimpMesh {
+class MeshData {
 public:
     // mesh Data
     vector<VertexData>       vertices;
@@ -41,7 +41,7 @@ public:
     unsigned int VAO;
 
     // constructor
-    AssimpMesh(vector<VertexData> vertices, vector<unsigned int> indices, vector<TextureData> textures)
+    MeshData(vector<VertexData> vertices, vector<unsigned int> indices, vector<TextureData> textures)
     {
         this->vertices = vertices;
         this->indices = indices;
@@ -52,7 +52,7 @@ public:
     }
 
     // render the mesh
-    void Draw(StaticShader &shader)
+    void render(ModelShader *shader)
     {
         // bind appropriate textures
         unsigned int diffuseNr  = 1;
@@ -75,7 +75,7 @@ public:
                 number = std::to_string(heightNr++); // transfer unsigned int to stream
 
             // now set the sampler to the correct texture unit
-            glUniform1i(glGetUniformLocation(shader.programID, (name + number).c_str()), i);
+            glUniform1i(glGetUniformLocation(shader->programID, (name + number).c_str()), i);
             // and finally bind the texture
             glBindTexture(GL_TEXTURE_2D, textures[i].id);
         }
@@ -133,4 +133,4 @@ private:
     }
 };
 
-#endif //ENGINE_ASSIMPMESH_H
+#endif //ENGINE_MESHDATA_H

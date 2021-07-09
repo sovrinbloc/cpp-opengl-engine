@@ -105,14 +105,24 @@ void MainGameLoop::main() {
     terrain = new Terrain(-1, -1, loader, new ModelTexture(FileSystem::Path("/src/Resources/Models/Terrain/grass.png"), PNG));
     terrain2 = new Terrain(0, -1, loader, new ModelTexture(FileSystem::Path("/src/Resources/Models/Terrain/grass.png"), PNG));
 
+
+    std::vector<Scene *> allScenes;
+    Model assimpModel = Model(FileSystem::Path("/src/Resources/Models/Backpack/backpack.obj"));
+    allScenes.push_back(new Scene(&assimpModel, glm::vec3(1.0f, 0.0f, -82.4f), glm::vec3(0.0f, 180.0f, 0.0f), 2.0f ));
+
     MasterRenderer *renderer;
     renderer = new MasterRenderer(cameraInput);
     while (DisplayManager::stayOpen()) {
+        renderer->processModel(&assimpModel);
         // game logic
         renderer->processTerrain(terrain);
         renderer->processTerrain(terrain2);
+
         for (Entity *booth : allEntities) {
             renderer->processEntity(booth);
+        }
+        for (Scene *pack : allScenes) {
+            renderer->processScenes(pack);
         }
         renderer->processEntity(dragonEntity);
         light->setPosition(light->getPosition() + glm::vec3(0.0, 0.01, -0.1f));

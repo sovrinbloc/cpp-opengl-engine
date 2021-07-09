@@ -11,6 +11,9 @@
 #include "../Entities/CameraInput.h"
 #include "EntityRenderer.h"
 #include "TerrainRenderer.h"
+#include "SceneRenderer.h"
+#include "../Shaders/Assimp/ModelShader.h"
+#include "SceneLoader.h"
 
 static const float FOVY = 45.0f;
 static const float NEAR_PLANE = 0.1f;
@@ -26,7 +29,12 @@ private:
     TerrainRenderer *terrainRenderer;
     TerrainShader *terrainShader;
     std::map<TexturedModel *, std::vector<Entity *>> *entities;
+    std::map<Model *, std::vector<Scene *>> *scenes;
     std::vector<Terrain *> *terrains;
+
+    SceneRenderer *assimpRenderer;
+    ModelShader *modelShader;
+    std::vector<Model *> *models;
 
 public:
     MasterRenderer(CameraInput *cameraInput);
@@ -47,6 +55,10 @@ public:
     glm::mat4 getProjectionMatrix();
 
     void processEntity(Entity *entity);
+
+    void processModel(Model *model);
+
+    void processScenes(Scene *scene);
 
     void updatePerspective(float width, float height);
 
