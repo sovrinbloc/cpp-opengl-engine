@@ -26,9 +26,9 @@ void MainGameLoop::main() {
     viewCamera = new Camera(glm::vec3(0.0f, 4.5f, 0.0f));
     cameraInput = new CameraInput(viewCamera);
 
-    RawModel *grassModel, *treeModel, *stallModel, *dragonModel;
-    ModelTexture *grassTexture, *treeTexture, *stallTexture, *dragonTexture;
-    TexturedModel *staticGrass, *staticTree, *staticStall, *staticDragon;
+    RawModel *grassModel, *treeModel, *fluffyTreeModel, *stallModel, *dragonModel;
+    ModelTexture *grassTexture, *treeTexture, *fluffyTreeTexture, *stallTexture, *dragonTexture;
+    TexturedModel *staticGrass, *staticTree, *staticStall, *staticFluffyTree, *staticDragon;
     Light *light;
 
     light = new Light(glm::vec3(0.0, 4.5, -10.0f), glm::vec3(1, 1, 1));
@@ -69,9 +69,17 @@ void MainGameLoop::main() {
             .shininess = 32.0f});
     staticTree = new TexturedModel(treeModel, treeTexture);
 
+    ModelData fluffyTreeData = OBJLoader::loadObjModel("/src/Resources/InProgress/Tree/fluffy-tree.obj");
+    fluffyTreeModel = loader->loadToVAO(&fluffyTreeData);
+    fluffyTreeTexture = new ModelTexture(FileSystem::Path("/src/Resources/InProgress/Tree/tree.png"), PNG, Material{
+            .ambient =  glm::vec3(1),
+            .diffuse =  glm::vec3(1),
+            .specular =  glm::vec3(0.3),
+            .shininess = 32.0f});
+    staticFluffyTree = new TexturedModel(fluffyTreeModel, fluffyTreeTexture);
+
     std::vector<Entity *> allEntities;
     allEntities.push_back(new Entity(staticStall, glm::vec3(1.0f, 0.0f, -82.4f), glm::vec3(0.0f, 180.0f, 0.0f)));
-    allEntities.push_back(new Entity(staticTree, glm::vec3(3.0f, 0.0f, -79.4f), glm::vec3(0.0f, 180.0f, 0.0f)));
 
     for (int i = 0; i < 50; ++i) {
         float x = randomFloat() * 100 - 50;
@@ -85,7 +93,6 @@ void MainGameLoop::main() {
         glm::vec3 rot(rx, ry, rz);
         rot = rot * 180.0f;
         allEntities.push_back(new Entity(staticGrass, glm::vec3(x, y, z), rot));
-//        allEntities.push_back(new Entity(staticTree, glm::vec3(x * 1.5, y, z * 1.5), rot, randomFloat()));
     }
     for (int i = 0; i < 50; ++i) {
         float x = randomFloat() * 100 - 50;
@@ -100,6 +107,19 @@ void MainGameLoop::main() {
         rot = rot * 180.0f;
         allEntities.push_back(new Entity(staticTree, glm::vec3(x, y, z), rot, randomFloat()));
     }
+    for (int i = 0; i < 50; ++i) {
+        float x = randomFloat() * 100 - 50;
+        float y = randomFloat() * 0;
+        float z = randomFloat() * -300;
+
+        float rx, ry, rz, scale;
+        rx = 0;
+        ry = randomFloat() * 100 - 50;
+        rz = 0;
+        glm::vec3 rot(rx, ry, rz);
+        rot = rot * 180.0f;
+        allEntities.push_back(new Entity(staticFluffyTree, glm::vec3(x, y, z), rot, randomFloat() * 2));
+    }
 
     Terrain *terrain, *terrain2;
     terrain = new Terrain(-1, -1, loader, new ModelTexture(FileSystem::Path("/src/Resources/Models/Terrain/grass.png"), PNG));
@@ -108,7 +128,20 @@ void MainGameLoop::main() {
 
     std::vector<Scene *> allScenes;
     Model assimpModel = Model(FileSystem::Path("/src/Resources/Models/Backpack/backpack.obj"));
-    allScenes.push_back(new Scene(&assimpModel, glm::vec3(1.0f, 0.0f, -82.4f), glm::vec3(0.0f, 180.0f, 0.0f), 2.0f ));
+
+    for (int i = 0; i < 5; ++i) {
+        float x = randomFloat() * 100 - 50;
+        float y = randomFloat() * 100 + 3;
+        float z = randomFloat() * -300;
+
+        float rx, ry, rz, scale;
+        rx = 0;
+        ry = randomFloat() * 100 - 50;
+        rz = 0;
+        glm::vec3 rot(rx, ry, rz);
+        rot = rot * 180.0f;
+        allScenes.push_back(new Scene(&assimpModel, glm::vec3(x, y, z), rot, randomFloat() * 2));
+    }
 
     MasterRenderer *renderer;
     renderer = new MasterRenderer(cameraInput);
