@@ -6,10 +6,10 @@
 #define ENGINE_MODELSHADER_H
 
 
-#include "../../Entities/CameraInput.h"
-#include "../../Textures/ModelTexture.h"
-#include "../ShaderProgram.h"
-#include "../../Entities/Light.h"
+#include "../Entities/CameraInput.h"
+#include "../Textures/ModelTexture.h"
+#include "ShaderProgram.h"
+#include "../Entities/Light.h"
 
 
 class ModelShader : public ShaderProgram {

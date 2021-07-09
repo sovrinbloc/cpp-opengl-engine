@@ -12,7 +12,7 @@
 #include "EntityRenderer.h"
 #include "TerrainRenderer.h"
 #include "SceneRenderer.h"
-#include "../Shaders/Assimp/ModelShader.h"
+#include "../Shaders/ModelShader.h"
 #include "SceneLoader.h"
 
 static const float FOVY = 45.0f;

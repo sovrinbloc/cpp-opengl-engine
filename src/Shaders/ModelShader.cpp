@@ -5,8 +5,8 @@
 #include "ModelShader.h"
 
 
-static const char *VertexPath = "/src/Shaders/Assimp/VertexShader.glsl";
-static const char *FragmentPath = "/src/Shaders/Assimp/FragmentShader.glsl";
+static const char *VertexPath = "/src/Shaders/Scene/VertexShader.glsl";
+static const char *FragmentPath = "/src/Shaders/Scene/FragmentShader.glsl";
 
 ModelShader::ModelShader() : ShaderProgram(VertexPath, FragmentPath, nullptr) {
     this->initialize();

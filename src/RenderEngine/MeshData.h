@@ -6,7 +6,7 @@
 #define ENGINE_MESHDATA_H
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include "../Shaders/Assimp/ModelShader.h"
+#include "../Shaders/ModelShader.h"
 #include <string>
 #include <vector>
 using namespace std;

@@ -4,8 +4,8 @@
 
 #include "TerrainShader.h"
 
-static const char *VertexPath = "/src/Shaders/TerrainVertexShader.glsl";
-static const char *FragmentPath = "/src/Shaders/TerrainFragmentShader.glsl";
+static const char *VertexPath = "/src/Shaders/Terrain/VertexShader.glsl";
+static const char *FragmentPath = "/src/Shaders/Terrain/FragmentShader.glsl";
 
 TerrainShader::TerrainShader() : ShaderProgram(VertexPath, FragmentPath, nullptr) {
     this->initialize();

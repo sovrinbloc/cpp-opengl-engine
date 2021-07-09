@@ -10,7 +10,7 @@
 #include <assimp/postprocess.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include "../Shaders/Assimp/ModelShader.h"
+#include "../Shaders/ModelShader.h"
 #include "../Libraries/images/stb_image.h"
 
 #include <iostream>
