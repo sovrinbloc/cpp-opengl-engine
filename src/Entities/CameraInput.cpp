@@ -4,16 +4,16 @@
 #include "CameraInput.h"
 #include "../RenderEngine/DisplayManager.h"
 
-double lastX, lastY;
+double CameraInput::lastX, CameraInput::lastY;
 
 Camera *CameraInput::ViewCamera;
 
-bool firstMouse = true;
+bool CameraInput::firstMouse = true;
 
 CameraInput::CameraInput(Camera *camera) {
     ViewCamera = camera;
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    glfwGetCursorPos(window, &lastX, &lastY);
+    glfwGetCursorPos(window, &CameraInput::lastX, &CameraInput::lastY);
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
 }
@@ -47,17 +47,17 @@ void CameraInput::processInput(GLFWwindow *window) {
 }
 
 void CameraInput::mouse_callback(GLFWwindow *window, double xpos, double ypos) {
-    if (firstMouse) {
-        lastX = (GLfloat) xpos;
-        lastY = (GLfloat) ypos;
-        firstMouse = false;
+    if (CameraInput::firstMouse) {
+        CameraInput::lastX = (GLfloat) xpos;
+        CameraInput::lastY = (GLfloat) ypos;
+        CameraInput::firstMouse = false;
     }
 
-    GLfloat xoffset = (GLfloat) xpos - lastX;
-    GLfloat yoffset = lastY - (GLfloat) ypos; // reversed since y-coordinates go from bottom to top
+    GLfloat xoffset = (GLfloat) xpos - CameraInput::lastX;
+    GLfloat yoffset = CameraInput::lastY - (GLfloat) ypos; // reversed since y-coordinates go from bottom to top
 
-    lastX = (GLfloat) xpos;
-    lastY = (GLfloat) ypos;
+    CameraInput::lastX = (GLfloat) xpos;
+    CameraInput::lastY = (GLfloat) ypos;
 
     ViewCamera->ProcessMouseMovement(xoffset, yoffset);
 }

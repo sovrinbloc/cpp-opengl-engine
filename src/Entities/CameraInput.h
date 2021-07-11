@@ -9,15 +9,15 @@
 #include <GLFW/glfw3.h>
 #include "Camera.h"
 
-extern double lastX, lastY;
-extern bool firstMouse;
-
 class CameraInput {
 public:
+    static double lastX, lastY;
+
+    static bool firstMouse;
 
     static Camera *ViewCamera;
 
-    CameraInput(Camera *camera);
+    explicit CameraInput(Camera *camera);
 
     void move();
 
