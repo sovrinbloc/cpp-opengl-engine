@@ -10,7 +10,7 @@
 
 
 class Entity {
-private:
+protected:
     TexturedModel *model;
     glm::vec3 position;
     glm::vec3 rotation;
@@ -19,10 +19,7 @@ private:
 public:
 
     Entity(TexturedModel *model, glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 rotation = glm::vec3(0),
-           float scale = 1.0f) : model(model), position(position), rotation(rotation),
-                                                               scale(scale) {
-
-    }
+           float scale = 1.0f) : model(model), position(position), rotation(rotation), scale(scale) {}
 
     TexturedModel *getModel() {
         return this->model;

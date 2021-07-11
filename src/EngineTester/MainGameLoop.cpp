@@ -81,10 +81,10 @@ void MainGameLoop::main() {
     std::vector<Entity *> allEntities;
     allEntities.push_back(new Entity(staticStall, glm::vec3(1.0f, 0.0f, -82.4f), glm::vec3(0.0f, 180.0f, 0.0f)));
 
-    for (int i = 0; i < 50; ++i) {
-        float x = randomFloat() * 100 - 50;
+    for (int i = 0; i < 500; ++i) {
+        float x = randomFloat() * 1500 - 800;
         float y = randomFloat() * 0;
-        float z = randomFloat() * -300;
+        float z = randomFloat() * -800;
 
         float rx, ry, rz, scale;
         rx = 0;
@@ -94,10 +94,10 @@ void MainGameLoop::main() {
         rot = rot * 180.0f;
         allEntities.push_back(new Entity(staticGrass, glm::vec3(x, y, z), rot));
     }
-    for (int i = 0; i < 50; ++i) {
-        float x = randomFloat() * 100 - 50;
+    for (int i = 0; i < 500; ++i) {
+        float x = randomFloat() * 1500 - 800;
         float y = randomFloat() * 0;
-        float z = randomFloat() * -300;
+        float z = randomFloat() * -800;
 
         float rx, ry, rz, scale;
         rx = 0;
@@ -107,10 +107,10 @@ void MainGameLoop::main() {
         rot = rot * 180.0f;
         allEntities.push_back(new Entity(staticTree, glm::vec3(x, y, z), rot, randomFloat()));
     }
-    for (int i = 0; i < 50; ++i) {
-        float x = randomFloat() * 100 - 50;
+    for (int i = 0; i < 500; ++i) {
+        float x = randomFloat() * 1500 - 800;
         float y = randomFloat() * 0;
-        float z = randomFloat() * -300;
+        float z = randomFloat() * -800;
 
         float rx, ry, rz, scale;
         rx = 0;
@@ -138,7 +138,7 @@ void MainGameLoop::main() {
 
 
 
-    for (int i = 0; i < 5; ++i) {
+    for (int i = 0; i < 2; ++i) {
         float x = randomFloat() * 100 - 50;
         float y = randomFloat() * 100 + 3;
         float z = randomFloat() * -300;

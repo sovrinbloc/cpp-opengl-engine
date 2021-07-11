@@ -8,6 +8,9 @@ GLint SRC_WIDTH = 800;
 GLint SRC_HEIGHT = 600;
 GLFWwindow *window;
 
+float DisplayManager::deltaTime;
+float DisplayManager::lastFrame;
+
 int DisplayManager::createDisplay() {
     glfwInit();
 
@@ -44,6 +47,13 @@ void DisplayManager::updateDisplay() {
     // -------------------------------------------------------------------------------
     glfwSwapBuffers(window);
     glfwPollEvents();
+}
+
+
+void DisplayManager::uniformMovement() {
+    float currentFrame = glfwGetTime();
+    DisplayManager::deltaTime = currentFrame - DisplayManager::lastFrame;
+    DisplayManager::lastFrame = currentFrame;
 }
 
 bool DisplayManager::stayOpen() {

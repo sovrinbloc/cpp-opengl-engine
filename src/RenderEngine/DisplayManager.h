@@ -17,6 +17,11 @@ extern GLFWwindow *window;
 
 class DisplayManager {
 public:
+
+    static float deltaTime;
+
+    static float lastFrame;
+
     static int createDisplay();
 
     static void updateDisplay();
@@ -24,6 +29,8 @@ public:
     static bool stayOpen();
 
     static void closeDisplay();
+
+    static void uniformMovement();
 
     static float getWidth() {
         return SRC_WIDTH;

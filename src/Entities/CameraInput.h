@@ -10,26 +10,24 @@
 #include "Camera.h"
 
 extern double lastX, lastY;
-extern float deltaTime;
-extern float lastFrame;
 extern bool firstMouse;
-extern Camera *VIEW_CAMERA;
 
 class CameraInput {
 public:
+
+    static Camera *ViewCamera;
 
     CameraInput(Camera *camera);
 
     void move();
 
-    static void uniformMovement();
 
     // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
     // ---------------------------------------------------------------------------------------------------------
     void processInput(GLFWwindow *window);
 
     static Camera *getCamera() {
-        return VIEW_CAMERA;
+        return ViewCamera;
     }
 
     static void mouse_callback (GLFWwindow *window, double xpos, double ypos);

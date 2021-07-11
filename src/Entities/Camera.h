@@ -61,6 +61,10 @@ public:
     // processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
     void ProcessMouseScroll(float yoffset);
 
+    void ToggleChangeSpeed(float velocity) {
+        this->MovementSpeed = velocity;
+    }
+
 private:
     bool fps = false;
 
