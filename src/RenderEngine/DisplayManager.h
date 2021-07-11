@@ -22,6 +22,10 @@ public:
 
     static float lastFrameTime;
 
+    static int samplers;
+
+    static bool antiAliasingEnabled;
+
     static int createDisplay();
 
     static void updateDisplay();
@@ -34,7 +38,9 @@ public:
 
     static float getFrameTimeSeconds();
 
-    float getPlayerDelta();
+    static void setAntiAliasing(bool enabled);
+
+    static void setAntiAliasingSamplers(int samplers);
 
     static float getWidth() {
         return SRC_WIDTH;

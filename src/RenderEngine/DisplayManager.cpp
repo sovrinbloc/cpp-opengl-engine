@@ -21,12 +21,15 @@ int DisplayManager::createDisplay() {
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
+    glfwWindowHint(GLFW_SAMPLES, 4);
+
     window = glfwCreateWindow(SRC_WIDTH, SRC_HEIGHT, "ENGINE: Manifest (Alpha & Omega)", nullptr, nullptr);
     if (window == nullptr) {
         printf("Failed to create GLFW window\n");
         glfwTerminate();
         return -1;
     }
+    glEnable(GL_MULTISAMPLE);
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, (GLFWframebuffersizefun) framebuffer_size_callback);
 
@@ -57,7 +60,7 @@ void DisplayManager::uniformMovement() {
 }
 
 float DisplayManager::getFrameTimeSeconds() {
-    return DisplayManager::lastFrameTime / 1000.0f;
+    return DisplayManager::delta;
 }
 
 
