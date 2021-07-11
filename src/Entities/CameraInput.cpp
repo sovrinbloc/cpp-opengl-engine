@@ -31,13 +31,13 @@ void CameraInput::processInput(GLFWwindow *window) {
         glfwSetWindowShouldClose(window, true);
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        ViewCamera->ProcessKeyboard(FORWARD, DisplayManager::deltaTime);
+        ViewCamera->ProcessKeyboard(FORWARD, DisplayManager::delta);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        ViewCamera->ProcessKeyboard(BACKWARD, DisplayManager::deltaTime);
+        ViewCamera->ProcessKeyboard(BACKWARD, DisplayManager::delta);
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        ViewCamera->ProcessKeyboard(LEFT, DisplayManager::deltaTime);
+        ViewCamera->ProcessKeyboard(LEFT, DisplayManager::delta);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        ViewCamera->ProcessKeyboard(RIGHT, DisplayManager::deltaTime);
+        ViewCamera->ProcessKeyboard(RIGHT, DisplayManager::delta);
     if (glfwGetKey(window, GLFW_KEY_TAB)) {
         ViewCamera->MovementSpeed *= 1.5;
     }

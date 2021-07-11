@@ -12,6 +12,7 @@
 #include "../RenderEngine/EntityRenderer.h"
 #include "../RenderEngine/ObjLoader.h"
 #include "../RenderEngine/MasterRenderer.h"
+#include "../Entities/Player.h"
 
 using namespace glm;
 
@@ -135,9 +136,6 @@ void MainGameLoop::main() {
     terrain = new Terrain(-1, -1, loader, texturePack, blendMap);
     terrain2 = new Terrain(0, -1, loader, texturePack, blendMap);
 
-
-
-
     for (int i = 0; i < 2; ++i) {
         float x = randomFloat() * 100 - 50;
         float y = randomFloat() * 100 + 3;
@@ -152,9 +150,16 @@ void MainGameLoop::main() {
         allScenes.push_back(new Scene(&assimpModel, glm::vec3(x, y, z), rot, randomFloat() * 2));
     }
 
+//    ModelData bunnyModelData = OBJLoader::loadObjModel(FileSystem::Path("/src/Resources/Models/Tutorial/dragon.obj"));
+    RawModel *bunnyModel = loader->loadToVAO(&stallData);
+    TexturedModel *stanfordBunny = new TexturedModel(bunnyModel, new ModelTexture(FileSystem::Path("/src/Resources/Models/Tutorial/grass.png"), PNG));
+    Player *player = new Player(stanfordBunny, glm::vec3(100.0f, 3.0f, -50.0f), glm::vec3(0.0f), 1.0f);
+
     MasterRenderer *renderer;
     renderer = new MasterRenderer(cameraInput);
     while (DisplayManager::stayOpen()) {
+        player->move();
+        renderer->processEntity(player);
         renderer->processModel(&assimpModel);
         // game logic
         renderer->processTerrain(terrain);
