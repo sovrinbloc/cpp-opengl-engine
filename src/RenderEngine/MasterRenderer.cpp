@@ -4,14 +4,13 @@
 
 #include "MasterRenderer.h"
 #include "DisplayManager.h"
-#include "../Toolbox/Maths.h"
 #include "RenderStyle.h"
 #include "SceneLoader.h"
 
 MasterRenderer::MasterRenderer(CameraInput *cameraInput) : shader(new StaticShader()),
                                                            renderer(new EntityRenderer(shader)),
                                                            camera(cameraInput), projectionMatrix(
-                Maths::createProjectionMatrix(FOVY, SRC_WIDTH, SRC_HEIGHT, NEAR_PLANE, FAR_PLANE)),
+                Maths::createProjectionMatrix(FOVY, (float)DisplayManager::SRC_WIDTH, (float)DisplayManager::SRC_HEIGHT, NEAR_PLANE, FAR_PLANE)),
                                                            terrainShader(new TerrainShader()),
                                                            modelShader(new ModelShader())
                                                            {
@@ -52,7 +51,7 @@ void MasterRenderer::render(Light *sun) {
     shader->loadLight(sun);
     shader->loadViewPosition(CameraInput::getCamera());
     shader->loadViewMatrix(CameraInput::getCamera()->GetViewMatrix());
-    shader->loadProjectionMatrix(this->createProjectionMatrix());
+    shader->loadProjectionMatrix(MasterRenderer::createProjectionMatrix());
     renderer->render(entities);
 
     shader->stop();
@@ -61,7 +60,7 @@ void MasterRenderer::render(Light *sun) {
 
     modelShader->loadViewPosition(CameraInput::getCamera());
     modelShader->loadViewMatrix(CameraInput::getCamera()->GetViewMatrix());
-    modelShader->loadProjectionMatrix(this->createProjectionMatrix());
+    modelShader->loadProjectionMatrix(MasterRenderer::createProjectionMatrix());
     assimpRenderer->render(scenes);
     modelShader->stop();
 
@@ -71,7 +70,7 @@ void MasterRenderer::render(Light *sun) {
     terrainShader->loadLight(sun);
     terrainShader->loadViewPosition(CameraInput::getCamera());
     terrainShader->loadViewMatrix(CameraInput::getCamera()->GetViewMatrix());
-    terrainShader->loadProjectionMatrix(this->createProjectionMatrix());
+    terrainShader->loadProjectionMatrix(MasterRenderer::createProjectionMatrix());
     terrainRenderer->render(terrains);
     terrains->clear();
     terrainShader->stop();
@@ -90,7 +89,7 @@ void MasterRenderer::processModel(Model *model) {
 
 glm::mat4 MasterRenderer::createProjectionMatrix() {
     // my additions
-    return Maths::createProjectionMatrix(camera->getCamera()->Zoom, SRC_WIDTH, SRC_HEIGHT, NEAR_PLANE,
+    return Maths::createProjectionMatrix(CameraInput::getCamera()->Zoom, (GLfloat)DisplayManager::SRC_WIDTH, (GLfloat)DisplayManager::SRC_HEIGHT, NEAR_PLANE,
                                          FAR_PLANE);
 }
 
@@ -123,6 +122,6 @@ void MasterRenderer::processScenes(Scene *scene) {
 }
 
 void MasterRenderer::updatePerspective(float width, float height) {
-    SRC_WIDTH = width;
-    SRC_HEIGHT = height;
+    DisplayManager::SRC_WIDTH = (GLint)width;
+    DisplayManager::SRC_HEIGHT = (GLint)height;
 }

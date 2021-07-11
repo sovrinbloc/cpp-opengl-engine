@@ -4,6 +4,8 @@
 #include "CameraInput.h"
 #include "../RenderEngine/DisplayManager.h"
 
+bool CameraInput::cursorInvisible = false;
+
 double CameraInput::lastX, CameraInput::lastY;
 
 Camera *CameraInput::ViewCamera;
@@ -12,36 +14,48 @@ bool CameraInput::firstMouse = true;
 
 CameraInput::CameraInput(Camera *camera) {
     ViewCamera = camera;
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    glfwGetCursorPos(window, &CameraInput::lastX, &CameraInput::lastY);
-    glfwSetCursorPosCallback(window, mouse_callback);
-    glfwSetScrollCallback(window, scroll_callback);
+    glfwSetInputMode(DisplayManager::window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwGetCursorPos(DisplayManager::window, &CameraInput::lastX, &CameraInput::lastY);
+    glfwSetCursorPosCallback(DisplayManager::window, mouse_callback);
+    glfwSetScrollCallback(DisplayManager::window, scroll_callback);
+}
+
+void CameraInput::toggleCursorStyle() {
+    cursorInvisible = !cursorInvisible;
+    GLint cursorStyle = cursorInvisible ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL;
+    glfwSetInputMode(DisplayManager::window, GLFW_CURSOR, cursorStyle);
 }
 
 void CameraInput::move() {
-    this->processInput(window);
+    this->processInput(DisplayManager::window);
     DisplayManager::uniformMovement();
 }
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
 void CameraInput::processInput(GLFWwindow *window) {
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS ||
-        glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+        this->toggleCursorStyle();
+    }
+    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
-
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    }
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
         ViewCamera->ProcessKeyboard(FORWARD, DisplayManager::delta);
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+    }
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
         ViewCamera->ProcessKeyboard(BACKWARD, DisplayManager::delta);
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+    }
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
         ViewCamera->ProcessKeyboard(LEFT, DisplayManager::delta);
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+    }
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
         ViewCamera->ProcessKeyboard(RIGHT, DisplayManager::delta);
+    }
     if (glfwGetKey(window, GLFW_KEY_TAB) == GLFW_PRESS) {
         ViewCamera->MovementSpeed = SPEED * 4.5;
     }
-    if (glfwGetKey(window, GLFW_KEY_TAB) == GLFW_RELEASE) {
+    if (glfwGetKey(window, GLFW_KEY_BACKSLASH) == GLFW_PRESS) {
         ViewCamera->MovementSpeed = SPEED;
     }
 }
@@ -53,8 +67,10 @@ void CameraInput::mouse_callback(GLFWwindow *window, double xpos, double ypos) {
         CameraInput::firstMouse = false;
     }
 
-    GLfloat xoffset = (GLfloat) xpos - CameraInput::lastX;
-    GLfloat yoffset = CameraInput::lastY - (GLfloat) ypos; // reversed since y-coordinates go from bottom to top
+    GLfloat xoffset = (GLfloat) xpos - (GLfloat) CameraInput::lastX;
+
+    // reversed since y-coordinates go from bottom to top
+    GLfloat yoffset = (GLfloat) CameraInput::lastY - (GLfloat) ypos;
 
     CameraInput::lastX = (GLfloat) xpos;
     CameraInput::lastY = (GLfloat) ypos;

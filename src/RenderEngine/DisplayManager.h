@@ -10,13 +10,19 @@
 
 #include <GLFW/glfw3.h>
 
-extern GLint SRC_WIDTH;
-extern GLint SRC_HEIGHT;
-
-extern GLFWwindow *window;
+//extern GLint SRC_WIDTH;
+//extern GLint SRC_HEIGHT;
+//
+//extern GLFWwindow *window;
 
 class DisplayManager {
 public:
+
+    static GLint SRC_WIDTH;
+
+    static GLint SRC_HEIGHT;
+
+    static GLFWwindow *window;
 
     static float delta;
 
@@ -37,22 +43,6 @@ public:
     static void uniformMovement();
 
     static float getFrameTimeSeconds();
-
-    static void setAntiAliasing(bool enabled);
-
-    static void setAntiAliasingSamplers(int samplers);
-
-    static float getWidth() {
-        return SRC_WIDTH;
-    }
-
-    static float getHeight() {
-        return SRC_HEIGHT;
-    }
-
-    static GLFWwindow *getWindow() {
-        return window;
-    }
 
 
 private:

@@ -4,9 +4,9 @@
 
 #include <cstdio>
 #include "DisplayManager.h"
-GLint SRC_WIDTH = 800;
-GLint SRC_HEIGHT = 600;
-GLFWwindow *window;
+GLint DisplayManager::SRC_WIDTH = 800;
+GLint DisplayManager::SRC_HEIGHT = 600;
+GLFWwindow *DisplayManager::window;
 
 float DisplayManager::delta;
 float DisplayManager::lastFrameTime;
@@ -23,7 +23,7 @@ int DisplayManager::createDisplay() {
 
     glfwWindowHint(GLFW_SAMPLES, 4);
 
-    window = glfwCreateWindow(SRC_WIDTH, SRC_HEIGHT, "ENGINE: Manifest (Alpha & Omega)", nullptr, nullptr);
+    window = glfwCreateWindow(SRC_WIDTH, SRC_HEIGHT, "GAME ENGINE: Manifest (Alpha & Omega)", nullptr, nullptr);
     if (window == nullptr) {
         printf("Failed to create GLFW window\n");
         glfwTerminate();
@@ -49,9 +49,9 @@ void DisplayManager::updateDisplay() {
     // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
     // -------------------------------------------------------------------------------
     glfwSwapBuffers(window);
+
     glfwPollEvents();
 }
-
 
 void DisplayManager::uniformMovement() {
     float currentFrame = glfwGetTime();
@@ -62,7 +62,6 @@ void DisplayManager::uniformMovement() {
 float DisplayManager::getFrameTimeSeconds() {
     return DisplayManager::delta;
 }
-
 
 bool DisplayManager::stayOpen() {
     return !glfwWindowShouldClose(window);

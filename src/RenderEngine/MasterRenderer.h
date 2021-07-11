@@ -37,7 +37,7 @@ private:
     std::vector<Model *> *models;
 
 public:
-    MasterRenderer(CameraInput *cameraInput);
+    explicit MasterRenderer(CameraInput *cameraInput);
 
     void cleanUp();
 
@@ -50,7 +50,7 @@ public:
 
     void processTerrain(Terrain *terrain);
 
-    glm::mat4 createProjectionMatrix();
+    static glm::mat4 createProjectionMatrix();
 
     glm::mat4 getProjectionMatrix();
 

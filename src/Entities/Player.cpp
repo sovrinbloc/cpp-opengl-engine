@@ -27,23 +27,24 @@ void Player::jump() {
 }
 
 void Player::checkInputs() {
-    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+
+    if (glfwGetKey(DisplayManager::window, GLFW_KEY_UP) == GLFW_PRESS) {
         this->currentSpeed = RUN_SPEED;
-    } else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+    } else if (glfwGetKey(DisplayManager::window, GLFW_KEY_DOWN) == GLFW_PRESS) {
         this->currentSpeed = -RUN_SPEED;
     } else {
         this->currentSpeed = 0.0f;
     }
 
-    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+    if (glfwGetKey(DisplayManager::window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
         this->currentTurnSpeed = -TURN_SPEED;
-    } else if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+    } else if (glfwGetKey(DisplayManager::window, GLFW_KEY_LEFT) == GLFW_PRESS) {
         this->currentTurnSpeed = TURN_SPEED;
     } else {
         this->currentTurnSpeed = 0.0f;
     }
 
-    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+    if (glfwGetKey(DisplayManager::window, GLFW_KEY_SPACE) == GLFW_PRESS) {
         this->jump();
     }
 }

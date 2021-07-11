@@ -21,6 +21,8 @@ public:
 
     void move();
 
+    static void toggleCursorStyle();
+
 
     // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
     // ---------------------------------------------------------------------------------------------------------
@@ -33,6 +35,9 @@ public:
     static void mouse_callback (GLFWwindow *window, double xpos, double ypos);
 
     static void scroll_callback (GLFWwindow *window, double xoffset, double yoffset);
+
+private:
+    static bool cursorInvisible;
 };
 
 #endif //ENGINE_CAMERAINPUT_H
