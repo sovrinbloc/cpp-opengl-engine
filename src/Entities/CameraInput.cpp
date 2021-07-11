@@ -38,10 +38,10 @@ void CameraInput::processInput(GLFWwindow *window) {
         ViewCamera->ProcessKeyboard(LEFT, DisplayManager::delta);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         ViewCamera->ProcessKeyboard(RIGHT, DisplayManager::delta);
-    if (glfwGetKey(window, GLFW_KEY_TAB)) {
-        ViewCamera->MovementSpeed *= 1.5;
+    if (glfwGetKey(window, GLFW_KEY_TAB) == GLFW_PRESS) {
+        ViewCamera->MovementSpeed = SPEED * 4.5;
     }
-    if (glfwGetKey(window, GLFW_KEY_SPACE)) {
+    if (glfwGetKey(window, GLFW_KEY_TAB) == GLFW_RELEASE) {
         ViewCamera->MovementSpeed = SPEED;
     }
 }
