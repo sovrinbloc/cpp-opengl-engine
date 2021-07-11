@@ -13,7 +13,7 @@ class CameraInput {
 public:
     static double lastX, lastY;
 
-    static bool firstMouse;
+    static bool resetMouse;
 
     static Camera *ViewCamera;
 
@@ -22,7 +22,6 @@ public:
     void move();
 
     static void toggleCursorStyle();
-
 
     // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
     // ---------------------------------------------------------------------------------------------------------

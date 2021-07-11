@@ -10,11 +10,6 @@
 
 #include <GLFW/glfw3.h>
 
-//extern GLint SRC_WIDTH;
-//extern GLint SRC_HEIGHT;
-//
-//extern GLFWwindow *window;
-
 class DisplayManager {
 public:
 
