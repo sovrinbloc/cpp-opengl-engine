@@ -74,8 +74,6 @@ void Camera::ProcessMouseScroll(float yoffset) {
         this->Zoom = MIN_ZOOM;
     if (this->Zoom > MAX_ZOOM)
         this->Zoom = MAX_ZOOM;
-
-    distanceFromPlayer -= this->Zoom;
 }
 
 void Camera::updateCameraVectors() {

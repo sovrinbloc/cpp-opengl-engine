@@ -43,8 +43,6 @@ void MasterRenderer::prepare() {
 }
 
 void MasterRenderer::render(Light *sun) {
-    camera->move();
-
     this->prepare();
     shader->start();
     shader->loadSkyColorVariable(glm::vec3(.529, .808, .98));

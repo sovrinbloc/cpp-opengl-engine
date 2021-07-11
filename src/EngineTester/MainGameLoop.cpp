@@ -13,6 +13,7 @@
 #include "../RenderEngine/ObjLoader.h"
 #include "../RenderEngine/MasterRenderer.h"
 #include "../Entities/Player.h"
+#include "../Entities/PlayerCamera.h"
 
 using namespace glm;
 
@@ -125,12 +126,17 @@ void MainGameLoop::main() {
     std::vector<Scene *> allScenes;
     Model assimpModel = Model(FileSystem::Path("/src/Resources/Models/Backpack/backpack.obj"));
 
-    TerrainTexture *backgroundTexture = new TerrainTexture(loader->loadTexture(FileSystem::Path("/src/Resources/Models/Terrain/MultiTexture/grass.png"))->getId());
-    TerrainTexture *rTexture = new TerrainTexture(loader->loadTexture(FileSystem::Path("/src/Resources/Models/Terrain/MultiTexture/dirt.png"))->getId());
-    TerrainTexture *gTexture = new TerrainTexture(loader->loadTexture(FileSystem::Path("/src/Resources/Models/Terrain/MultiTexture/blueflowers.png"))->getId());
-    TerrainTexture *bTexture = new TerrainTexture(loader->loadTexture(FileSystem::Path("/src/Resources/Models/Terrain/MultiTexture/brickroad.png"))->getId());
+    TerrainTexture *backgroundTexture = new TerrainTexture(
+            loader->loadTexture(FileSystem::Path("/src/Resources/Models/Terrain/MultiTexture/grass.png"))->getId());
+    TerrainTexture *rTexture = new TerrainTexture(
+            loader->loadTexture(FileSystem::Path("/src/Resources/Models/Terrain/MultiTexture/dirt.png"))->getId());
+    TerrainTexture *gTexture = new TerrainTexture(loader->loadTexture(
+            FileSystem::Path("/src/Resources/Models/Terrain/MultiTexture/blueflowers.png"))->getId());
+    TerrainTexture *bTexture = new TerrainTexture(
+            loader->loadTexture(FileSystem::Path("/src/Resources/Models/Terrain/MultiTexture/brickroad.png"))->getId());
     TerrainTexturePack *texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
-    TerrainTexture *blendMap = new TerrainTexture(loader->loadTexture(FileSystem::Path("/src/Resources/Models/Terrain/MultiTexture/blendMap.png"))->getId());
+    TerrainTexture *blendMap = new TerrainTexture(
+            loader->loadTexture(FileSystem::Path("/src/Resources/Models/Terrain/MultiTexture/blendMap.png"))->getId());
 
     Terrain *terrain, *terrain2;
     terrain = new Terrain(-1, -1, loader, texturePack, blendMap);
@@ -152,13 +158,16 @@ void MainGameLoop::main() {
 
 //    ModelData bunnyModelData = OBJLoader::loadObjModel(FileSystem::Path("/src/Resources/Models/Tutorial/dragon.obj"));
     RawModel *bunnyModel = loader->loadToVAO(&stallData);
-    TexturedModel *stanfordBunny = new TexturedModel(bunnyModel, new ModelTexture(FileSystem::Path("/src/Resources/Models/Tutorial/grass.png"), PNG));
+    TexturedModel *stanfordBunny = new TexturedModel(bunnyModel, new ModelTexture(
+            FileSystem::Path("/src/Resources/Models/Tutorial/grass.png"), PNG));
+
     Player *player = new Player(stanfordBunny, glm::vec3(100.0f, 3.0f, -50.0f), glm::vec3(0.0f), 1.0f);
+    PlayerCamera *playerCamera = new PlayerCamera(player, CameraInput::getCamera());
 
     MasterRenderer *renderer;
     renderer = new MasterRenderer(cameraInput);
     while (DisplayManager::stayOpen()) {
-        player->move();
+        playerCamera->move();
         renderer->processEntity(player);
         renderer->processModel(&assimpModel);
         // game logic
