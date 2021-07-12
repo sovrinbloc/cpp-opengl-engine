@@ -17,6 +17,7 @@ public:
     void move() {
         this->processInput(DisplayManager::window);
         DisplayManager::uniformMovement();
+        getCamera()->move();
         player->move();
         float horizontalDistance = calculateHorizontalDistance();
         float verticalDistance = calculateVerticalDistance();
@@ -28,8 +29,13 @@ public:
         float offsetX = horizDistance * sin(glm::radians(theta));
         float offsetZ = horizDistance * cos(glm::radians(theta));
         getCamera()->Position.x = player->getPosition().x - offsetX;
-        getCamera()->Position.y = player->getPosition().y + verticDistance;
+        getCamera()->Position.y = player->getPosition().y - verticDistance;
         getCamera()->Position.z = player->getPosition().z - offsetZ;
+
+        if (glfwGetMouseButton(DisplayManager::window, GLFW_MOUSE_BUTTON_1) != GLFW_PRESS) {
+            getCamera()->Yaw = 180 - player->getRotation().y + angleAroundPlayer - 90;
+        }
+        printf("Pitch: %f, Yaw: %f\n", getCamera()->Pitch, getCamera()->Yaw);
     }
 
     void calculatePitch();
