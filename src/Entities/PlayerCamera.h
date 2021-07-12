@@ -17,6 +17,7 @@ public:
     void move() {
         this->processInput(DisplayManager::window);
         DisplayManager::uniformMovement();
+        calculateAngleAroundPlayer();
         getCamera()->move();
         player->move();
         float horizontalDistance = calculateHorizontalDistance();
@@ -38,10 +39,12 @@ public:
         printf("Pitch: %f, Yaw: %f\n", getCamera()->Pitch, getCamera()->Yaw);
     }
 
-    void calculatePitch();
-
-    void calculateAngleAroundPlayer();
-
+    void calculateAngleAroundPlayer(){
+        if (glfwGetMouseButton(DisplayManager::window, GLFW_MOUSE_BUTTON_1) != GLFW_PRESS) {
+            float angleChange = mouseDX * 0.1f;
+//            angleAroundPlayer -= angleChange;
+        }
+    }
 private:
     float calculateHorizontalDistance() {
         return (float) (distanceFromPlayer * cos(glm::radians(getCamera()->Pitch)));

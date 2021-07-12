@@ -7,6 +7,7 @@
 bool CameraInput::cursorInvisible = false;
 
 double CameraInput::lastX, CameraInput::lastY;
+float CameraInput::mouseDX, CameraInput::mouseDY;
 
 Camera *CameraInput::ViewCamera;
 
@@ -69,14 +70,14 @@ void CameraInput::mouse_callback(GLFWwindow *window, double xpos, double ypos) {
             CameraInput::resetMouse = false;
         }
 
-        GLfloat xoffset = (GLfloat) xpos - (GLfloat) CameraInput::lastX;
+        CameraInput::mouseDX = (GLfloat) xpos - (GLfloat) CameraInput::lastX;
 
         // reversed since y-coordinates go from bottom to top
-        GLfloat yoffset = (GLfloat) CameraInput::lastY - (GLfloat) ypos;
+        CameraInput::mouseDY = (GLfloat) CameraInput::lastY - (GLfloat) ypos;
 
         CameraInput::lastX = (GLfloat) xpos;
         CameraInput::lastY = (GLfloat) ypos;
-        ViewCamera->ProcessMouseMovement(xoffset, yoffset);
+        ViewCamera->ProcessMouseMovement(CameraInput::mouseDX, CameraInput::mouseDY);
         return;
     }
     CameraInput::resetMouse = true;

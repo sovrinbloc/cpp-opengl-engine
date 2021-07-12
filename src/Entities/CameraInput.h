@@ -12,6 +12,7 @@
 class CameraInput {
 public:
     static double lastX, lastY;
+    static float mouseDX, mouseDY;
 
     static bool resetMouse;
 
