@@ -10,8 +10,16 @@ double CameraInput::lastX, CameraInput::lastY;
 float CameraInput::mouseDX, CameraInput::mouseDY;
 
 bool CameraInput::resetMouse = true;
+// camera options
+float CameraInput::MovementSpeed;
+float CameraInput::MouseSensitivity;
+float CameraInput::Zoom;
 
 CameraInput::CameraInput(glm::vec3 position) : Camera(position) {
+
+    MovementSpeed = (SPEED);
+    MouseSensitivity = (SENSITIVITY);
+    Zoom = ZOOM;
     glfwSetInputMode(DisplayManager::window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     glfwGetCursorPos(DisplayManager::window, &CameraInput::lastX, &CameraInput::lastY);
     glfwSetCursorPosCallback(DisplayManager::window, mouse_callback);
@@ -84,4 +92,55 @@ void CameraInput::mouse_callback(GLFWwindow *window, double xpos, double ypos) {
 
 void CameraInput::scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
     ProcessMouseScroll((GLfloat) yoffset);
+}
+
+
+
+// processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
+void CameraInput::ProcessKeyboard(Camera_Movement direction, float deltaTime) {
+    float velocity = this->MovementSpeed * deltaTime;
+    if (direction == FORWARD)
+        this->Position += this->Front * velocity;
+    if (direction == BACKWARD)
+        this->Position -= this->Front * velocity;
+    if (direction == LEFT)
+        this->Position -= this->Right * velocity;
+    if (direction == RIGHT)
+        this->Position += this->Right * velocity;
+    if (this->fps) {
+        this->Position.y = 3;
+    }
+
+}
+
+// processes input received from a mouse input system. Expects the offset value in both the x and y direction.
+void CameraInput::ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch) {
+    xoffset *= MouseSensitivity;
+    yoffset *= MouseSensitivity;
+
+    Yaw   += xoffset;
+    Pitch += yoffset;
+
+    // make sure that when pitch is out of bounds, screen doesn't get flipped
+    if (constrainPitch) {
+        if (Pitch > 89.0f)
+            Pitch = 89.0f;
+        if (Pitch < -89.0f)
+            Pitch = -89.0f;
+    }
+}
+
+// processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
+void CameraInput::ProcessMouseScroll(float yoffset) {
+    Zoom += (float)yoffset;
+    if (Zoom < MIN_ZOOM)
+        Zoom = MIN_ZOOM;
+    if (Zoom > MAX_ZOOM)
+        Zoom = MAX_ZOOM;
+}
+
+
+
+void CameraInput::toggleFirstPersonShooter(bool enabled) {
+    this->fps = enabled;
 }

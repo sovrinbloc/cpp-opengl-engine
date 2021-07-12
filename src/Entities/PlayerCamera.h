@@ -9,10 +9,12 @@ class PlayerCamera : public CameraInput {
 public:
     Player *player;
 
-    float distanceFromPlayer = 50.0f;
+    float distanceFromPlayer = 55.0f;
     float angleAroundPlayer = 0.0f;
 
-    PlayerCamera(Player *player) : player(player), CameraInput(){}
+    PlayerCamera(Player *player) : player(player), CameraInput(){
+        Pitch = -20.0f;
+    }
 
     void move() {
         CameraInput::move();
@@ -32,16 +34,35 @@ public:
         Position.z = player->getPosition().z - offsetZ;
 
         if (glfwGetMouseButton(DisplayManager::window, GLFW_MOUSE_BUTTON_1) != GLFW_PRESS) {
-//            Yaw = 180 - player->getRotation().y + angleAroundPlayer - 90;
-            Yaw = 180 - player->getRotation().y + angleAroundPlayer - 90;
+            Yaw = int(180 - player->getRotation().y + angleAroundPlayer - 90) % 360;
         }
-        printf("Pitch: %f, Yaw: %f\n", Pitch, Yaw);
+    }
+
+// returns the view matrix calculated using Euler Angles and the LookAt Matrix
+    glm::mat4 GetViewMatrix() {
+        glm::vec3  front;
+        front.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
+        front.y = sin(glm::radians(Pitch));
+        front.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
+        return glm::lookAt(this->Position + glm::normalize(front), player->getPosition(), this->Up);
+    }
+
+    void updateCameraVectors() {
+        // calculate the new Front vector
+        glm::vec3 front;
+        front.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
+        front.y = sin(glm::radians(Pitch));
+        front.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
+        Front = glm::normalize(front);
+        // also re-calculate the Right and Up vector
+        Right = glm::normalize(glm::cross(Front, WorldUp));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+        Up    = glm::normalize(glm::cross(Right, Front));
     }
 
     void calculateAngleAroundPlayer(){
         if (glfwGetMouseButton(DisplayManager::window, GLFW_MOUSE_BUTTON_1) != GLFW_PRESS) {
             float angleChange = mouseDX * 0.1f;
-//            angleAroundPlayer -= angleChange;
+            angleAroundPlayer -= angleChange;
         }
     }
 private:
