@@ -14,9 +14,9 @@ bool CameraInput::resetMouse = true;
 float CameraInput::MovementSpeed;
 float CameraInput::MouseSensitivity;
 float CameraInput::Zoom;
+float CameraInput::ZoomOffset;
 
 CameraInput::CameraInput(glm::vec3 position) : Camera(position) {
-
     MovementSpeed = (SPEED);
     MouseSensitivity = (SENSITIVITY);
     Zoom = ZOOM;
@@ -36,7 +36,7 @@ void CameraInput::toggleCursorStyle() {
 void CameraInput::move() {
     this->processInput(DisplayManager::window);
     DisplayManager::uniformMovement();
-    Camera::move();
+    updateCameraVectors();
 }
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
@@ -89,12 +89,9 @@ void CameraInput::mouse_callback(GLFWwindow *window, double xpos, double ypos) {
     CameraInput::resetMouse = true;
 }
 
-
 void CameraInput::scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
     ProcessMouseScroll((GLfloat) yoffset);
 }
-
-
 
 // processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
 void CameraInput::ProcessKeyboard(Camera_Movement direction, float deltaTime) {
@@ -117,7 +114,6 @@ void CameraInput::ProcessKeyboard(Camera_Movement direction, float deltaTime) {
 void CameraInput::ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch) {
     xoffset *= MouseSensitivity;
     yoffset *= MouseSensitivity;
-
     Yaw   += xoffset;
     Pitch += yoffset;
 
@@ -133,14 +129,29 @@ void CameraInput::ProcessMouseMovement(float xoffset, float yoffset, GLboolean c
 // processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
 void CameraInput::ProcessMouseScroll(float yoffset) {
     Zoom += (float)yoffset;
+    ZoomOffset = yoffset;
     if (Zoom < MIN_ZOOM)
         Zoom = MIN_ZOOM;
     if (Zoom > MAX_ZOOM)
         Zoom = MAX_ZOOM;
 }
 
-
-
 void CameraInput::toggleFirstPersonShooter(bool enabled) {
     this->fps = enabled;
+}
+
+void CameraInput::updateCameraVectors() {
+    // calculate the new Front vector
+    glm::vec3 front;
+    front.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
+    front.y = sin(glm::radians(Pitch));
+    front.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
+    Front = glm::normalize(front);
+
+    // also re-calculate the Right and Up vector
+    Right = glm::normalize(glm::cross(Front,
+                                      WorldUp));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+    Up = glm::normalize(glm::cross(Right, Front));
+
+    printf("right: %f, %f, %f\n", Right.x, Right.y, Right.z);
 }

@@ -21,8 +21,6 @@ void MainGameLoop::main() {
     DisplayManager::createDisplay();
 
     Loader *loader;
-//    Camera *viewCamera;
-//    PlayerCamera *cameraInput;
 
     loader = new Loader();
 
@@ -154,14 +152,12 @@ void MainGameLoop::main() {
         allScenes.push_back(new Scene(&assimpModel, glm::vec3(x, y, z), rot, randomFloat() * 2));
     }
 
-//    ModelData bunnyModelData = OBJLoader::loadObjModel(FileSystem::Path("/src/Resources/Models/Tutorial/dragon.obj"));
     RawModel *bunnyModel = loader->loadToVAO(&stallData);
     TexturedModel *stanfordBunny = new TexturedModel(bunnyModel, new ModelTexture(
             FileSystem::Path("/src/Resources/Models/Tutorial/grass.png"), PNG));
 
     Player *player = new Player(stanfordBunny, glm::vec3(100.0f, 3.0f, -50.0f), glm::vec3(0.0f), 1.0f);
     PlayerCamera *playerCamera = new PlayerCamera(player);
-//    cameraInput = new PlayerCamera(glm::vec3(0.0f, 4.5f, 0.0f));
 
     MasterRenderer *renderer;
     renderer = new MasterRenderer(playerCamera);

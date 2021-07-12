@@ -6,6 +6,7 @@
 #define ENGINE_CAMERAINPUT_H
 #define GL_SILENCE_DEPRECATION
 #define GLFW_INCLUDE_GLCOREARB
+
 #include <GLFW/glfw3.h>
 #include "Camera.h"
 
@@ -17,9 +18,9 @@ enum Camera_Movement {
     RIGHT
 };
 
-const float SPEED       =  12.5f;
-const float SENSITIVITY =  0.1f;
-const float ZOOM        =  45.0f;
+const float SPEED = 12.5f;
+const float SENSITIVITY = 0.1f;
+const float ZOOM = 45.0f;
 const float MIN_ZOOM = 20.0f;
 const float MAX_ZOOM = 45.0f;
 
@@ -29,14 +30,16 @@ public:
     static float mouseDX, mouseDY;
 
     static bool resetMouse;
+
     // camera options
     static float MovementSpeed;
     static float MouseSensitivity;
     static float Zoom;
+    static float ZoomOffset;
 
     explicit CameraInput(glm::vec3 position = glm::vec3(0.0f, 4.5f, 0.0f));
 
-    void move();
+    virtual void move();
 
     static void toggleCursorStyle();
 
@@ -44,9 +47,9 @@ public:
     // ---------------------------------------------------------------------------------------------------------
     void processInput(GLFWwindow *window);
 
-    static void mouse_callback (GLFWwindow *window, double xpos, double ypos);
+    static void mouse_callback(GLFWwindow *window, double xpos, double ypos);
 
-    static void scroll_callback (GLFWwindow *window, double xoffset, double yoffset);
+    static void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
 
     // processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
     void ProcessKeyboard(Camera_Movement direction, float deltaTime);
@@ -62,6 +65,8 @@ public:
     void ToggleChangeSpeed(float velocity) {
         this->MovementSpeed = velocity;
     }
+
+    virtual void updateCameraVectors();
 
 private:
     static bool cursorInvisible;

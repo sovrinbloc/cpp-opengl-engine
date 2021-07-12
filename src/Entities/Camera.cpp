@@ -3,18 +3,18 @@
 //
 #include "Camera.h"
 
-
- glm::vec3 Camera::Position;
- glm::vec3 Camera::Front;
- glm::vec3 Camera::Up;
- glm::vec3 Camera::Right;
- glm::vec3 Camera::WorldUp;
+glm::vec3 Camera::Position;
+glm::vec3 Camera::Front;
+glm::vec3 Camera::Up;
+glm::vec3 Camera::Right;
+glm::vec3 Camera::WorldUp;
 // euler Angles
- float Camera::Yaw;
- float Camera::Pitch;
+float Camera::Yaw = 90.0f;
+float Camera::Pitch;
+float Camera::Roll = 0.0f;
 
 // constructor with vectors
-Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch)  {
+Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch) {
     Front = (glm::vec3(0.0f, 0.0f, -1.0f));
     Position = position;
     WorldUp = up;
@@ -39,7 +39,9 @@ void Camera::updateCameraVectors() {
     front.y = sin(glm::radians(Pitch));
     front.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
     Front = glm::normalize(front);
+
     // also re-calculate the Right and Up vector
-    Right = glm::normalize(glm::cross(Front, WorldUp));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
-    Up    = glm::normalize(glm::cross(Right, Front));
+    Right = glm::normalize(glm::cross(Front,
+                                      WorldUp));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+    Up = glm::normalize(glm::cross(Right, Front));
 }

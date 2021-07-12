@@ -87,7 +87,7 @@ void MasterRenderer::processModel(Model *model) {
 
 glm::mat4 MasterRenderer::createProjectionMatrix() {
     // my additions
-    return Maths::createProjectionMatrix(CameraInput::Zoom, (GLfloat)DisplayManager::SRC_WIDTH, (GLfloat)DisplayManager::SRC_HEIGHT, NEAR_PLANE,
+    return Maths::createProjectionMatrix(PlayerCamera::Zoom, (GLfloat)DisplayManager::SRC_WIDTH, (GLfloat)DisplayManager::SRC_HEIGHT, NEAR_PLANE,
                                          FAR_PLANE);
 }
 

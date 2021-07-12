@@ -24,19 +24,19 @@ public:
     // euler Angles
     static float Yaw;
     static float Pitch;
+    static float Roll;
 
     // constructor with vectors
     explicit Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH);
 
     // updates the sight vector;
-    void move();
+    virtual void move();
 
     // returns the view matrix calculated using Euler Angles and the LookAt Matrix
     virtual glm::mat4 GetViewMatrix();
 
-private:
-
-    // calculates the front vector from the Camera's (updated) Euler Angles
-    static void updateCameraVectors();
+protected:
+// calculates the front vector from the Camera's (updated) Euler Angles
+static void updateCameraVectors();
 };
 #endif
