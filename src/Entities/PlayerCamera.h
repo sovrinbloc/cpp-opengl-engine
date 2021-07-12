@@ -5,20 +5,18 @@
 #ifndef ENGINE_PLAYERCAMERA_H
 #define ENGINE_PLAYERCAMERA_H
 #include "Camera.h"
-class PlayerCamera : CameraInput {
+class PlayerCamera : public CameraInput {
 public:
     Player *player;
 
     float distanceFromPlayer = 50.0f;
     float angleAroundPlayer = 0.0f;
 
-    PlayerCamera(Player *player, Camera *camera) : player(player), CameraInput(camera){}
+    PlayerCamera(Player *player) : player(player), CameraInput(){}
 
     void move() {
-        this->processInput(DisplayManager::window);
-        DisplayManager::uniformMovement();
+        CameraInput::move();
         calculateAngleAroundPlayer();
-        getCamera()->move();
         player->move();
         float horizontalDistance = calculateHorizontalDistance();
         float verticalDistance = calculateVerticalDistance();
@@ -29,14 +27,15 @@ public:
         float theta = player->getRotation().y + angleAroundPlayer;
         float offsetX = horizDistance * sin(glm::radians(theta));
         float offsetZ = horizDistance * cos(glm::radians(theta));
-        getCamera()->Position.x = player->getPosition().x - offsetX;
-        getCamera()->Position.y = player->getPosition().y - verticDistance;
-        getCamera()->Position.z = player->getPosition().z - offsetZ;
+        Position.x = player->getPosition().x - offsetX;
+        Position.y = player->getPosition().y - verticDistance;
+        Position.z = player->getPosition().z - offsetZ;
 
         if (glfwGetMouseButton(DisplayManager::window, GLFW_MOUSE_BUTTON_1) != GLFW_PRESS) {
-            getCamera()->Yaw = 180 - player->getRotation().y + angleAroundPlayer - 90;
+//            Yaw = 180 - player->getRotation().y + angleAroundPlayer - 90;
+            Yaw = 180 - player->getRotation().y + angleAroundPlayer - 90;
         }
-        printf("Pitch: %f, Yaw: %f\n", getCamera()->Pitch, getCamera()->Yaw);
+        printf("Pitch: %f, Yaw: %f\n", Pitch, Yaw);
     }
 
     void calculateAngleAroundPlayer(){
@@ -47,10 +46,10 @@ public:
     }
 private:
     float calculateHorizontalDistance() {
-        return (float) (distanceFromPlayer * cos(glm::radians(getCamera()->Pitch)));
+        return (float) (distanceFromPlayer * cos(glm::radians(Pitch + 4)));
     }
     float calculateVerticalDistance() {
-        return (float) (distanceFromPlayer * sin(glm::radians(getCamera()->Pitch)));
+        return (float) (distanceFromPlayer * sin(glm::radians(Pitch + 4)));
     }
 
 

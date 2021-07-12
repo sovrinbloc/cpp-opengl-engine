@@ -29,24 +29,21 @@ const float MAX_ZOOM = 45.0f;
 class Camera {
 public:
     // camera Attributes
-    glm::vec3 Position;
-    glm::vec3 Front;
-    glm::vec3 Up;
-    glm::vec3 Right;
-    glm::vec3 WorldUp;
+    static glm::vec3 Position;
+    static glm::vec3 Front;
+    static glm::vec3 Up;
+    static glm::vec3 Right;
+    static glm::vec3 WorldUp;
     // euler Angles
-    float Yaw;
-    float Pitch;
+    static float Yaw;
+    static float Pitch;
     // camera options
-    float MovementSpeed;
-    float MouseSensitivity;
-    float Zoom;
+    static float MovementSpeed;
+    static float MouseSensitivity;
+    static float Zoom;
 
     // constructor with vectors
     explicit Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH);
-
-    // constructor with scalar values
-    Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch);
 
     // updates the sight vector;
     void move();
@@ -60,10 +57,10 @@ public:
     void ProcessKeyboard(Camera_Movement direction, float deltaTime);
 
     // processes input received from a mouse input system. Expects the offset value in both the x and y direction.
-    void ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch = true);
+    static void ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch = true);
 
     // processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
-    void ProcessMouseScroll(float yoffset);
+    static void ProcessMouseScroll(float yoffset);
 
     void ToggleChangeSpeed(float velocity) {
         this->MovementSpeed = velocity;
@@ -73,6 +70,6 @@ private:
     bool fps = false;
 
     // calculates the front vector from the Camera's (updated) Euler Angles
-    void updateCameraVectors();
+    static void updateCameraVectors();
 };
 #endif

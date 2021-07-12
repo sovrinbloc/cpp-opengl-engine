@@ -21,12 +21,10 @@ void MainGameLoop::main() {
     DisplayManager::createDisplay();
 
     Loader *loader;
-    Camera *viewCamera;
-    CameraInput *cameraInput;
+//    Camera *viewCamera;
+//    PlayerCamera *cameraInput;
 
     loader = new Loader();
-    viewCamera = new Camera(glm::vec3(0.0f, 4.5f, 0.0f));
-    cameraInput = new CameraInput(viewCamera);
 
     RawModel *grassModel, *treeModel, *fluffyTreeModel, *stallModel, *dragonModel;
     ModelTexture *grassTexture, *treeTexture, *fluffyTreeTexture, *stallTexture, *dragonTexture;
@@ -162,10 +160,11 @@ void MainGameLoop::main() {
             FileSystem::Path("/src/Resources/Models/Tutorial/grass.png"), PNG));
 
     Player *player = new Player(stanfordBunny, glm::vec3(100.0f, 3.0f, -50.0f), glm::vec3(0.0f), 1.0f);
-    PlayerCamera *playerCamera = new PlayerCamera(player, CameraInput::getCamera());
+    PlayerCamera *playerCamera = new PlayerCamera(player);
+//    cameraInput = new PlayerCamera(glm::vec3(0.0f, 4.5f, 0.0f));
 
     MasterRenderer *renderer;
-    renderer = new MasterRenderer(cameraInput);
+    renderer = new MasterRenderer(playerCamera);
     while (DisplayManager::stayOpen()) {
         playerCamera->move();
         renderer->processEntity(player);

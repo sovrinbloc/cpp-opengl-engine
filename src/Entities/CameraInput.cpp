@@ -9,12 +9,9 @@ bool CameraInput::cursorInvisible = false;
 double CameraInput::lastX, CameraInput::lastY;
 float CameraInput::mouseDX, CameraInput::mouseDY;
 
-Camera *CameraInput::ViewCamera;
-
 bool CameraInput::resetMouse = true;
 
-CameraInput::CameraInput(Camera *camera) {
-    ViewCamera = camera;
+CameraInput::CameraInput(glm::vec3 position) : Camera(position) {
     glfwSetInputMode(DisplayManager::window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     glfwGetCursorPos(DisplayManager::window, &CameraInput::lastX, &CameraInput::lastY);
     glfwSetCursorPosCallback(DisplayManager::window, mouse_callback);
@@ -31,6 +28,7 @@ void CameraInput::toggleCursorStyle() {
 void CameraInput::move() {
     this->processInput(DisplayManager::window);
     DisplayManager::uniformMovement();
+    Camera::move();
 }
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
@@ -43,22 +41,22 @@ void CameraInput::processInput(GLFWwindow *window) {
         glfwSetWindowShouldClose(window, true);
     }
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-        ViewCamera->ProcessKeyboard(FORWARD, DisplayManager::delta);
+        ProcessKeyboard(FORWARD, DisplayManager::delta);
     }
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-        ViewCamera->ProcessKeyboard(BACKWARD, DisplayManager::delta);
+        ProcessKeyboard(BACKWARD, DisplayManager::delta);
     }
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-        ViewCamera->ProcessKeyboard(LEFT, DisplayManager::delta);
+        ProcessKeyboard(LEFT, DisplayManager::delta);
     }
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-        ViewCamera->ProcessKeyboard(RIGHT, DisplayManager::delta);
+        ProcessKeyboard(RIGHT, DisplayManager::delta);
     }
     if (glfwGetKey(window, GLFW_KEY_TAB) == GLFW_PRESS) {
-        ViewCamera->MovementSpeed = SPEED * 4.5;
+        MovementSpeed = SPEED * 4.5;
     }
     if (glfwGetKey(window, GLFW_KEY_BACKSLASH) == GLFW_PRESS) {
-        ViewCamera->MovementSpeed = SPEED;
+        MovementSpeed = SPEED;
     }
 }
 
@@ -77,7 +75,7 @@ void CameraInput::mouse_callback(GLFWwindow *window, double xpos, double ypos) {
 
         CameraInput::lastX = (GLfloat) xpos;
         CameraInput::lastY = (GLfloat) ypos;
-        ViewCamera->ProcessMouseMovement(CameraInput::mouseDX, CameraInput::mouseDY);
+        ProcessMouseMovement(mouseDX, mouseDY);
         return;
     }
     CameraInput::resetMouse = true;
@@ -85,5 +83,5 @@ void CameraInput::mouse_callback(GLFWwindow *window, double xpos, double ypos) {
 
 
 void CameraInput::scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
-    ViewCamera->ProcessMouseScroll((GLfloat) yoffset);
+    ProcessMouseScroll((GLfloat) yoffset);
 }

@@ -9,16 +9,14 @@
 #include <GLFW/glfw3.h>
 #include "Camera.h"
 
-class CameraInput {
+class CameraInput : public Camera {
 public:
     static double lastX, lastY;
     static float mouseDX, mouseDY;
 
     static bool resetMouse;
 
-    static Camera *ViewCamera;
-
-    explicit CameraInput(Camera *camera);
+    explicit CameraInput(glm::vec3 position = glm::vec3(0.0f, 4.5f, 0.0f));
 
     void move();
 
@@ -27,10 +25,6 @@ public:
     // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
     // ---------------------------------------------------------------------------------------------------------
     void processInput(GLFWwindow *window);
-
-    static Camera *getCamera() {
-        return ViewCamera;
-    }
 
     static void mouse_callback (GLFWwindow *window, double xpos, double ypos);
 

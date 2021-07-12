@@ -14,6 +14,7 @@
 #include "SceneRenderer.h"
 #include "../Shaders/ModelShader.h"
 #include "SceneLoader.h"
+#include "../Entities/PlayerCamera.h"
 
 static const float FOVY = 45.0f;
 static const float NEAR_PLANE = 0.1f;
@@ -24,7 +25,7 @@ private:
     StaticShader *shader;
     EntityRenderer *renderer;
     glm::mat4 projectionMatrix;
-    CameraInput *camera;
+    PlayerCamera *camera;
 
     TerrainRenderer *terrainRenderer;
     TerrainShader *terrainShader;
@@ -37,7 +38,7 @@ private:
     std::vector<Model *> *models;
 
 public:
-    explicit MasterRenderer(CameraInput *cameraInput);
+    explicit MasterRenderer(PlayerCamera *cameraInput);
 
     void cleanUp();
 
