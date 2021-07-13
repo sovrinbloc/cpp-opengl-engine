@@ -56,6 +56,6 @@ public:
     Terrain(int gridX, int gridZ, Loader *loader, TerrainTexturePack *texturePack, TerrainTexture *blendMap);
 
 private:
-    RawModel *generateTerrain(Loader *loader);
+    RawModel *generateTerrain(Loader *loader, std::string heightMap);
 };
 #endif //ENGINE_TERRAIN_H

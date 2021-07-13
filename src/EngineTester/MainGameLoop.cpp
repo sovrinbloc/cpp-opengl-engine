@@ -12,8 +12,7 @@
 #include "../RenderEngine/EntityRenderer.h"
 #include "../RenderEngine/ObjLoader.h"
 #include "../RenderEngine/MasterRenderer.h"
-#include "../Entities/Player.h"
-#include "../Entities/PlayerCamera.h"
+#include "../Terrain/HeightMap.h"
 
 using namespace glm;
 

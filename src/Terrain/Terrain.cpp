@@ -9,10 +9,11 @@ Terrain::Terrain(int gridX, int gridZ, Loader *loader, TerrainTexturePack *textu
     this->blendMap = blendMap;
     this->x = (float)gridX * SIZE;
     this->z = (float)gridZ * SIZE;
-    this->model = generateTerrain(loader);
+    this->model = generateTerrain(loader, "");
 }
 
-RawModel *Terrain::generateTerrain(Loader *loader){
+RawModel *Terrain::generateTerrain(Loader *loader, std::string heightMap) {
+
     int count = VERTEX_COUNT * VERTEX_COUNT;
     std::vector<GLfloat> vertices(count * 3); vertices.reserve(count * 3);
     std::vector<GLfloat> normals(count * 3); normals.reserve(count * 3);

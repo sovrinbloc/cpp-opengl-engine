@@ -5,7 +5,7 @@
 #ifndef ENGINE_PLAYERCAMERA_H
 #define ENGINE_PLAYERCAMERA_H
 #include "Camera.h"
-#include "glm/gtx/quaternion.hpp"
+
 class PlayerCamera : public CameraInput {
 public:
     Player *player;
@@ -21,7 +21,6 @@ public:
         this->processInput(DisplayManager::window);
         DisplayManager::uniformMovement();
         updateCameraVectors();
-        calculateZoom();
         calculateAngleAroundPlayer();
         player->move();
         float horizontalDistance = calculateHorizontalDistance();
@@ -37,7 +36,7 @@ public:
         Position.z = player->getPosition().z - offsetZ;
         Position.y = player->getPosition().y - verticDistance + 4;
 
-        if (glfwGetMouseButton(DisplayManager::window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS) {
+        if (glfwGetMouseButton(DisplayManager::window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS || cursorInvisible) {
             Yaw = int(180 - player->getRotation().y + angleAroundPlayer - 90) % 360;
         }
     }
@@ -52,7 +51,7 @@ public:
     }
 
     void calculateAngleAroundPlayer(){
-        if (glfwGetMouseButton(DisplayManager::window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS) {
+        if (glfwGetMouseButton(DisplayManager::window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS || cursorInvisible) {
             float angleChange = mouseDX * 0.1f;
             angleAroundPlayer -= angleChange;
         }
@@ -69,23 +68,6 @@ private:
         Front = glm::vec3(0, 0, 1);
         Up = glm::vec3(0, 1, 0);
         Right = glm::vec3(1, 0, 0);
-    }
-
-    void updateCameraVectorsQuaternions() {
-        glm::quat Orientation;
-        Yaw = abs(Yaw);
-        glm::quat rotation = glm::quat(glm::vec3(Yaw, Pitch, Roll));
-
-        Orientation = rotation * Orientation;
-        Orientation = glm::normalize(Orientation);
-        glm::mat4 OrientMat = glm::mat4_cast(Orientation);
-
-        glm::mat4 viewMatrix = OrientMat;
-        viewMatrix = glm::transpose(viewMatrix);
-
-        Front = glm::vec3(viewMatrix[2]);
-        Up = glm::vec3(viewMatrix[1]);
-        Right = glm::vec3(viewMatrix[0]);
     }
 
     void calculateZoom(){

@@ -68,8 +68,8 @@ public:
 
     virtual void updateCameraVectors();
 
-private:
     static bool cursorInvisible;
+private:
 
     bool fps = false;
 };
