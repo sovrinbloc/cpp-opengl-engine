@@ -4,26 +4,30 @@
 
 #include "Terrain.h"
 
-Terrain::Terrain(int gridX, int gridZ, Loader *loader, TerrainTexturePack *texturePack, TerrainTexture *blendMap) {
+
+Terrain::Terrain(int gridX, int gridZ, Loader *loader, TerrainTexturePack *texturePack, TerrainTexture *blendMap, const std::string& heightMap) : heightMap(Heightmap(heightMap)){
     this->texturePack = texturePack;
     this->blendMap = blendMap;
     this->x = (float)gridX * SIZE;
     this->z = (float)gridZ * SIZE;
-    this->model = generateTerrain(loader, "");
+    this->model = generateTerrain(loader);
 }
 
-RawModel *Terrain::generateTerrain(Loader *loader, std::string heightMap) {
+RawModel *Terrain::generateTerrain(Loader *loader) {
+    int VERTEX_COUNT = heightMap.getImageInfo().height;
 
     int count = VERTEX_COUNT * VERTEX_COUNT;
+
     std::vector<GLfloat> vertices(count * 3); vertices.reserve(count * 3);
     std::vector<GLfloat> normals(count * 3); normals.reserve(count * 3);
     std::vector<GLfloat> textureCoords(count * 2); textureCoords.reserve(count*2);
     std::vector<GLint> indices(6*(VERTEX_COUNT-1)*(VERTEX_COUNT-1)); indices.reserve(6*(VERTEX_COUNT-1)*(VERTEX_COUNT-1));
+
     int vertexPointer = 0;
     for(int i=0;i<VERTEX_COUNT;i++){
         for(int j=0;j<VERTEX_COUNT;j++){
             vertices[vertexPointer*3] =  (float)j/((float)VERTEX_COUNT - 1) * SIZE;
-            vertices[vertexPointer*3+1] = 0;
+            vertices[vertexPointer*3+1] = heightMap.getHeight(j, i);
             vertices[vertexPointer*3+2] =  (float)i/((float)VERTEX_COUNT - 1) * SIZE;
             normals[vertexPointer*3] = 0;
             normals[vertexPointer*3+1] = 1;

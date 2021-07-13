@@ -9,6 +9,12 @@
 #include <iostream>
 #include <vector>
 
+struct ImageInfo {
+    int height;
+    int width;
+    std::string filename;
+};
+
 class Heightmap {
 public:
 
@@ -16,23 +22,24 @@ public:
 
     void calculateMapFromImage();
 
-    int getWidth() const;
+    std::vector<std::vector<float>> getHeightData();
 
-    int getHeight() const;
+    float getHeight(int x, int z);
 
-    const std::vector<std::vector<float>> getHeightData();
+    ImageInfo getImageInfo();
 
 private:
+
+
+    static const float MAX_HEIGHT;
+    static const float MIN_HEIGHT;
+    static const float MAX_COLOR_VALUE;
 
     std::string fileName;
 
     std::vector<std::vector<float>> heightData;
 
-private:
-
-    int width;
-
-    int height;
+    ImageInfo imageInfo;
 
 };
 

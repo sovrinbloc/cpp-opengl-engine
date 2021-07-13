@@ -8,6 +8,7 @@
 #include "../Textures/ModelTexture.h"
 #include "../RenderEngine/Loader.h"
 #include "../Textures/TerrainTexturePack.h"
+#include "HeightMap.h"
 
 class Terrain {
 private:
@@ -19,6 +20,7 @@ private:
     RawModel *model;
     TerrainTexturePack *texturePack;
     TerrainTexture *blendMap;
+    Heightmap heightMap;
 
 public:
     float getX() const {
@@ -53,9 +55,9 @@ public:
         return this->blendMap;
     }
 
-    Terrain(int gridX, int gridZ, Loader *loader, TerrainTexturePack *texturePack, TerrainTexture *blendMap);
+    Terrain(int gridX, int gridZ, Loader *loader, TerrainTexturePack *texturePack, TerrainTexture *blendMap, const std::string& heightMap);
 
 private:
-    RawModel *generateTerrain(Loader *loader, std::string heightMap);
+    RawModel *generateTerrain(Loader *loader);
 };
 #endif //ENGINE_TERRAIN_H

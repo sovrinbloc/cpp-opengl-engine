@@ -17,6 +17,16 @@
 using namespace glm;
 
 void MainGameLoop::main() {
+
+//    auto k = new Heightmap(FileSystem::Path("/src/Resources/Models/Tutorial/heightMap.png"));
+//    for (int x = 0; x < 25; ++x) {
+//        for (int z = 0; z < 25; ++z) {
+//            int randX = (randomFloat() * 10);
+//            int randZ = (randomFloat() * 10);
+//            printf("y at (%d, %d): %f\n", x * randX, z * randZ, k->getHeight(x * randX, z * randZ));
+//        }
+//    }
+//    return;
     DisplayManager::createDisplay();
 
     Loader *loader;
@@ -134,8 +144,8 @@ void MainGameLoop::main() {
             loader->loadTexture(FileSystem::Path("/src/Resources/Models/Terrain/MultiTexture/blendMap.png"))->getId());
 
     Terrain *terrain, *terrain2;
-    terrain = new Terrain(-1, -1, loader, texturePack, blendMap);
-    terrain2 = new Terrain(0, -1, loader, texturePack, blendMap);
+    terrain = new Terrain(-1, -1, loader, texturePack, blendMap, FileSystem::Path("/src/Resources/Models/Tutorial/heightMap.png"));
+    terrain2 = new Terrain(0, -1, loader, texturePack, blendMap, FileSystem::Path("/src/Resources/Models/Tutorial/heightMap.png"));
 
     for (int i = 0; i < 2; ++i) {
         float x = randomFloat() * 100 - 50;
