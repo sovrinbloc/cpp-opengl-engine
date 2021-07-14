@@ -3,7 +3,7 @@
 //
 #include "Player.h"
 
-void Player::move() {
+void Player::move(Terrain *terrain) {
     checkInputs();
     rotate(glm::vec3(0.0f, currentTurnSpeed * DisplayManager::getFrameTimeSeconds(), 0.0f));
     float distance = currentSpeed * DisplayManager::getFrameTimeSeconds();
@@ -12,9 +12,10 @@ void Player::move() {
     increasePosition(glm::vec3(dx, 0.0f, dz));
     this->upwardsSpeed += GRAVITY * DisplayManager::getFrameTimeSeconds();
     increasePosition(glm::vec3(0, upwardsSpeed * DisplayManager::getFrameTimeSeconds(), 0.0f));
-    if (getPosition().y <= TERRAIN_HEIGHT) {
+    float terrainHeight = terrain->getHeightOfTerrain(getPosition().x, getPosition().z);
+    if (getPosition().y <= terrainHeight) {
         this->upwardsSpeed = 0.0f;
-        setPosition( + glm::vec3(getPosition().x, TERRAIN_HEIGHT, getPosition().z));
+        setPosition( + glm::vec3(getPosition().x, terrainHeight, getPosition().z));
         this->isInAir = false;
     }
 }

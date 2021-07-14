@@ -17,12 +17,12 @@ public:
         Pitch = -20.0f;
     }
 
-    void move() {
+    void move(Terrain *terrain) {
         this->processInput(DisplayManager::window);
         DisplayManager::uniformMovement();
         updateCameraVectors();
         calculateAngleAroundPlayer();
-        player->move();
+        player->move(terrain);
         float horizontalDistance = calculateHorizontalDistance();
         float verticalDistance = calculateVerticalDistance();
         calculateCameraPosition(horizontalDistance, verticalDistance);

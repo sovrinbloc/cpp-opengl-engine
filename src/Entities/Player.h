@@ -6,6 +6,7 @@
 #define ENGINE_PLAYER_H
 #include "Entity.h"
 #include "../RenderEngine/DisplayManager.h"
+#include "../Terrain/Terrain.h"
 class Player : public Entity {
 private:
     constexpr static const float RUN_SPEED = 20;
@@ -26,7 +27,7 @@ public:
     Player(TexturedModel *model, glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 rotation = glm::vec3(0),
             float scale = 1.0f) : Entity(model, position, rotation, scale){}
 
-    void move();
+    void move(Terrain *terrain);
 
 private:
     void checkInputs();

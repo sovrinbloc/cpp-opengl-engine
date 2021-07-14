@@ -166,7 +166,7 @@ void MainGameLoop::main() {
     MasterRenderer *renderer;
     renderer = new MasterRenderer(playerCamera);
     while (DisplayManager::stayOpen()) {
-        playerCamera->move();
+        playerCamera->move(terrain);
         renderer->processEntity(player);
         renderer->processModel(&assimpModel);
         // game logic
