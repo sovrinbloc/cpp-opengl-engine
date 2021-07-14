@@ -21,6 +21,8 @@ private:
     TerrainTexturePack *texturePack;
     TerrainTexture *blendMap;
     Heightmap heightMap;
+public:
+    Heightmap getHeightMap();
 
 public:
     float getX() const {
@@ -54,6 +56,8 @@ public:
     TerrainTexture *getBlendMap() {
         return this->blendMap;
     }
+
+    glm::vec3 calculateNormal(int x, int z);
 
     Terrain(int gridX, int gridZ, Loader *loader, TerrainTexturePack *texturePack, TerrainTexture *blendMap, const std::string& heightMap);
 

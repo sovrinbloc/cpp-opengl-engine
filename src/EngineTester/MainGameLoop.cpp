@@ -18,20 +18,28 @@ using namespace glm;
 
 void MainGameLoop::main() {
 
-//    auto k = new Heightmap(FileSystem::Path("/src/Resources/Models/Tutorial/heightMap.png"));
-//    for (int x = 0; x < 25; ++x) {
-//        for (int z = 0; z < 25; ++z) {
-//            int randX = (randomFloat() * 10);
-//            int randZ = (randomFloat() * 10);
-//            printf("y at (%d, %d): %f\n", x * randX, z * randZ, k->getHeight(x * randX, z * randZ));
-//        }
-//    }
-//    return;
     DisplayManager::createDisplay();
 
     Loader *loader;
 
     loader = new Loader();
+
+
+    TerrainTexture *backgroundTexture = new TerrainTexture(
+            loader->loadTexture(FileSystem::Path("/src/Resources/Models/Terrain/MultiTexture/grass.png"))->getId());
+    TerrainTexture *rTexture = new TerrainTexture(
+            loader->loadTexture(FileSystem::Path("/src/Resources/Models/Terrain/MultiTexture/dirt.png"))->getId());
+    TerrainTexture *gTexture = new TerrainTexture(loader->loadTexture(
+            FileSystem::Path("/src/Resources/Models/Terrain/MultiTexture/blueflowers.png"))->getId());
+    TerrainTexture *bTexture = new TerrainTexture(
+            loader->loadTexture(FileSystem::Path("/src/Resources/Models/Terrain/MultiTexture/brickroad.png"))->getId());
+    TerrainTexturePack *texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
+    TerrainTexture *blendMap = new TerrainTexture(
+            loader->loadTexture(FileSystem::Path("/src/Resources/Models/Terrain/MultiTexture/blendMap.png"))->getId());
+
+    Terrain *terrain;
+//    Terrain *terrain2;
+
 
     RawModel *grassModel, *treeModel, *fluffyTreeModel, *stallModel, *dragonModel;
     ModelTexture *grassTexture, *treeTexture, *fluffyTreeTexture, *stallTexture, *dragonTexture;
@@ -88,6 +96,9 @@ void MainGameLoop::main() {
     std::vector<Entity *> allEntities;
     allEntities.push_back(new Entity(staticStall, glm::vec3(1.0f, 0.0f, -82.4f), glm::vec3(0.0f, 180.0f, 0.0f)));
 
+    terrain = new Terrain(0, -1, loader, texturePack, blendMap, FileSystem::Path("/src/Resources/Models/Tutorial/heightMap.png"));
+//    terrain2 = new Terrain(0, -1, loader, texturePack, blendMap, FileSystem::Path("/src/Resources/Models/Tutorial/heightMap.png"));
+
     for (int i = 0; i < 500; ++i) {
         float x = randomFloat() * 1500 - 800;
         float y = randomFloat() * 0;
@@ -131,22 +142,6 @@ void MainGameLoop::main() {
     std::vector<Scene *> allScenes;
     Model assimpModel = Model(FileSystem::Path("/src/Resources/Models/Backpack/backpack.obj"));
 
-    TerrainTexture *backgroundTexture = new TerrainTexture(
-            loader->loadTexture(FileSystem::Path("/src/Resources/Models/Terrain/MultiTexture/grass.png"))->getId());
-    TerrainTexture *rTexture = new TerrainTexture(
-            loader->loadTexture(FileSystem::Path("/src/Resources/Models/Terrain/MultiTexture/dirt.png"))->getId());
-    TerrainTexture *gTexture = new TerrainTexture(loader->loadTexture(
-            FileSystem::Path("/src/Resources/Models/Terrain/MultiTexture/blueflowers.png"))->getId());
-    TerrainTexture *bTexture = new TerrainTexture(
-            loader->loadTexture(FileSystem::Path("/src/Resources/Models/Terrain/MultiTexture/brickroad.png"))->getId());
-    TerrainTexturePack *texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
-    TerrainTexture *blendMap = new TerrainTexture(
-            loader->loadTexture(FileSystem::Path("/src/Resources/Models/Terrain/MultiTexture/blendMap.png"))->getId());
-
-    Terrain *terrain, *terrain2;
-    terrain = new Terrain(-1, -1, loader, texturePack, blendMap, FileSystem::Path("/src/Resources/Models/Tutorial/heightMap.png"));
-    terrain2 = new Terrain(0, -1, loader, texturePack, blendMap, FileSystem::Path("/src/Resources/Models/Tutorial/heightMap.png"));
-
     for (int i = 0; i < 2; ++i) {
         float x = randomFloat() * 100 - 50;
         float y = randomFloat() * 100 + 3;
@@ -176,7 +171,7 @@ void MainGameLoop::main() {
         renderer->processModel(&assimpModel);
         // game logic
         renderer->processTerrain(terrain);
-        renderer->processTerrain(terrain2);
+//        renderer->processTerrain(terrain2);
 
         for (Entity *booth : allEntities) {
             renderer->processEntity(booth);

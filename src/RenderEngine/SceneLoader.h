@@ -23,7 +23,17 @@
 
 using namespace std;
 
-
+/**
+ * std::vector<Scene *> allScenes;
+ * Model assimpModel = Model(FileSystem::Path("/src/Resources/Models/Backpack/backpack.obj"));
+ * allScenes.push_back(new Scene(&assimpModel, glm::vec3(x, y, z), rot, randomFloat() * 2));
+ * then in MainGameLoop renderer...
+ * for (Scene *pack : allScenes) {
+ *          renderer->processScenes(pack);
+ *  }
+ *  0r...
+ *  renderer->processModel(&assimpModel); if it's a single model
+ */
 class Model {
 public:
     // model data
@@ -32,7 +42,13 @@ public:
     string directory;
     bool gammaCorrection;
 
-    // constructor, expects a filepath to a 3D model.
+    /**
+     * @brief: constructor, expects a filepath to a 3D model.
+     *
+     * @example: Model assimpModel = Model(FileSystem::Path("/src/Resources/Models/Backpack/backpack.obj"));
+     * @param path
+     * @param gamma
+     */
     Model(string const &path, bool gamma = false) : gammaCorrection(gamma) {
         loadModel(path);
     }

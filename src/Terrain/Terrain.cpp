@@ -29,9 +29,10 @@ RawModel *Terrain::generateTerrain(Loader *loader) {
             vertices[vertexPointer*3] =  (float)j/((float)VERTEX_COUNT - 1) * SIZE;
             vertices[vertexPointer*3+1] = heightMap.getHeight(j, i);
             vertices[vertexPointer*3+2] =  (float)i/((float)VERTEX_COUNT - 1) * SIZE;
-            normals[vertexPointer*3] = 0;
-            normals[vertexPointer*3+1] = 1;
-            normals[vertexPointer*3+2] = 0;
+            glm::vec3 normal = calculateNormal(j, i);
+            normals[vertexPointer*3] = normal.x;
+            normals[vertexPointer*3+1] = normal.y;
+            normals[vertexPointer*3+2] = normal.z;
             textureCoords[vertexPointer*2] = (float)j/((float)VERTEX_COUNT - 1);
             textureCoords[vertexPointer*2+1] = (float)i/((float)VERTEX_COUNT - 1);
             vertexPointer++;
@@ -53,4 +54,17 @@ RawModel *Terrain::generateTerrain(Loader *loader) {
         }
     }
     return loader->loadToVAO(vertices, textureCoords, normals, indices);
+}
+
+glm::vec3 Terrain::calculateNormal(int x, int z) {
+    float heightL = heightMap.getHeight(x - 1, z);
+    float heightR = heightMap.getHeight(x + 1, z);
+    float heightD = heightMap.getHeight(x, z - 1);
+    float heightU = heightMap.getHeight(x, z + 1);
+    glm::vec3 normal(heightL - heightR, 2.0f, heightD - heightU);
+    return glm::normalize(normal);
+}
+
+Heightmap Terrain::getHeightMap() {
+    return heightMap;
 }

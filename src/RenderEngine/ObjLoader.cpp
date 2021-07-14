@@ -87,9 +87,10 @@ ModelData OBJLoader::loadObjModel(std::string filename) {
     std::vector<glm::vec2> textures;
     std::vector<GLint> indices;
 
+    auto copy = filename;
     FILE *file = std::fopen(FileSystem::Path(std::move(filename)).c_str(), "r");
     if (file == nullptr) {
-        printf("Impossible to open the file !\n");
+        printf("Impossible to open the file: %s !\n", copy.c_str());
     }
 
     while (true) {
