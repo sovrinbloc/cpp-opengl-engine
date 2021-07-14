@@ -101,8 +101,8 @@ void MainGameLoop::main() {
 
     for (int i = 0; i < 500; ++i) {
         float x = randomFloat() * 1500 - 800;
-        float y = randomFloat() * 0;
         float z = randomFloat() * -800;
+        float y = terrain->getHeightOfTerrain(x, z);
 
         float rx, ry, rz, scale;
         rx = 0;
@@ -114,8 +114,8 @@ void MainGameLoop::main() {
     }
     for (int i = 0; i < 500; ++i) {
         float x = randomFloat() * 1500 - 800;
-        float y = randomFloat() * 0;
         float z = randomFloat() * -800;
+        float y = terrain->getHeightOfTerrain(x, z);
 
         float rx, ry, rz, scale;
         rx = 0;
@@ -127,8 +127,8 @@ void MainGameLoop::main() {
     }
     for (int i = 0; i < 500; ++i) {
         float x = randomFloat() * 1500 - 800;
-        float y = randomFloat() * 0;
         float z = randomFloat() * -800;
+        float y = terrain->getHeightOfTerrain(x, z);
 
         float rx, ry, rz, scale;
         rx = 0;
@@ -144,8 +144,8 @@ void MainGameLoop::main() {
 
     for (int i = 0; i < 2; ++i) {
         float x = randomFloat() * 100 - 50;
-        float y = randomFloat() * 100 + 3;
         float z = randomFloat() * -300;
+        float y = terrain->getHeightOfTerrain(x, z);
 
         float rx, ry, rz, scale;
         rx = 0;
@@ -170,8 +170,8 @@ void MainGameLoop::main() {
         renderer->processEntity(player);
         renderer->processModel(&assimpModel);
         // game logic
+
         renderer->processTerrain(terrain);
-//        renderer->processTerrain(terrain2);
 
         for (Entity *booth : allEntities) {
             renderer->processEntity(booth);
