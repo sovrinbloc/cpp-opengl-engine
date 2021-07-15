@@ -33,8 +33,8 @@ private:
     std::map<Model *, std::vector<Scene *>> *scenes;
     std::vector<Terrain *> *terrains;
 
-    SceneRenderer *assimpRenderer;
-    ModelShader *modelShader;
+    SceneRenderer *sceneRenderer;
+    ModelShader *sceneShader;
     std::vector<Model *> *models;
 
 public:

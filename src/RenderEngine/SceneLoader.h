@@ -4,6 +4,7 @@
 
 #ifndef ENGINE_SCENELOADER_H
 #define ENGINE_SCENELOADER_H
+
 #include <string>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -17,6 +18,7 @@
 
 #define GL_SILENCE_DEPRECATION
 #define GLFW_INCLUDE_GLCOREARB
+
 #include <GLFW/glfw3.h>
 
 #include "MeshData.h"
@@ -35,13 +37,16 @@ using namespace std;
  *  renderer->processModel(&assimpModel); if it's a single model
  */
 class Model {
+
+private:
+    Material material;
 public:
+
     // model data
     vector<TextureData> textures_loaded;    // stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
     vector<MeshData> meshes;
     string directory;
     bool gammaCorrection;
-
     /**
      * @brief: constructor, expects a filepath to a 3D model.
      *
@@ -49,7 +54,14 @@ public:
      * @param path
      * @param gamma
      */
-    Model(string const &path, bool gamma = false) : gammaCorrection(gamma) {
+    Model(string const &path,
+          Material
+          materials = Material{
+                  .ambient =  glm::vec3(1.0f),
+                  .diffuse =  glm::vec3(1.0f),
+                  .specular =  glm::vec3(1.0f),
+                  .shininess = 32.0f}, bool gamma = false) : gammaCorrection(gamma) {
+        material = materials;
         loadModel(path);
     }
 
@@ -58,6 +70,11 @@ public:
         for (unsigned int i = 0; i < meshes.size(); i++)
             meshes[i].render(shader);
     }
+
+    const Material &getMaterial() const {
+        return material;
+    }
+
 private:
 
 
@@ -203,7 +220,6 @@ private:
         }
         return textures;
     }
-
 
 
     static unsigned int TextureFromFile(const char *path, const string &directory, bool gamma = false) {

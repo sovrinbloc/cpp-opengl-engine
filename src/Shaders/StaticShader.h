@@ -22,7 +22,6 @@ private:
     const std::string projectionMatrix = "projectionMatrix";
     const std::string viewMatrix = "viewMatrix";
     const std::string lightColor = "lightColor";
-    const std::string ambientStrength = "ambientStrength";
     const std::string useFakeLighting = "useFakeLighting";
     const std::string skyColor = "skyColor";
     const std::string viewPosition = "viewPosition";
@@ -40,10 +39,11 @@ private:
     GLint location_transformationMatrix;
     GLint location_projectionMatrix;
     GLint location_viewMatrix;
+    GLint location_viewPosition;
+
     GLint location_lightColor;
     GLint location_useFakeLighting;
     GLint location_skyColor;
-    GLint location_viewPosition;
 
     GLint location_lightAmbient;
     GLint location_lightDiffuse;
@@ -67,15 +67,15 @@ public:
 
     void loadViewMatrix(glm::mat4 matrix = glm::mat4(1.0f));
 
+    void loadViewPosition(Camera *camera);
+
     void loadLight(Light *light);
-    
+
     void loadMaterial(Material material);
 
     void loadFakeLightingVariable(bool useFakeLighting);
 
     void loadSkyColorVariable(glm::vec3 skyColor);
-
-    void loadViewPosition(Camera *camera);
 
 
 

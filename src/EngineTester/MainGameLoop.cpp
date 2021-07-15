@@ -12,7 +12,6 @@
 #include "../RenderEngine/EntityRenderer.h"
 #include "../RenderEngine/ObjLoader.h"
 #include "../RenderEngine/MasterRenderer.h"
-#include "../Terrain/HeightMap.h"
 
 using namespace glm;
 
@@ -100,8 +99,8 @@ void MainGameLoop::main() {
 //    terrain2 = new Terrain(0, -1, loader, texturePack, blendMap, FileSystem::Path("/src/Resources/Models/Tutorial/heightMap.png"));
 
     for (int i = 0; i < 500; ++i) {
-        float x = randomFloat() * 1500 - 800;
-        float z = randomFloat() * -800;
+        float x = floor(randomFloat() * 1500 - 800);
+        float z = floor(randomFloat() * -800);
         float y = terrain->getHeightOfTerrain(x, z);
 
         float rx, ry, rz, scale;
@@ -113,8 +112,8 @@ void MainGameLoop::main() {
         allEntities.push_back(new Entity(staticGrass, glm::vec3(x, y, z), rot));
     }
     for (int i = 0; i < 500; ++i) {
-        float x = randomFloat() * 1500 - 800;
-        float z = randomFloat() * -800;
+        float x = floor(randomFloat() * 1500 - 800);
+        float z = floor(randomFloat() * -800);
         float y = terrain->getHeightOfTerrain(x, z);
 
         float rx, ry, rz, scale;
@@ -126,8 +125,8 @@ void MainGameLoop::main() {
         allEntities.push_back(new Entity(staticTree, glm::vec3(x, y, z), rot, randomFloat()));
     }
     for (int i = 0; i < 500; ++i) {
-        float x = randomFloat() * 1500 - 800;
-        float z = randomFloat() * -800;
+        float x = floor(randomFloat() * 1500 - 800);
+        float z = floor(randomFloat() * -800);
         float y = terrain->getHeightOfTerrain(x, z);
 
         float rx, ry, rz, scale;
@@ -139,28 +138,12 @@ void MainGameLoop::main() {
         allEntities.push_back(new Entity(staticFluffyTree, glm::vec3(x, y, z), rot, randomFloat() * 2));
     }
 
-    std::vector<Scene *> allScenes;
-    Model assimpModel = Model(FileSystem::Path("/src/Resources/Models/Backpack/backpack.obj"));
 
-    for (int i = 0; i < 2; ++i) {
-        float x = randomFloat() * 100 - 50;
-        float z = randomFloat() * -300;
-        float y = terrain->getHeightOfTerrain(x, z);
+    RawModel *playerModel = loader->loadToVAO(&stallData);
+    TexturedModel *playerOne = new TexturedModel(playerModel, new ModelTexture(
+            FileSystem::Path("/src/Resources/Models/Stall/stallTexture.png"), PNG));
 
-        float rx, ry, rz, scale;
-        rx = 0;
-        ry = randomFloat() * 100 - 50;
-        rz = 0;
-        glm::vec3 rot(rx, ry, rz);
-        rot = rot * 180.0f;
-        allScenes.push_back(new Scene(&assimpModel, glm::vec3(x, y, z), rot, randomFloat() * 2));
-    }
-
-    RawModel *bunnyModel = loader->loadToVAO(&stallData);
-    TexturedModel *stanfordBunny = new TexturedModel(bunnyModel, new ModelTexture(
-            FileSystem::Path("/src/Resources/Models/Tutorial/grass.png"), PNG));
-
-    Player *player = new Player(stanfordBunny, glm::vec3(100.0f, 3.0f, -50.0f), glm::vec3(0.0f), 1.0f);
+    Player *player = new Player(playerOne, glm::vec3(100.0f, 3.0f, -50.0f), glm::vec3(0.0f), 1.0f);
     PlayerCamera *playerCamera = new PlayerCamera(player);
 
     MasterRenderer *renderer;
@@ -168,7 +151,6 @@ void MainGameLoop::main() {
     while (DisplayManager::stayOpen()) {
         playerCamera->move(terrain);
         renderer->processEntity(player);
-        renderer->processModel(&assimpModel);
         // game logic
 
         renderer->processTerrain(terrain);
@@ -176,10 +158,9 @@ void MainGameLoop::main() {
         for (Entity *booth : allEntities) {
             renderer->processEntity(booth);
         }
-        for (Scene *pack : allScenes) {
-            renderer->processScenes(pack);
-        }
+
         renderer->processEntity(dragonEntity);
+
         light->setPosition(light->getPosition() + glm::vec3(0.0, 0.01, -0.1f));
         renderer->render(light);
         dragonEntity->setPosition(light->getPosition());

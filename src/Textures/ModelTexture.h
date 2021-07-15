@@ -19,7 +19,6 @@ class ModelTexture : public TextureLoader {
 public:
     ModelTexture(std::string filename, ImageType type,
                  Material
-
                  materials = Material{
                          .ambient =  glm::vec3(1.0f),
                          .diffuse =  glm::vec3(1.0f),

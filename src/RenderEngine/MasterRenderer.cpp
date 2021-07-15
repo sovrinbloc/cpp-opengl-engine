@@ -8,25 +8,25 @@
 #include "SceneLoader.h"
 
 MasterRenderer::MasterRenderer(PlayerCamera *cameraInput) : shader(new StaticShader()),
-                                                           renderer(new EntityRenderer(shader)),
-                                                           camera(cameraInput), projectionMatrix(
-                Maths::createProjectionMatrix(FOVY, (float)DisplayManager::SRC_WIDTH, (float)DisplayManager::SRC_HEIGHT, NEAR_PLANE, FAR_PLANE)),
-                                                           terrainShader(new TerrainShader()),
-                                                           modelShader(new ModelShader())
-                                                           {
+                                                            renderer(new EntityRenderer(shader)),
+                                                            camera(cameraInput), projectionMatrix(
+                Maths::createProjectionMatrix(FOVY, (float) DisplayManager::SRC_WIDTH,
+                                              (float) DisplayManager::SRC_HEIGHT, NEAR_PLANE, FAR_PLANE)),
+                                                            terrainShader(new TerrainShader()),
+                                                            sceneShader(new ModelShader()) {
     RenderStyle::enableCulling();
     entities = new std::map<TexturedModel *, std::vector<Entity *>>;
     scenes = new std::map<Model *, std::vector<Scene *>>;
     terrains = new std::vector<Terrain *>;
     models = new std::vector<Model *>;
     terrainRenderer = new TerrainRenderer(terrainShader, this->projectionMatrix);
-    assimpRenderer = new SceneRenderer(modelShader);
+    sceneRenderer = new SceneRenderer(sceneShader);
 }
 
 void MasterRenderer::cleanUp() {
     shader->cleanUp();
     terrainShader->cleanUp();
-    modelShader->cleanUp();
+    sceneShader->cleanUp();
 }
 
 /**
@@ -44,7 +44,10 @@ void MasterRenderer::prepare() {
 
 void MasterRenderer::render(Light *sun) {
     this->prepare();
+
+
     shader->start();
+
     shader->loadSkyColorVariable(glm::vec3(.529, .808, .98));
     shader->loadLight(sun);
     shader->loadViewPosition(camera);
@@ -52,29 +55,35 @@ void MasterRenderer::render(Light *sun) {
     shader->loadProjectionMatrix(MasterRenderer::createProjectionMatrix());
     renderer->render(entities);
 
+    entities->clear();
     shader->stop();
 
-    modelShader->start();
 
-    modelShader->loadViewPosition(camera);
-    modelShader->loadViewMatrix(camera->GetViewMatrix());
-    modelShader->loadProjectionMatrix(MasterRenderer::createProjectionMatrix());
-    assimpRenderer->render(scenes);
-    modelShader->stop();
+    sceneShader->start();
+
+    sceneShader->loadSkyColorVariable(glm::vec3(.529, .808, .98));
+    sceneShader->loadLight(sun);
+    sceneShader->loadViewPosition(camera);
+    sceneShader->loadViewMatrix(camera->GetViewMatrix());
+    sceneShader->loadProjectionMatrix(MasterRenderer::createProjectionMatrix());
+    sceneRenderer->render(scenes);
+
+    scenes->clear();
+    sceneShader->stop();
 
 
     terrainShader->start();
+
     terrainShader->loadSkyColorVariable(glm::vec3(.529, .808, .98));
     terrainShader->loadLight(sun);
     terrainShader->loadViewPosition(camera);
     terrainShader->loadViewMatrix(camera->GetViewMatrix());
     terrainShader->loadProjectionMatrix(MasterRenderer::createProjectionMatrix());
     terrainRenderer->render(terrains);
+
     terrains->clear();
     terrainShader->stop();
 
-    entities->clear();
-    scenes->clear();
 }
 
 void MasterRenderer::processTerrain(Terrain *terrain) {
@@ -87,7 +96,8 @@ void MasterRenderer::processModel(Model *model) {
 
 glm::mat4 MasterRenderer::createProjectionMatrix() {
     // my additions
-    return Maths::createProjectionMatrix(PlayerCamera::Zoom, (GLfloat)DisplayManager::SRC_WIDTH, (GLfloat)DisplayManager::SRC_HEIGHT, NEAR_PLANE,
+    return Maths::createProjectionMatrix(PlayerCamera::Zoom, (GLfloat) DisplayManager::SRC_WIDTH,
+                                         (GLfloat) DisplayManager::SRC_HEIGHT, NEAR_PLANE,
                                          FAR_PLANE);
 }
 
@@ -120,6 +130,6 @@ void MasterRenderer::processScenes(Scene *scene) {
 }
 
 void MasterRenderer::updatePerspective(float width, float height) {
-    DisplayManager::SRC_WIDTH = (GLint)width;
-    DisplayManager::SRC_HEIGHT = (GLint)height;
+    DisplayManager::SRC_WIDTH = (GLint) width;
+    DisplayManager::SRC_HEIGHT = (GLint) height;
 }

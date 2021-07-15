@@ -30,6 +30,10 @@ void StaticShader::loadViewMatrix(glm::mat4 matrix) {
     this->setMat4(location_viewMatrix, matrix);
 }
 
+void StaticShader::loadViewPosition(Camera *camera) {
+    this->setVec3(location_viewPosition, camera->Position);
+}
+
 void StaticShader::loadLight(Light *light) {
     this->setVec3(location_lightPosition, light->getPosition());
     this->setVec3(location_lightColor, light->getColor());
@@ -54,10 +58,6 @@ void StaticShader::loadFakeLightingVariable(bool useFakeLighting) {
 
 void StaticShader::loadSkyColorVariable(glm::vec3 skyColor) {
     this->setVec3(location_skyColor, skyColor);
-}
-
-void StaticShader::loadViewPosition(Camera *camera) {
-    this->setVec3(location_viewPosition, camera->Position);
 }
 
 

@@ -18,9 +18,7 @@ public:
 
     Scene(Model *model, glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 rotation = glm::vec3(0),
           float scale = 1.0f) : model(model), position(position), rotation(rotation),
-                                scale(scale) {
-
-    }
+                                scale(scale) {}
 
     Model *getModel() {
         return this->model;
@@ -31,7 +29,7 @@ public:
     }
 
 
-    glm::vec3 getPosition() {
+    glm::vec3 getPosition () {
         return position;
     }
 
