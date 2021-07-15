@@ -90,20 +90,17 @@ float Terrain::getHeightOfTerrain(float worldX, float worldZ) {
 
     float xCoord = (float) ((int) terrainX % (int) gridSquareSize) / gridSquareSize;
     float zCoord = (float) ((int) terrainZ % (int) gridSquareSize) / gridSquareSize;
-    float answer;
 
     if (xCoord <= (1 - zCoord)) {
-        answer = Maths::barryCentric(glm::vec3(0, heights[gridX][gridZ], 0), glm::vec3(1,
-                                                                                       heights[gridX + 1][gridZ], 0),
-                                     glm::vec3(0,
-                                               heights[gridX][gridZ + 1], 1), glm::vec2(xCoord, zCoord));
+        return Maths::barryCentric(glm::vec3(0, heights[gridX][gridZ], 0), glm::vec3(1,
+                                                                                     heights[gridX + 1][gridZ], 0),
+                                   glm::vec3(0,
+                                             heights[gridX][gridZ + 1], 1), glm::vec2(xCoord, zCoord));
     } else {
-        answer = Maths::barryCentric(glm::vec3(1, heights[gridX + 1][gridZ], 0), glm::vec3(1,
-                                                                                           heights[gridX + 1][gridZ +
-                                                                                                              1], 1),
-                                     glm::vec3(0,
-                                               heights[gridX][gridZ + 1], 1), glm::vec2(xCoord, zCoord));
+        return Maths::barryCentric(glm::vec3(1, heights[gridX + 1][gridZ], 0), glm::vec3(1,
+                                                                                         heights[gridX + 1][gridZ +
+                                                                                                            1], 1),
+                                   glm::vec3(0,
+                                             heights[gridX][gridZ + 1], 1), glm::vec2(xCoord, zCoord));
     }
-
-    return answer;
 }

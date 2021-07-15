@@ -48,6 +48,10 @@ public:
         this->lighting.position = position;
     }
 
+    void addToPosition(vec3 position) {
+        this->lighting.position += position;
+    }
+
     vec3 getColor() const {
         return color;
     }
