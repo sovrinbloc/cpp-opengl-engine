@@ -110,9 +110,9 @@ void MainGameLoop::main() {
     TexturedModel *playerOne = new TexturedModel(playerModel, new ModelTexture(
             FileSystem::Path("/src/Resources/Models/Stall/stallTexture.png"), PNG));
 
-    Player *player = new Player(playerOne, glm::vec3(100.0f, 3.0f, -50.0f), glm::vec3(0.0f), 1.0f);
-    PlayerCamera *playerCamera = new PlayerCamera(player);
+    Player *player = new Player(playerOne, glm::vec3(100.0f, 3.0f, -50.0f), glm::vec3(0.0f, 180.0f, 0.0f), 1.0f);
     allEntities.push_back(player);
+    PlayerCamera *playerCamera = new PlayerCamera(player);
 
     MasterRenderer *renderer;
     renderer = new MasterRenderer(playerCamera);
@@ -125,7 +125,7 @@ void MainGameLoop::main() {
             renderer->processEntity(ent);
         }
 
-        light->addToPosition(glm::vec3(0.0, 0.1 * sin(glfwGetTime()) * 2 + 0.005, cos(glfwGetTime()) * 2 * -0.1f - 0.1f));
+        light->setPosition(light->getPosition() + glm::vec3(0.0, 0.01, -0.1f));
         renderer->render(light);
         dragonEntity->setPosition(light->getPosition());
         DisplayManager::updateDisplay();
