@@ -60,6 +60,14 @@ void StaticShader::loadSkyColorVariable(glm::vec3 skyColor) {
     this->setVec3(location_skyColor, skyColor);
 }
 
+void StaticShader::loadNumberOfRows(int rows) {
+    this->setFloat(location_textureNumberOfRows, (float)rows);
+}
+
+void StaticShader::loadOffset(float x, float y) {
+    this->setVec2(location_textureOffset, glm::vec2(x, y));
+}
+
 
 void StaticShader::getAllUniformLocations() {
     location_transformationMatrix = getUniformLocation(transformationMatrix);
@@ -69,6 +77,9 @@ void StaticShader::getAllUniformLocations() {
     location_useFakeLighting = getUniformLocation(useFakeLighting);
     location_skyColor = getUniformLocation(skyColor);
     location_viewPosition = getUniformLocation(viewPosition);
+
+    location_textureNumberOfRows = getUniformLocation(textureNumberOfRows);
+    location_textureOffset = getUniformLocation(textureOffset);
 
 // for textures and lighting
     location_lightAmbient = getUniformLocation(lightAmbient);

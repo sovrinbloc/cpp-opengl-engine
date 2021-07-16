@@ -8,7 +8,6 @@
 #include "../Toolbox/FileSystem.h"
 #include "../Toolbox/Utils.h"
 #include "../RenderEngine/DisplayManager.h"
-#include "../RenderEngine/Loader.h"
 #include "../RenderEngine/EntityRenderer.h"
 #include "../RenderEngine/ObjLoader.h"
 #include "../RenderEngine/MasterRenderer.h"
@@ -39,13 +38,18 @@ void MainGameLoop::main() {
     Terrain *terrain;
 //    Terrain *terrain2;
 
-    RawModel *grassModel, *treeModel, *fluffyTreeModel, *stallModel, *dragonModel;
-    ModelTexture *grassTexture, *treeTexture, *fluffyTreeTexture, *stallTexture, *dragonTexture;
-    TexturedModel *staticGrass, *staticTree, *staticStall, *staticFluffyTree, *staticDragon;
+    RawModel *grassModel, *treeModel, *fluffyTreeModel, *stallModel, *dragonModel, *fernModel;
+    ModelTexture *grassTexture, *treeTexture, *fluffyTreeTexture, *stallTexture, *dragonTexture, *fernTexture;
+    TexturedModel *staticGrass, *staticTree, *staticStall, *staticFluffyTree, *staticDragon, *staticFern;
     Light *light;
 
     light = new Light(glm::vec3(0.0, 4.5, -10.0f), glm::vec3(1, 1, 1));
 
+    ModelData fernData = OBJLoader::loadObjModel("/src/Resources/Models/Tutorial/Lesson-23/resources/fern.obj");
+    fernModel = loader->loadToVAO(&fernData);
+    fernTexture = new ModelTexture(FileSystem::TutorialTexture("fern"), PNG);
+    fernTexture->setNumberOfRows(2);
+    staticFern = new TexturedModel(fernModel, fernTexture);
 
     ModelData dragonData = OBJLoader::loadObjModel("/src/Resources/Models/Tutorial/dragon.obj");
     dragonModel = loader->loadToVAO(&dragonData);
@@ -101,6 +105,8 @@ void MainGameLoop::main() {
         allEntities.push_back(new Entity(staticFluffyTree, generateRandomPosition(terrain), generateRandomRotation(),
                                          generateRandomScale(0.5, 1.50f)));
         allEntities.push_back(new Entity(staticTree, generateRandomPosition(terrain), generateRandomRotation(),
+                                         generateRandomScale(.25, 1.50)));
+        allEntities.push_back(new Entity(staticFern, roll(1, 4), generateRandomPosition(terrain), generateRandomRotation(),
                                          generateRandomScale(.25, 1.50)));
     }
     allEntities.push_back(dragonEntity);

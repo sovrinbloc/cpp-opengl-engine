@@ -10,3 +10,11 @@ ModelTexture::ModelTexture(std::string filename, ImageType type,
         TextureLoader(filename, type) {
     this->material = materials;
 }
+
+int ModelTexture::getNumberOfRows() const {
+    return numberOfRows;
+}
+
+void ModelTexture::setNumberOfRows(int numberOfRows) {
+    ModelTexture::numberOfRows = numberOfRows;
+}

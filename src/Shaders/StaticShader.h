@@ -25,7 +25,10 @@ private:
     const std::string useFakeLighting = "useFakeLighting";
     const std::string skyColor = "skyColor";
     const std::string viewPosition = "viewPosition";
-    
+
+    const std::string textureNumberOfRows = "numberOfRows";
+    const std::string textureOffset = "offset";
+
     const std::string lightAmbient = "light.ambient";
     const std::string lightDiffuse = "light.diffuse";
     const std::string lightSpecular = "light.specular";
@@ -44,6 +47,9 @@ private:
     GLint location_lightColor;
     GLint location_useFakeLighting;
     GLint location_skyColor;
+
+    GLint location_textureNumberOfRows;
+    GLint location_textureOffset;
 
     GLint location_lightAmbient;
     GLint location_lightDiffuse;
@@ -77,6 +83,9 @@ public:
 
     void loadSkyColorVariable(glm::vec3 skyColor);
 
+    void loadNumberOfRows(int rows);
+
+    void loadOffset(float x, float y);
 
 
 protected:

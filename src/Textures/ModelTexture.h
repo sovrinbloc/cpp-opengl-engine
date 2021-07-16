@@ -32,6 +32,13 @@ private:
     float ambient = 0.1;
     bool hasTransparency = false;
     bool useFakeLighting = false;
+    int numberOfRows = 1;
+public:
+    int getNumberOfRows() const;
+
+    void setNumberOfRows(int numberOfRows);
+
+private:
     Material material;
 
 public:

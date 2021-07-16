@@ -15,11 +15,15 @@ protected:
     glm::vec3 position;
     glm::vec3 rotation;
     float scale;
+    int textureIndex = 0;
 
 public:
 
     explicit Entity(TexturedModel *model, glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 rotation = glm::vec3(0),
            float scale = 1.0f) : model(model), position(position), rotation(rotation), scale(scale) {}
+
+    explicit Entity(TexturedModel *model, int textureIndex, glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 rotation = glm::vec3(0),
+           float scale = 1.0f) : model(model), textureIndex(textureIndex), position(position), rotation(rotation), scale(scale) {}
 
     TexturedModel *getModel() {
         return this->model;
@@ -27,6 +31,16 @@ public:
 
     void setModel(TexturedModel *texturedModel) {
         this->model = texturedModel;
+    }
+
+    float getTextureYOffset() {
+        int column = textureIndex % model->getModelTexture()->getNumberOfRows();
+        return (float)column / (float)model->getModelTexture()->getNumberOfRows();
+    }
+
+    float getTextureXOffset() {
+        int row = textureIndex % model->getModelTexture()->getNumberOfRows();
+        return (float)row / (float)model->getModelTexture()->getNumberOfRows();
     }
 
 

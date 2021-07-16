@@ -50,6 +50,8 @@ void EntityRenderer::prepareTexturedModel(TexturedModel *model) {
 
     ModelTexture *texture = model->getModelTexture();
 
+    shader->loadNumberOfRows(texture->getNumberOfRows());
+
     if (texture->isHasTransparency()) {
         RenderStyle::disableCulling();
     }
@@ -81,4 +83,5 @@ void EntityRenderer::prepareInstance(Entity *entity) {
                                                                        entity->getScale());
     shader->loadTransformationMatrix(transformationMatrix);
     shader->loadMaterial(entity->getModel()->getModelTexture()->getMaterial());
+    shader->loadOffset(entity->getTextureXOffset(), entity->getTextureYOffset());
 }
