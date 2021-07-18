@@ -12,8 +12,6 @@
 #include "../RenderEngine/ObjLoader.h"
 #include "../RenderEngine/MasterRenderer.h"
 
-using namespace glm;
-
 void MainGameLoop::main() {
 
     DisplayManager::createDisplay();
@@ -45,27 +43,26 @@ void MainGameLoop::main() {
 
     light = new Light(glm::vec3(0.0, 4.5, -10.0f), glm::vec3(1, 1, 1));
 
-    ModelData fernData = OBJLoader::loadObjModel("/src/Resources/Models/Tutorial/Lesson-23/resources/fern.obj");
+    ModelData fernData = OBJLoader::loadObjModel(FileSystem::Path("/src/Resources/Models/Tutorial/Lesson-23/resources/fern.obj"));;
     fernModel = loader->loadToVAO(&fernData);
     fernTexture = new ModelTexture(FileSystem::TutorialTexture("fern"), PNG);
     fernTexture->setNumberOfRows(2);
     staticFern = new TexturedModel(fernModel, fernTexture);
 
-    ModelData dragonData = OBJLoader::loadObjModel("/src/Resources/Models/Tutorial/dragon.obj");
+    ModelData dragonData = OBJLoader::loadObjModel(FileSystem::Path("/src/Resources/Models/Tutorial/dragon.obj"));;
     dragonModel = loader->loadToVAO(&dragonData);
     dragonTexture = new ModelTexture(FileSystem::Path("/src/Resources/Models/Tutorial/grassTexture.png"), PNG);
     staticDragon = new TexturedModel(dragonModel, dragonTexture);
     auto dragonEntity = new Entity(staticDragon, glm::vec3(0.0, 120.0, 80), glm::vec3(0.0f, 180.0f, 0.0f));
 
-    ModelData grassData = OBJLoader::loadObjModel("/src/Resources/Models/Tutorial/grassModel.obj");
+    ModelData grassData = OBJLoader::loadObjModel(FileSystem::Path("/src/Resources/Models/Tutorial/grassModel.obj"));;
     grassModel = loader->loadToVAO(&grassData);
     grassTexture = new ModelTexture(FileSystem::Path("/src/Resources/Models/Tutorial/grassTexture.png"), PNG);
-    staticGrass = new TexturedModel(grassModel, grassTexture);
     grassTexture->setHasTransparency(true);
     grassTexture->setUseFakeLighting(true);
+    staticGrass = new TexturedModel(grassModel, grassTexture);
 
-
-    ModelData stallData = OBJLoader::loadObjModel("/src/Resources/Models/Stall/Stall.obj");
+    ModelData stallData = OBJLoader::loadObjModel(FileSystem::Path("/src/Resources/Models/Stall/Stall.obj"));;
     stallModel = loader->loadToVAO(&stallData);
     stallTexture = new ModelTexture(FileSystem::Path("/src/Resources/Models/Stall/stallTexture.png"), PNG, Material{
             .ambient =  glm::vec3(1),
@@ -74,7 +71,7 @@ void MainGameLoop::main() {
             .shininess = 32.0f});
     staticStall = new TexturedModel(stallModel, stallTexture);
 
-    ModelData treeData = OBJLoader::loadObjModel("/src/Resources/InProgress/Tree/tree.obj");
+    ModelData treeData = OBJLoader::loadObjModel(FileSystem::Path("/src/Resources/InProgress/Tree/tree.obj"));;
     treeModel = loader->loadToVAO(&treeData);
     treeTexture = new ModelTexture(FileSystem::Path("/src/Resources/InProgress/Tree/tree.png"), PNG, Material{
             .ambient =  glm::vec3(1),
@@ -83,7 +80,7 @@ void MainGameLoop::main() {
             .shininess = 32.0f});
     staticTree = new TexturedModel(treeModel, treeTexture);
 
-    ModelData fluffyTreeData = OBJLoader::loadObjModel("/src/Resources/InProgress/Tree/fluffy-tree.obj");
+    ModelData fluffyTreeData = OBJLoader::loadObjModel(FileSystem::Path("/src/Resources/InProgress/Tree/fluffy-tree.obj"));;
     fluffyTreeModel = loader->loadToVAO(&fluffyTreeData);
     fluffyTreeTexture = new ModelTexture(FileSystem::Path("/src/Resources/InProgress/Tree/tree.png"), PNG, Material{
             .ambient =  glm::vec3(1),
@@ -120,11 +117,12 @@ void MainGameLoop::main() {
     allEntities.push_back(player);
     PlayerCamera *playerCamera = new PlayerCamera(player);
 
+
+
     MasterRenderer *renderer;
     renderer = new MasterRenderer(playerCamera);
     while (DisplayManager::stayOpen()) {
         playerCamera->move(terrain);
-
         renderer->processTerrain(terrain);
 
         for (Entity *ent : allEntities) {
@@ -132,8 +130,8 @@ void MainGameLoop::main() {
         }
 
         light->setPosition(light->getPosition() + glm::vec3(0.0, 0.01, -0.1f));
-        renderer->render(light);
         dragonEntity->setPosition(light->getPosition());
+        renderer->render(light);
         DisplayManager::updateDisplay();
     }
 
@@ -142,11 +140,11 @@ void MainGameLoop::main() {
     DisplayManager::closeDisplay();
 }
 
-glm::vec3 MainGameLoop::generateRandomPosition(Terrain *terrain) {
+glm::vec3 MainGameLoop::generateRandomPosition(Terrain *terrain, float yOffset) {
     glm::vec3 positionVector(0.0f);
     positionVector.x = floor(randomFloat() * 1500 - 800);
     positionVector.z = floor(randomFloat() * -800);
-    positionVector.y = terrain->getHeightOfTerrain(positionVector.x, positionVector.z);
+    positionVector.y = terrain->getHeightOfTerrain(positionVector.x, positionVector.z) + yOffset;
     return positionVector;
 }
 

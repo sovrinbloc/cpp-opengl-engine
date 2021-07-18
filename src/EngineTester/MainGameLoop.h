@@ -12,7 +12,7 @@ class MainGameLoop {
 public:
     static void main();
 
-    static glm::vec3 generateRandomPosition(Terrain *terrain);
+    static glm::vec3 generateRandomPosition(Terrain *terrain, float yOffset = 0.0f);
 
     static glm::vec3 generateRandomRotation();
 
