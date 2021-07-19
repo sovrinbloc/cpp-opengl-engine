@@ -14,11 +14,14 @@ std::string FileSystem::Path(char *in) {
     return HOME_PATH + in;
 }
 
-std::string FileSystem::TutorialModel(std::string in) {
-    return HOME_PATH + "/src/Resources/Models/Tutorial/Lesson-23/resources/" + in + ".obj";
+std::string FileSystem::Model(std::string in) {
+    return HOME_PATH + "/src/Resources/Tutorial/" + in + ".obj";
 }
 
-std::string FileSystem::TutorialTexture(std::string in) {
-    printf("%s%s%s%s\n", HOME_PATH.c_str() , "/src/Resources/Models/Tutorial/Lesson-23/resources/" , in.c_str() , ".png");
-    return HOME_PATH + "/src/Resources/Models/Tutorial/Lesson-23/resources/" + in + ".png";
+std::string FileSystem::Texture(std::string in) {
+    return HOME_PATH + "/src/Resources/Tutorial/" + in + ".png";
+}
+
+std::string FileSystem::TerrainTexture(std::string in) {
+    return HOME_PATH + "/src/Resources/Tutorial/MultiTextureTerrain/" + in + ".png";
 }

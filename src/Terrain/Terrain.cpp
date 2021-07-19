@@ -4,9 +4,10 @@
 
 #include "Terrain.h"
 #include "../Toolbox/Maths.h"
+#include "../Toolbox/FileSystem.h"
 
 Terrain::Terrain(int gridX, int gridZ, Loader *loader, TerrainTexturePack *texturePack, TerrainTexture *blendMap,
-                 const std::string &heightMap) : heightMap(Heightmap(heightMap)) {
+                 const std::string &heightMap) : heightMap(Heightmap(FileSystem::Texture(heightMap))) {
     this->texturePack = texturePack;
     this->blendMap = blendMap;
     this->x = (float) gridX * SIZE;

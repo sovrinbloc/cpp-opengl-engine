@@ -17,6 +17,13 @@ public:
         return glm::scale(matrix, glm::vec3(scale));
     }
 
+   static glm::mat4 createTransformationMatrix(glm::vec2 translation, glm::vec2 scale) {
+        glm::mat4 matrix(1.0f);
+        matrix = glm::translate(matrix, glm::vec3(translation.x, translation.y, 0));
+        matrix = glm::scale(matrix, glm::vec3(scale.x, scale.y, 1.0f));
+        return matrix;
+    }
+
     static glm::mat4 createProjectionMatrix(float fovy = 45.0f, float width = 800.0f, float height = 600.0f, float zNear = 0.1f, float zFar = 100.0f) {
         return glm::perspective(glm::radians(fovy), (float) width / (float) height, zNear,zFar);
     }

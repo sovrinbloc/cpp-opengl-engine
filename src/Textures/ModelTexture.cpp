@@ -3,11 +3,12 @@
 //
 
 #include "ModelTexture.h"
+#include "../Toolbox/FileSystem.h"
 
 ModelTexture::ModelTexture(std::string filename, ImageType type,
                            Material materials
 ) :
-        TextureLoader(filename, type) {
+        TextureLoader(FileSystem::Texture(filename), type) {
     this->material = materials;
 }
 

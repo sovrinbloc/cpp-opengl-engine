@@ -3,6 +3,8 @@
 //
 
 #include "Loader.h"
+#include "../Toolbox/FileSystem.h"
+
 RawModel *Loader::loadToVAO(std::vector<GLfloat> positions, std::vector<GLfloat> textureCoords, std::vector<GLfloat> normals, std::vector<GLint> indices) {
     int vaoID = this->createVAO();
     this->bindIndicesBuffer(indices);
@@ -14,17 +16,18 @@ RawModel *Loader::loadToVAO(std::vector<GLfloat> positions, std::vector<GLfloat>
 }
 
 RawModel *Loader::loadToVAO(ModelData *data) {
+    return loadToVAO(data->getVertices(), data->getTextureCoords(), data->getNormals(), data->getIndices());
+}
+
+RawModel *Loader::loadToVAO(std::vector<GLfloat> positions) {
     int vaoID = this->createVAO();
-    this->bindIndicesBuffer(data->getIndices());
-    this->storeDataInAttributeList(0, 3, data->getVertices());
-    this->storeDataInAttributeList(1, 2, data->getTextureCoords());
-    this->storeDataInAttributeList(2, 3, data->getNormals());
+    this->storeDataInAttributeList(0, 2, positions);
     this->unbindVAO();
-    return new RawModel(vaoID, (data->getIndices()).size());
+    return new RawModel(vaoID, positions.size() / 2);
 }
 
 TextureLoader *Loader::loadTexture(std::string fileName) {
-    TextureLoader *tex = new TextureLoader(fileName, PNG);
+    TextureLoader *tex = new TextureLoader(FileSystem::Texture(fileName), PNG);
     textures.push_back(tex->id);
     return tex;
 }

@@ -64,7 +64,7 @@ void TextureLoader::loadPngTexture(const char *file_name) {
     unsigned char *image = stbi_load(file_name, &w, &h, &comp, STBI_rgb_alpha);
 
     if (image == nullptr) {
-        printf("Failed to load texture");
+        printf("Failed to load texture %s\n", file_name);
         return;
     }
 

@@ -14,8 +14,9 @@ class FileSystem {
 public:
     static std::string Path(std::string in);
     static std::string Path(char *in);
-    static std::string TutorialModel(std::string in);
-    static std::string TutorialTexture(std::string in);
+    static std::string Model(std::string in);
+    static std::string Texture(std::string in);
+    static std::string TerrainTexture(std::string in);
 
 };
 #endif //ENGINE_FILESYSTEM_H
