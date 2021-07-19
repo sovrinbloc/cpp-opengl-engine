@@ -42,13 +42,13 @@ void MasterRenderer::prepare() {
 
 }
 
-void MasterRenderer::render(Light *sun) {
+void MasterRenderer::render(std::vector<Light *>suns) {
     this->prepare();
 
     shader->start();
 
     shader->loadSkyColorVariable(glm::vec3(.529, .808, .98));
-    shader->loadLight(sun);
+    shader->loadLight(suns);
     shader->loadViewPosition(camera);
     shader->loadViewMatrix(camera->GetViewMatrix());
     shader->loadProjectionMatrix(MasterRenderer::createProjectionMatrix());
@@ -61,7 +61,7 @@ void MasterRenderer::render(Light *sun) {
     sceneShader->start();
 
     sceneShader->loadSkyColorVariable(glm::vec3(.529, .808, .98));
-    sceneShader->loadLight(sun);
+    sceneShader->loadLight(suns);
     sceneShader->loadViewPosition(camera);
     sceneShader->loadViewMatrix(camera->GetViewMatrix());
     sceneShader->loadProjectionMatrix(MasterRenderer::createProjectionMatrix());
@@ -74,7 +74,7 @@ void MasterRenderer::render(Light *sun) {
     terrainShader->start();
 
     terrainShader->loadSkyColorVariable(glm::vec3(.529, .808, .98));
-    terrainShader->loadLight(sun);
+    terrainShader->loadLight(suns);
     terrainShader->loadViewPosition(camera);
     terrainShader->loadViewMatrix(camera->GetViewMatrix());
     terrainShader->loadProjectionMatrix(MasterRenderer::createProjectionMatrix());

@@ -40,10 +40,9 @@ void MainGameLoop::main() {
     RawModel *grassModel, *treeModel, *fluffyTreeModel, *stallModel, *dragonModel, *fernModel;
     ModelTexture *grassTexture, *treeTexture, *fluffyTreeTexture, *stallTexture, *dragonTexture, *fernTexture;
     TexturedModel *staticGrass, *staticTree, *staticStall, *staticFluffyTree, *staticDragon, *staticFern;
-    Light *light;
-
-    light = new Light(glm::vec3(0.0, 4.5, -10.0f), glm::vec3(1, 1, 1));
-
+    std::vector<Light *>lights;
+    Light *light = new Light(glm::vec3(0.0, 4.5, -10.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    lights.push_back(light);
     ModelData fernData = OBJLoader::loadObjModel("fern");
     fernModel = loader->loadToVAO(&fernData);
     fernTexture = new ModelTexture("fern", PNG);
@@ -140,7 +139,7 @@ void MainGameLoop::main() {
 
         light->setPosition(light->getPosition() + glm::vec3(0.0, 0.01, -0.1f));
         dragonEntity->setPosition(light->getPosition());
-        renderer->render(light);
+        renderer->render(lights);
         guiRenderer->render(guis);
         DisplayManager::updateDisplay();
     }

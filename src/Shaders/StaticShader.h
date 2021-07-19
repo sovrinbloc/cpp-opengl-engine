@@ -12,6 +12,8 @@
 
 class StaticShader : public ShaderProgram {
 private:
+
+    static const int MAX_LIGHTS = 4;
     // attribute names
     const std::string position = "position";
     const std::string texture = "textureCoords";
@@ -51,10 +53,10 @@ private:
     GLint location_textureNumberOfRows;
     GLint location_textureOffset;
 
-    GLint location_lightAmbient;
-    GLint location_lightDiffuse;
-    GLint location_lightSpecular;
-    GLint location_lightPosition;
+    GLint location_lightAmbient[MAX_LIGHTS];
+    GLint location_lightDiffuse[MAX_LIGHTS];
+    GLint location_lightSpecular[MAX_LIGHTS];
+    GLint location_lightPosition[MAX_LIGHTS];
 
     GLint location_materialShininess;
     GLint location_materialAmbient;
@@ -75,7 +77,7 @@ public:
 
     void loadViewPosition(Camera *camera);
 
-    void loadLight(Light *light);
+    void loadLight(std::vector<Light *>light);
 
     void loadMaterial(Material material);
 

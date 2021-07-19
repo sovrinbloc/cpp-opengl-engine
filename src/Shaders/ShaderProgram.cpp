@@ -45,6 +45,7 @@ void Shader::loadShader(std::string path, ShaderType type) {
     glShaderSource(shaderId, 1, &vShaderCode, NULL);
     glCompileShader(shaderId);
     checkCompileErrors(shaderId, debugType);
+    printf("finished with %s\n", path.c_str());
 }
 
 // utility function for checking shader compilation/linking errors.

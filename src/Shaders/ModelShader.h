@@ -14,6 +14,8 @@
 
 class ModelShader : public ShaderProgram {
 private:
+    static const int MAX_LIGHTS = 4;
+
     // attribute names
     const std::string position = "position";
     const std::string texture = "textureCoords";
@@ -44,13 +46,12 @@ private:
     GLint location_viewMatrix;
     GLint location_viewPosition;
 
-    GLint location_lightColor;
     GLint location_skyColor;
 
-    GLint location_lightAmbient;
-    GLint location_lightDiffuse;
-    GLint location_lightSpecular;
-    GLint location_lightPosition;
+    GLint location_lightAmbient[4];
+    GLint location_lightDiffuse[4];
+    GLint location_lightSpecular[4];
+    GLint location_lightPosition[4];
 
     GLint location_materialShininess;
     GLint location_materialAmbient;
@@ -71,7 +72,7 @@ public:
 
     void loadViewPosition(Camera *camera);
 
-    void loadLight(Light *light);
+    void loadLight(std::vector<Light *>lights);
 
     void loadMaterial(Material material);
 

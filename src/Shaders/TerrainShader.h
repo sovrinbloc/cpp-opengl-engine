@@ -12,6 +12,7 @@
 
 
 class TerrainShader : public ShaderProgram {
+    static const int MAX_LIGHTS = 4;
 // attribute names
     const std::string position = "position";
     const std::string texture = "textureCoords";
@@ -48,10 +49,10 @@ class TerrainShader : public ShaderProgram {
     GLint location_skyColor;
     GLint location_viewPosition;
 
-    GLint location_lightAmbient;
-    GLint location_lightDiffuse;
-    GLint location_lightSpecular;
-    GLint location_lightPosition;
+    GLint location_lightAmbient[MAX_LIGHTS];
+    GLint location_lightDiffuse[MAX_LIGHTS];
+    GLint location_lightSpecular[MAX_LIGHTS];
+    GLint location_lightPosition[MAX_LIGHTS];
 
     GLint location_materialShininess;
     GLint location_materialAmbient;
@@ -76,7 +77,7 @@ public:
 
     void loadViewMatrix(glm::mat4 matrix = glm::mat4(1.0f));
 
-    void loadLight(Light *light);
+    void loadLight(std::vector<Light *>lights);
 
     void loadMaterial(Material material);
 

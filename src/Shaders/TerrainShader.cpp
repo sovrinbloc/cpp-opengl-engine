@@ -30,15 +30,22 @@ void TerrainShader::loadViewMatrix(glm::mat4 matrix) {
     this->setMat4(location_viewMatrix, matrix);
 }
 
-void TerrainShader::loadLight(Light *light) {
-    this->setVec3(location_lightPosition, light->getPosition());
-    this->setVec3(location_lightColor, light->getColor());
+void TerrainShader::loadLight(std::vector<Light *>lights) {
 
     // for textures and lighting
-    this->setVec3(location_lightAmbient, light->getLighting().ambient);
-    this->setVec3(location_lightDiffuse, light->getLighting().diffuse);
-    this->setVec3(location_lightSpecular, light->getLighting().specular);
-    this->setVec3(location_lightPosition, light->getLighting().position);
+    for(int i = 0; i < MAX_LIGHTS; i++) {
+        if (i < lights.size()) {
+            this->setVec3(location_lightAmbient[i], lights[i]->getLighting().ambient);
+            this->setVec3(location_lightDiffuse[i], lights[i]->getLighting().diffuse);
+            this->setVec3(location_lightSpecular[i], lights[i]->getLighting().specular);
+            this->setVec3(location_lightPosition[i], lights[i]->getLighting().position);
+        } else {
+            this->setVec3(location_lightAmbient[i], glm::vec3(0));
+            this->setVec3(location_lightDiffuse[i], glm::vec3(0));
+            this->setVec3(location_lightSpecular[i], glm::vec3(0));
+            this->setVec3(location_lightPosition[i], glm::vec3(0.0f));
+        }
+    }
 }
 
 void TerrainShader::loadMaterial(Material material) {
@@ -68,17 +75,17 @@ void TerrainShader::getAllUniformLocations() {
     location_transformationMatrix = getUniformLocation(transformationMatrix);
     location_projectionMatrix = getUniformLocation(projectionMatrix);
     location_viewMatrix = getUniformLocation(viewMatrix);
-    location_lightPosition = getUniformLocation(lightPosition);
-    location_lightColor = getUniformLocation(lightColor);
     location_skyColor = getUniformLocation(skyColor);
 
     location_viewPosition = getUniformLocation(viewPosition);
 
-// for textures and lighting
-    location_lightAmbient = getUniformLocation(lightAmbient);
-    location_lightDiffuse = getUniformLocation(lightDiffuse);
-    location_lightSpecular = getUniformLocation(lightSpecular);
-    location_lightPosition = getUniformLocation(lightPosition);
+    // for textures and lighting
+    for(int i = 0; i < MAX_LIGHTS; i++) {
+        location_lightPosition[i] = getUniformLocation("light[" + std::to_string(i) + "]" + ".position");
+        location_lightAmbient[i] = getUniformLocation("light[" + std::to_string(i) + "]" + ".ambient");
+        location_lightSpecular[i] = getUniformLocation("light[" + std::to_string(i) + "]" + ".specular");
+        location_lightDiffuse[i] = getUniformLocation("light[" + std::to_string(i) + "]" + ".diffuse");
+    }
 
     location_materialShininess = getUniformLocation(materialShininess);
     location_materialAmbient = getUniformLocation(materialAmbient);

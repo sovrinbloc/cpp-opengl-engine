@@ -7,7 +7,8 @@ struct Light {
     vec3 specular;
 };
 
-uniform Light light;
+uniform Light light[4];
+
 
 layout (location = 0) in vec3 position;
 layout (location = 1) in vec2 textureCoords;
@@ -15,7 +16,7 @@ layout (location = 2) in vec3 normal;
 
 out vec2 pass_textureCoords;
 out vec3 surfaceNormal;
-out vec3 toLightVector;
+out vec3 toLightVector[4];
 out vec4 worldPosition;
 out float visibility;
 
@@ -34,7 +35,9 @@ void main()
     pass_textureCoords = textureCoords;
 
     surfaceNormal = (transformationMatrix * vec4(normal, 0.0)).xyz;
-    toLightVector = light.position - worldPosition.xyz;
+    for (int i = 0; i < 4; i++) {
+        toLightVector[i] = light[i].position - worldPosition.xyz;
+    }
 
     float distance = length(positionRelativeToCam.xyz);
     visibility = exp(-pow((distance * density), gradient));
