@@ -122,9 +122,9 @@ void MainGameLoop::main() {
 
 
     std::vector<GuiTexture*> guis = std::vector<GuiTexture*>();
-    GuiTexture *gui = new GuiTexture(loader->loadTexture("manifest")->getId(), glm::vec2(0.5f, 0.5f), glm::vec2(0.25f, 0.25f));
-    guis.push_back(new GuiTexture(loader->loadTexture("grassTexture")->getId(), glm::vec2(0.5f, 0.5f), glm::vec2(0.25f, 0.25f)));
-    guis.push_back(gui);
+    guis.push_back(new GuiTexture(loader->loadTexture("gui/lifebar")->getId(), glm::vec2(-0.72f, 0.9f), glm::vec2(0.290f, 0.0900f)));
+    guis.push_back(new GuiTexture(loader->loadTexture("gui/green")->getId(), glm::vec2(-0.7f, 0.9f), glm::vec2(0.185f, 0.070f)));
+    guis.push_back(new GuiTexture(loader->loadTexture("gui/heart")->getId(), glm::vec2(-0.9f, 0.9f), glm::vec2(0.075f, 0.075f)));
 
     GuiRenderer *guiRenderer = new GuiRenderer(loader);
 
