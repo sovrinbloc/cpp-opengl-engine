@@ -50,7 +50,6 @@ public:
         // creates the matrices to be passed into the shader
         glm::mat4 transformationMatrix = Maths::createTransformationMatrix(scene->getPosition(), scene->getRotation(),
                                                                            scene->getScale());
-        printf("sceen->getPosition.y: %f\n", scene->getPosition().y);
         shader->loadTransformationMatrix(transformationMatrix);
         shader->loadMaterial(scene->getModel()->getMaterial());
     }

@@ -41,8 +41,11 @@ void MainGameLoop::main() {
     ModelTexture *grassTexture, *treeTexture, *fluffyTreeTexture, *stallTexture, *dragonTexture, *fernTexture;
     TexturedModel *staticGrass, *staticTree, *staticStall, *staticFluffyTree, *staticDragon, *staticFern;
     std::vector<Light *>lights;
-    Light *light = new Light(glm::vec3(0.0, 4.5, -10.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    Light *light = new Light(glm::vec3(0.0, 4.5, -10.0f), glm::vec3(255.0f, 255.0f, 255.0f));
     lights.push_back(light);
+//    lights.push_back(new Light(glm::vec3(0.0, 34.5, -100.0f), glm::vec3(0.0f, 255.0f, 255.0f)));
+//    lights.push_back(new Light(glm::vec3(0.0, 4.5, -10.0f), glm::vec3(0, 1, 0)));
+//    lights.push_back(new Light(glm::vec3(0.0, 4.5, -10.0f), glm::vec3(0, 0, 1)));
     ModelData fernData = OBJLoader::loadObjModel("fern");
     fernModel = loader->loadToVAO(&fernData);
     fernTexture = new ModelTexture("fern", PNG);
@@ -98,6 +101,9 @@ void MainGameLoop::main() {
                           "heightMap");
 //    terrain2 = new Terrain(0, -1, loader, texturePack, blendMap, "heightMap");
 
+    std::vector<Scene *> allScenes;
+    Model *pBackpack = new Model("Backpack/backpack");
+
     for (int i = 0; i < 500; ++i) {
         allEntities.push_back(new Entity(staticGrass, generateRandomPosition(terrain), generateRandomRotation(),
                                          generateRandomScale(0.5, 1.50f)));
@@ -105,8 +111,12 @@ void MainGameLoop::main() {
                                          generateRandomScale(0.5, 1.50f)));
         allEntities.push_back(new Entity(staticTree, generateRandomPosition(terrain), generateRandomRotation(),
                                          generateRandomScale(.25, 1.50)));
-        allEntities.push_back(new Entity(staticFern, roll(1, 4), generateRandomPosition(terrain), generateRandomRotation(),
+        allEntities.push_back(new Entity(staticFern, Utils::roll(1, 4), generateRandomPosition(terrain), generateRandomRotation(),
                                          generateRandomScale(.25, 1.50)));
+        if (i % 30 == 0) {
+            allScenes.push_back(new Scene(pBackpack, generateRandomPosition(terrain, 3.0f), generateRandomRotation(),
+                                          generateRandomScale(3.25, 10.50)));
+        }
     }
     allEntities.push_back(dragonEntity);
 
@@ -136,6 +146,9 @@ void MainGameLoop::main() {
         for (Entity *ent : allEntities) {
             renderer->processEntity(ent);
         }
+        for (Scene *scene : allScenes) {
+            renderer->processScenes(scene);
+        }
 
         light->setPosition(light->getPosition() + glm::vec3(0.0, 0.01, -0.1f));
         dragonEntity->setPosition(light->getPosition());
@@ -151,8 +164,8 @@ void MainGameLoop::main() {
 
 glm::vec3 MainGameLoop::generateRandomPosition(Terrain *terrain, float yOffset) {
     glm::vec3 positionVector(0.0f);
-    positionVector.x = floor(randomFloat() * 1500 - 800);
-    positionVector.z = floor(randomFloat() * -800);
+    positionVector.x = floor(Utils::randomFloat() * 1500 - 800);
+    positionVector.z = floor(Utils::randomFloat() * -800);
     positionVector.y = terrain->getHeightOfTerrain(positionVector.x, positionVector.z) + yOffset;
     return positionVector;
 }
@@ -160,7 +173,7 @@ glm::vec3 MainGameLoop::generateRandomPosition(Terrain *terrain, float yOffset) 
 glm::vec3 MainGameLoop::generateRandomRotation() {
     float rx, ry, rz, scale;
     rx = 0;
-    ry = randomFloat() * 100 - 50;
+    ry = Utils::randomFloat() * 100 - 50;
     rz = 0;
     glm::vec3 rot(rx, ry, rz);
     rot = rot * 180.0f;
@@ -172,7 +185,7 @@ float MainGameLoop::generateRandomScale(float min = 0.75, float max = 1.50) {
     if (max > 1) {
         multiplier = ceil(max);
     }
-    auto r = randomFloat() * multiplier;
+    auto r = Utils::randomFloat() * multiplier;
     if (r < min) {
         r = min;
     }

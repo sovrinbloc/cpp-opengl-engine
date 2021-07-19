@@ -8,7 +8,7 @@ Model::Model(string const &path,
 Material
         materials, bool gamma) : gammaCorrection(gamma) {
         material = materials;
-        loadModel(path);
+        loadModel(FileSystem::Model(path));
 }
 
 // draws the model, and thus all its meshes

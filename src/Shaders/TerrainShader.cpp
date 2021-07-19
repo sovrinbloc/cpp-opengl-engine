@@ -3,6 +3,7 @@
 //
 
 #include "TerrainShader.h"
+#include "../Toolbox/Utils.h"
 
 static const char *VertexPath = "/src/Shaders/Terrain/VertexShader.glsl";
 static const char *FragmentPath = "/src/Shaders/Terrain/FragmentShader.glsl";
@@ -35,14 +36,16 @@ void TerrainShader::loadLight(std::vector<Light *>lights) {
     // for textures and lighting
     for(int i = 0; i < MAX_LIGHTS; i++) {
         if (i < lights.size()) {
+            this->setVec3(location_lightColor[i], lights[i]->getColor());
             this->setVec3(location_lightAmbient[i], lights[i]->getLighting().ambient);
             this->setVec3(location_lightDiffuse[i], lights[i]->getLighting().diffuse);
             this->setVec3(location_lightSpecular[i], lights[i]->getLighting().specular);
             this->setVec3(location_lightPosition[i], lights[i]->getLighting().position);
         } else {
-            this->setVec3(location_lightAmbient[i], glm::vec3(0));
-            this->setVec3(location_lightDiffuse[i], glm::vec3(0));
-            this->setVec3(location_lightSpecular[i], glm::vec3(0));
+            this->setVec3(location_lightColor[i], glm::vec3(0.0f));
+            this->setVec3(location_lightAmbient[i], glm::vec3(0.0f));
+            this->setVec3(location_lightDiffuse[i], glm::vec3(0.0f));
+            this->setVec3(location_lightSpecular[i], glm::vec3(0.0f));
             this->setVec3(location_lightPosition[i], glm::vec3(0.0f));
         }
     }
@@ -81,10 +84,11 @@ void TerrainShader::getAllUniformLocations() {
 
     // for textures and lighting
     for(int i = 0; i < MAX_LIGHTS; i++) {
-        location_lightPosition[i] = getUniformLocation("light[" + std::to_string(i) + "]" + ".position");
-        location_lightAmbient[i] = getUniformLocation("light[" + std::to_string(i) + "]" + ".ambient");
-        location_lightSpecular[i] = getUniformLocation("light[" + std::to_string(i) + "]" + ".specular");
-        location_lightDiffuse[i] = getUniformLocation("light[" + std::to_string(i) + "]" + ".diffuse");
+        location_lightColor[i] = getUniformLocation(Utils::shaderArray("light", i, "color"));
+        location_lightPosition[i] = getUniformLocation(Utils::shaderArray("light", i, "position"));
+        location_lightAmbient[i] = getUniformLocation(Utils::shaderArray("light", i, "ambient"));
+        location_lightSpecular[i] = getUniformLocation(Utils::shaderArray("light", i, "specular"));
+        location_lightDiffuse[i] = getUniformLocation(Utils::shaderArray("light", i, "diffuse"));
     }
 
     location_materialShininess = getUniformLocation(materialShininess);

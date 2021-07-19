@@ -48,10 +48,11 @@ private:
 
     GLint location_skyColor;
 
-    GLint location_lightAmbient[4];
-    GLint location_lightDiffuse[4];
-    GLint location_lightSpecular[4];
-    GLint location_lightPosition[4];
+    GLint location_lightColor[MAX_LIGHTS];
+    GLint location_lightAmbient[MAX_LIGHTS];
+    GLint location_lightDiffuse[MAX_LIGHTS];
+    GLint location_lightSpecular[MAX_LIGHTS];
+    GLint location_lightPosition[MAX_LIGHTS];
 
     GLint location_materialShininess;
     GLint location_materialAmbient;

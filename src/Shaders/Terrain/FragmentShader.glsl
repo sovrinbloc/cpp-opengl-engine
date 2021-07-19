@@ -8,6 +8,7 @@ struct Material {
 uniform Material material;
 
 struct Light {
+    vec3 color;
     vec3 position;
 
     vec3 ambient;
@@ -41,10 +42,10 @@ uniform float  shineDamper;
 uniform float ambientStrength;
 uniform vec3 skyColor;
 
-void main()
-{
 
+mat3 calculateLighting(vec3 unitNormal, vec3 unitVectorToCamera, vec3 toLightVector[4], Light lights[4], Material material);
 
+void main() {
     vec4 blendMapColor = texture(blendMap, pass_textureCoords);
 
     float backTextureAmount = 1 - (blendMapColor.r, blendMapColor.g, blendMapColor.b);
@@ -56,13 +57,21 @@ void main()
 
     vec4 totalColor = backgroundTextureColor + rTextureColor + gTextureColor + bTextureColor;
 
+    vec3 unitNormal = normalize(surfaceNormal);
+    vec3 unitVectorToCamera = normalize(viewPosition - vec3(worldPosition));
+
+    mat3 lv = calculateLighting(unitNormal, unitVectorToCamera, toLightVector, light, material);
+
+
+    out_color = vec4(lv[0], 1.0) * totalColor + vec4(lv[2], 1.0) + vec4(lv[1], 1.0);
+    out_color = mix(vec4(skyColor, 1.0), out_color, visibility);
+
+}
+
+mat3 calculateLighting(vec3 unitNormal, vec3 unitVectorToCamera, vec3 toLightVector[4], Light lights[4], Material material) {
     vec3 totalDiffuse;
     vec3 totalSpecular;
     vec3 totalAmbient;
-
-
-    vec3 unitNormal = normalize(surfaceNormal);
-    vec3 unitVectorToCamera = normalize(viewPosition - vec3(worldPosition));
 
     for (int i = 0; i < 4; i++) {
         totalAmbient = totalAmbient + light[i].ambient * material.ambient;
@@ -78,12 +87,9 @@ void main()
         specularFactor = max(specularFactor, 0.0);
         float dampedFactor = pow(specularFactor, material.shininess);
 
-        totalDiffuse = totalDiffuse + (brightness * material.diffuse) * light[i].diffuse;
+        totalDiffuse = totalDiffuse + (brightness * light[i].color * material.diffuse) * light[i].diffuse;
         totalSpecular =  totalSpecular + (dampedFactor * material.specular) * light[i].specular;
     }
 
-
-    out_color = vec4(totalDiffuse, 1.0) * totalColor + vec4(totalAmbient, 1.0) + vec4(totalSpecular, 1.0);
-    out_color = mix(vec4(skyColor, 1.0), out_color, visibility);
-
+    return mat3(totalDiffuse, totalSpecular, totalAmbient);
 }

@@ -46,13 +46,13 @@ private:
     GLint location_viewMatrix;
     GLint location_viewPosition;
 
-    GLint location_lightColor;
     GLint location_useFakeLighting;
     GLint location_skyColor;
-
     GLint location_textureNumberOfRows;
+
     GLint location_textureOffset;
 
+    GLint location_lightColor[MAX_LIGHTS];
     GLint location_lightAmbient[MAX_LIGHTS];
     GLint location_lightDiffuse[MAX_LIGHTS];
     GLint location_lightSpecular[MAX_LIGHTS];

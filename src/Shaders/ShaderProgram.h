@@ -18,7 +18,6 @@ typedef enum {
 class Shader {
 public:
     unsigned int shaderId;
-    char *file;
 
     Shader(std::string file, ShaderType type);
 
@@ -185,7 +184,7 @@ public:
 
 protected:
 
-    int getUniformLocation(std::string uniformName) {
+    int getUniformLocation(const std::string& uniformName) const {
         return glGetUniformLocation(this->programID, uniformName.c_str());
     }
     // implementation inside child class

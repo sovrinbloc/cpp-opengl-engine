@@ -45,10 +45,10 @@ class TerrainShader : public ShaderProgram {
     GLint location_transformationMatrix;
     GLint location_projectionMatrix;
     GLint location_viewMatrix;
-    GLint location_lightColor;
     GLint location_skyColor;
     GLint location_viewPosition;
 
+    GLint location_lightColor[MAX_LIGHTS];
     GLint location_lightAmbient[MAX_LIGHTS];
     GLint location_lightDiffuse[MAX_LIGHTS];
     GLint location_lightSpecular[MAX_LIGHTS];
@@ -69,7 +69,7 @@ public:
 
     TerrainShader();
 
-    void bindAttributes();
+    void bindAttributes() override;
 
     void loadTransformationMatrix(glm::mat4 matrix = glm::mat4(1.0f));
 
@@ -84,8 +84,6 @@ public:
     void loadSkyColorVariable(glm::vec3 skyColor);
 
     void loadViewPosition(Camera *camera);
-
-//    void connectTextureUnits(TerrainTexturePack *texturePack, TerrainTexture *blendMap);
 
     void connectTextureUnits();
 

@@ -28,7 +28,7 @@ using namespace std;
 /**
  * std::vector<Scene *> allScenes;
  * Model assimpModel = Model(FileSystem::Path("/src/Resources/Models/Backpack/backpack.obj"));
- * allScenes.push_back(new Scene(&assimpModel, glm::vec3(x, y, z), rot, randomFloat() * 2));
+ * allScenes.push_back(new Scene(&assimpModel, glm::vec3(x, y, z), rot, Utils::randomFloat() * 2));
  * then in MainGameLoop renderer...
  * for (Scene *pack : allScenes) {
  *          renderer->processScenes(pack);

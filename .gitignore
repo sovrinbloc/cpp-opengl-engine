@@ -15,4 +15,5 @@ lib/*
 *.blend1
 *.mtl
 src/Resources/Models/Tutorial/*
-src/Resources/Models/Backpack/*
+src/Resources/Tutorial/Backpack/*
+src/Resources/Tutorial/*
