@@ -63,6 +63,9 @@ public:
     void setColor(vec3 color) {
         this->color = color;
     }
+
+public:
+    constexpr static float DIRECTIONAL = -1.0f;
 };
 
 #endif //ENGINE_LIGHT_H

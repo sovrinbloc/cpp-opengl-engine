@@ -63,10 +63,10 @@ void main() {
 
     vec3 unitNormal = normalize(surfaceNormal);
     vec3 unitVectorToCamera = normalize(viewPosition - vec3(worldPosition));
-//    unitVectorToCamera = normalize(toCameraVector); // added now to replace former line if this works
+    //    unitVectorToCamera = normalize(toCameraVector); // added now to replace former line if this works
 
     if (dot(unitNormal, unitVectorToCamera) < 0.0)
-        unitNormal = -unitNormal;
+    unitNormal = -unitNormal;
 
     vec3 runningResult = vec3(0.0f);
 
@@ -98,7 +98,7 @@ vec3 CalcPointLight(Light light, vec3 lightVector, vec3 unitNormal, vec3 unitVec
     float dampedFactor = pow(specularFactor, material.shininess);
 
     // attenuation (looks okay)
-    float distance = length(lightVector); // checks out
+    float distance = length(lightVector);// checks out
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
 
     //        dampedFactor = max(dampedFactor, .65);
@@ -110,19 +110,26 @@ vec3 CalcPointLight(Light light, vec3 lightVector, vec3 unitNormal, vec3 unitVec
     ambient *= attenuation;
     diffuse  *= attenuation;
     specular *= attenuation;
-    
+
     return ambient + diffuse + specular;
 }
 
 
 vec3 CalcDirLight(Light light, vec3 unitNormal, vec3 unitVectorToCamera, vec4 totalColour)
 {
-    vec3 lightDirection = normalize(-light.position);
+    if (dot(unitNormal, unitVectorToCamera) < 0.0) {
+        unitNormal = -unitNormal;
+    }
+
+    vec3 lightDirection = normalize(-unitVectorToCamera);
+
     // diffuse shading
     float diff = max(dot(unitNormal, lightDirection), 0.0);
     // specular shading
+
     vec3 reflectDirection = reflect(-lightDirection, unitNormal);
     float spec = pow(max(dot(unitVectorToCamera, reflectDirection), 0.0), material.shininess);
+
     // combine results
     vec3 diffuse  = light.diffuse  * diff * totalColour.rgb;
     vec3 specular = light.specular * spec * totalColour.rgb;
