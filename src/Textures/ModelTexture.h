@@ -9,41 +9,31 @@
 #include "glm/glm.hpp"
 
 struct Material {
-    glm::vec3 ambient;
-    glm::vec3 diffuse;
-    glm::vec3 specular;
     float shininess;
+    float reflectivity;
 };
 
 class ModelTexture : public TextureLoader {
 public:
     ModelTexture(std::string filename, ImageType type,
-                 Material
-                 materials = Material{
-                         .ambient =  glm::vec3(1.0f),
-                         .diffuse =  glm::vec3(1.0f),
-                         .specular =  glm::vec3(1.0f),
-                         .shininess = 32.0f}
-    ) ;
+                 Material materials = Material{
+                         .shininess = 1.0f,
+                         .reflectivity = 0.5f
+                 }
+    );
 
 private:
-    float shineDamper = 1;
-    float reflectivity = 0.5;
-    float ambient = 0.1;
     bool hasTransparency = false;
     bool useFakeLighting = false;
     int numberOfRows = 1;
+    Material material;
 public:
     int getNumberOfRows() const;
 
     void setNumberOfRows(int numberOfRows);
 
-private:
-    Material material;
 
-public:
-
-    Material getMaterial() const {
+    Material &getMaterial() {
         return material;
     }
 
@@ -65,30 +55,6 @@ public:
 
     void setHasTransparency(bool hasTransparency) {
         ModelTexture::hasTransparency = hasTransparency;
-    }
-
-    float getAmbient() {
-        return ambient;
-    }
-
-    void setAmbient(float ambient) {
-        this->ambient = ambient;
-    }
-
-    float getShineDamper() const {
-        return shineDamper;
-    }
-
-    void setShineDamper(float shineDamper) {
-        ModelTexture::shineDamper = shineDamper;
-    }
-
-    float getReflectivity() const {
-        return reflectivity;
-    }
-
-    void setReflectivity(float reflectivity) {
-        this->reflectivity = reflectivity;
     }
 
 };

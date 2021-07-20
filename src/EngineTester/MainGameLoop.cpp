@@ -13,7 +13,6 @@
 #include "../RenderEngine/MasterRenderer.h"
 #include "../Guis/GuiTexture.h"
 #include "../Guis/GuiRenderer.h"
-#include "glm/gtc/type_ptr.hpp"
 
 void MainGameLoop::main() {
     DisplayManager::createDisplay();
@@ -35,71 +34,80 @@ void MainGameLoop::main() {
             loader->loadTexture("MultiTextureTerrain/blendMap")->getId());
 
     Terrain *terrain;
-//    Terrain *terrain2;
+    Terrain *terrain2;
+    Terrain *terrain3;
+    Terrain *terrain4;
 
-    RawModel *grassModel, *treeModel, *fluffyTreeModel, *stallModel, *dragonModel, *fernModel;
-    ModelTexture *grassTexture, *treeTexture, *fluffyTreeTexture, *stallTexture, *dragonTexture, *fernTexture;
-    TexturedModel *staticGrass, *staticTree, *staticStall, *staticFluffyTree, *staticDragon, *staticFern;
-    std::vector<Light *>lights;
-    Light *light = new Light(glm::vec3(0.0, 4.5, -10.0f), glm::vec3(255.0f, 255.0f, 255.0f));
+    RawModel *grassModel, *treeModel, *fluffyTreeModel, *stallModel, *dragonModel, *fernModel, *lampModel;
+    ModelTexture *grassTexture, *treeTexture, *fluffyTreeTexture, *stallTexture, *dragonTexture, *fernTexture, *lampTexture;
+    TexturedModel *staticGrass, *staticTree, *staticStall, *staticFluffyTree, *staticDragon, *staticFern, *staticLamp;
+    std::vector<Light *> lights;
+    Light *light = new Light(glm::vec3(0.0, 1000., -7000.0f), glm::vec3(0.4f, 0.4f, 0.4f));
     lights.push_back(light);
-//    lights.push_back(new Light(glm::vec3(0.0, 34.5, -100.0f), glm::vec3(0.0f, 255.0f, 255.0f)));
-//    lights.push_back(new Light(glm::vec3(0.0, 4.5, -10.0f), glm::vec3(0, 1, 0)));
-//    lights.push_back(new Light(glm::vec3(0.0, 4.5, -10.0f), glm::vec3(0, 0, 1)));
-    ModelData fernData = OBJLoader::loadObjModel("fern");
-    fernModel = loader->loadToVAO(&fernData);
-    fernTexture = new ModelTexture("fern", PNG);
-    fernTexture->setNumberOfRows(2);
-    staticFern = new TexturedModel(fernModel, fernTexture);
 
-    // x rays abdomen, blood tests
+
+    ModelData lampData = OBJLoader::loadObjModel("lamp");
+    staticLamp = new TexturedModel(loader->loadToVAO(&lampData), new ModelTexture("lamp", PNG));
+
+    ModelData fernData = OBJLoader::loadObjModel("fern");
+    staticFern = new TexturedModel(loader->loadToVAO(&fernData), new ModelTexture("fern", PNG));
+    staticFern->getModelTexture()->setNumberOfRows(2);
 
     ModelData dragonData = OBJLoader::loadObjModel("dragon");;
-    dragonModel = loader->loadToVAO(&dragonData);
-    dragonTexture = new ModelTexture("grassTexture", PNG);
-    staticDragon = new TexturedModel(dragonModel, dragonTexture);
+    staticDragon = new TexturedModel(loader->loadToVAO(&dragonData), new ModelTexture("grassTexture", PNG));
     auto dragonEntity = new Entity(staticDragon, glm::vec3(0.0, 120.0, 80), glm::vec3(0.0f, 180.0f, 0.0f));
 
     ModelData grassData = OBJLoader::loadObjModel("grassModel");;
-    grassModel = loader->loadToVAO(&grassData);
     grassTexture = new ModelTexture("grassTexture", PNG);
     grassTexture->setHasTransparency(true);
     grassTexture->setUseFakeLighting(true);
-    staticGrass = new TexturedModel(grassModel, grassTexture);
+    staticGrass = new TexturedModel(loader->loadToVAO(&grassData), grassTexture);
+
+    const Material material = Material{
+            .shininess = 10.0f,
+            .reflectivity = 0.5f
+    };
 
     ModelData stallData = OBJLoader::loadObjModel("Stall");;
-    stallModel = loader->loadToVAO(&stallData);
-    stallTexture = new ModelTexture("stallTexture", PNG, Material{
-            .ambient =  glm::vec3(1),
-            .diffuse =  glm::vec3(1),
-            .specular =  glm::vec3(0.3),
-            .shininess = 32.0f});
-    staticStall = new TexturedModel(stallModel, stallTexture);
+    staticStall = new TexturedModel(loader->loadToVAO(&stallData),
+                                    new ModelTexture("stallTexture", PNG, material));
 
     ModelData treeData = OBJLoader::loadObjModel("tree");;
-    treeModel = loader->loadToVAO(&treeData);
-    treeTexture = new ModelTexture("tree", PNG, Material{
-            .ambient =  glm::vec3(1),
-            .diffuse =  glm::vec3(1),
-            .specular =  glm::vec3(0.3),
-            .shininess = 32.0f});
-    staticTree = new TexturedModel(treeModel, treeTexture);
+    staticTree = new TexturedModel(loader->loadToVAO(&treeData),
+                                   new ModelTexture("tree", PNG, material));
 
     ModelData fluffyTreeData = OBJLoader::loadObjModel("fluffy-tree");
-    fluffyTreeModel = loader->loadToVAO(&fluffyTreeData);
-    fluffyTreeTexture = new ModelTexture("tree", PNG, Material{
-            .ambient =  glm::vec3(1),
-            .diffuse =  glm::vec3(1),
-            .specular =  glm::vec3(0.3),
-            .shininess = 32.0f});
-    staticFluffyTree = new TexturedModel(fluffyTreeModel, fluffyTreeTexture);
+    staticFluffyTree = new TexturedModel(loader->loadToVAO(&fluffyTreeData),
+                                         new ModelTexture("tree", PNG, material));
 
     std::vector<Entity *> allEntities;
+
     allEntities.push_back(new Entity(staticStall, glm::vec3(1.0f, 0.0f, -82.4f), glm::vec3(0.0f, 180.0f, 0.0f)));
 
+    auto allTerrains = std::vector<Terrain *>();
     terrain = new Terrain(0, -1, loader, texturePack, blendMap,
                           "heightMap");
-//    terrain2 = new Terrain(0, -1, loader, texturePack, blendMap, "heightMap");
+
+    Entity *lampy = new Entity(staticLamp, glm::vec3(120.0f, terrain->getHeightOfTerrain(120, -50), -50.0f));
+    Light *lighty = new Light(glm::vec3(100.0f, terrain->getHeightOfTerrain(100, -50) + 4, -50.0f),
+                              glm::vec3(0.0f, 2.0f, 2.0f),
+                              {.attenuation = glm::vec3(1.0f, 0.01f, 0.002f)});
+    {
+        lights.push_back(new Light(glm::vec3(120.0f, terrain->getHeightOfTerrain(120, -50) + 4, -50.0f),
+                                   glm::vec3(2.0f, 0.0f, 0.0f),
+                                   {.attenuation = glm::vec3(1.0f, 0.01f, 0.002f)}));
+        lights.push_back(lighty);
+        lights.push_back(new Light(glm::vec3(110.0f, terrain->getHeightOfTerrain(110, -20) + 4, -20.0f),
+                                   glm::vec3(2.0f, 2.0f, 0.0f),
+                                   {.attenuation = glm::vec3(1.0f, 0.01f, 0.002f)}));
+        allEntities.push_back(lampy);
+        allEntities.push_back(new Entity(staticLamp, glm::vec3(100.0f, terrain->getHeightOfTerrain(100, -50), -50.0f)));
+        allEntities.push_back(new Entity(staticLamp, glm::vec3(110.0f, terrain->getHeightOfTerrain(110, -20), -20.0f)));
+    }
+    allTerrains.push_back(new Terrain(-1, -1, loader, texturePack, blendMap, "heightMap"));
+    allTerrains.push_back(new Terrain(0, 0, loader, texturePack, blendMap, "heightMap"));
+    allTerrains.push_back(new Terrain(-1, 0, loader, texturePack, blendMap, "heightMap"));
+    allTerrains.push_back(terrain);
 
     std::vector<Scene *> allScenes;
     Model *pBackpack = new Model("Backpack/backpack");
@@ -111,8 +119,9 @@ void MainGameLoop::main() {
                                          generateRandomScale(0.5, 1.50f)));
         allEntities.push_back(new Entity(staticTree, generateRandomPosition(terrain), generateRandomRotation(),
                                          generateRandomScale(.25, 1.50)));
-        allEntities.push_back(new Entity(staticFern, Utils::roll(1, 4), generateRandomPosition(terrain), generateRandomRotation(),
-                                         generateRandomScale(.25, 1.50)));
+        allEntities.push_back(
+                new Entity(staticFern, Utils::roll(1, 4), generateRandomPosition(terrain), generateRandomRotation(),
+                           generateRandomScale(.25, 1.50)));
         if (i % 30 == 0) {
             allScenes.push_back(new Scene(pBackpack, generateRandomPosition(terrain, 3.0f), generateRandomRotation(),
                                           generateRandomScale(3.25, 10.50)));
@@ -130,35 +139,51 @@ void MainGameLoop::main() {
     PlayerCamera *playerCamera = new PlayerCamera(player);
 
 
-    std::vector<GuiTexture*> guis = std::vector<GuiTexture*>();
-    guis.push_back(new GuiTexture(loader->loadTexture("gui/lifebar")->getId(), glm::vec2(-0.72f, 0.9f), glm::vec2(0.290f, 0.0900f)));
-    guis.push_back(new GuiTexture(loader->loadTexture("gui/green")->getId(), glm::vec2(-0.7f, 0.9f), glm::vec2(0.185f, 0.070f)));
-    guis.push_back(new GuiTexture(loader->loadTexture("gui/heart")->getId(), glm::vec2(-0.9f, 0.9f), glm::vec2(0.075f, 0.075f)));
+    std::vector<GuiTexture *> guis = std::vector<GuiTexture *>();
+    guis.push_back(new GuiTexture(loader->loadTexture("gui/lifebar")->getId(), glm::vec2(-0.72f, 0.9f),
+                                  glm::vec2(0.290f, 0.0900f)));
+    guis.push_back(new GuiTexture(loader->loadTexture("gui/green")->getId(), glm::vec2(-0.7f, 0.9f),
+                                  glm::vec2(0.185f, 0.070f)));
+    guis.push_back(new GuiTexture(loader->loadTexture("gui/heart")->getId(), glm::vec2(-0.9f, 0.9f),
+                                  glm::vec2(0.075f, 0.075f)));
 
     GuiRenderer *guiRenderer = new GuiRenderer(loader);
 
     MasterRenderer *renderer;
     renderer = new MasterRenderer(playerCamera);
+
     while (DisplayManager::stayOpen()) {
+
         playerCamera->move(terrain);
-        renderer->processTerrain(terrain);
+
+
+        for (Terrain *ter : allTerrains) {
+            renderer->processTerrain(ter);
+        }
 
         for (Entity *ent : allEntities) {
             renderer->processEntity(ent);
         }
+
         for (Scene *scene : allScenes) {
             renderer->processScenes(scene);
         }
 
-        light->setPosition(light->getPosition() + glm::vec3(0.0, 0.01, -0.1f));
-        dragonEntity->setPosition(light->getPosition());
+        light->getPosition().z += -0.02f;
+        light->getPosition().y += 0.01f;
+
+        dragonEntity->getPosition() = light->getPosition();
+
         renderer->render(lights);
         guiRenderer->render(guis);
+
         DisplayManager::updateDisplay();
     }
+
     guiRenderer->cleanUp();
     renderer->cleanUp();
     loader->cleanUp();
+
     DisplayManager::closeDisplay();
 }
 

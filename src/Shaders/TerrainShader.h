@@ -32,9 +32,7 @@ class TerrainShader : public ShaderProgram {
     const std::string lightPosition = "light.position";
 
     const std::string materialShininess = "material.shininess";
-    const std::string materialAmbient = "material.ambient";
-    const std::string materialDiffuse = "material.diffuse";
-    const std::string materialSpecular = "material.specular";
+    const std::string materialReflectivity = "material.reflectivity";
 
     const std::string backgroundTexture = "backgroundTexture";
     const std::string rTexture = "rTexture";
@@ -48,16 +46,14 @@ class TerrainShader : public ShaderProgram {
     GLint location_skyColor;
     GLint location_viewPosition;
 
-    GLint location_lightColor[MAX_LIGHTS];
+    GLint location_lightAttenuation[MAX_LIGHTS];
     GLint location_lightAmbient[MAX_LIGHTS];
     GLint location_lightDiffuse[MAX_LIGHTS];
     GLint location_lightSpecular[MAX_LIGHTS];
     GLint location_lightPosition[MAX_LIGHTS];
 
     GLint location_materialShininess;
-    GLint location_materialAmbient;
-    GLint location_materialDiffuse;
-    GLint location_materialSpecular;
+    GLint location_materialReflectivity;
     
     GLint location_backgroundTexture;
     GLint location_rTexture;

@@ -12,8 +12,8 @@ using namespace glm;
 struct Lighting {
     vec3 position;
 
+    vec3 attenuation;
     vec3 ambient;
-    vec3 diffuse;
     vec3 specular;
 };
 
@@ -23,16 +23,16 @@ private:
     vec3 color;
     Lighting lighting;
 public:
-    explicit Light(const vec3 position = vec3(1.2f, 1.0f, 2.0f), const vec3 color = vec3(255.0f, 255.0f, 255.0f),
-          Lighting lighting = {
-            .ambient =  glm::vec3(0.2f, 0.2f, 0.2f),
-            .diffuse =  glm::vec3(1.0f, 1.0f, 1.0f),
-            .specular =  glm::vec3(1.0f, 1.0f, 1.0f)})
-            : position(position), color(color / 255.0f), lighting(lighting) {
+    explicit Light(const vec3 position = vec3(1.2f, 1.0f, 2.0f), const vec3 color = vec3(1.0f, 1.0f, 1.0f),
+                   Lighting lighting = {
+                           .attenuation = glm::vec3(1.0f, 0.0f, 0.0f),
+                           .ambient =  glm::vec3(1.0f, 0.8f, 1.0f),
+                           .specular =  glm::vec3(1.0f, 1.0f, 1.0f),
+                   }) : position(position), color(color), lighting(lighting) {
         lighting.position = this->position;
     }
 
-    Lighting getLighting() const {
+    Lighting &getLighting() {
         return lighting;
     }
 
@@ -40,7 +40,7 @@ public:
         this->lighting = lighting;
     }
 
-    vec3 getPosition() {
+    vec3 &getPosition() {
         return this->lighting.position;
     }
 
@@ -52,7 +52,7 @@ public:
         this->lighting.position += position;
     }
 
-    vec3 getColor() const {
+    vec3 & getColor() {
         return color;
     }
 

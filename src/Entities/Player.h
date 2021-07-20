@@ -9,6 +9,7 @@
 #include "../Terrain/Terrain.h"
 class Player : public Entity {
 private:
+    static float SPEED_HACK;
     constexpr static const float RUN_SPEED = 20;
     constexpr static const float TURN_SPEED = 160;
     constexpr static const float GRAVITY = -50;

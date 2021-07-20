@@ -18,10 +18,9 @@ private:
 public:
     TerrainTexturePack(TerrainTexture *backgroundTexture, TerrainTexture *rTexture,
                        TerrainTexture *gTexture, TerrainTexture *bTexture, Material material = Material{
-            .ambient =  glm::vec3(1.0f),
-            .diffuse =  glm::vec3(1.0f),
-            .specular =  glm::vec3(0.00f), // shine reflectivity
-            .shininess = 32.0f}) : backgroundTexture(
+            .shininess = 1.0f,
+            .reflectivity = 0.5f
+    }) : backgroundTexture(
             backgroundTexture), rTexture(rTexture), gTexture(gTexture), bTexture(bTexture), material(material) {}
 
     TerrainTexture *getBackgroundTexture() {

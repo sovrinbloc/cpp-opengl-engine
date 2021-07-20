@@ -1,18 +1,16 @@
 #version 330 core
 struct Material {
-    vec3 ambient;
-    vec3 diffuse;
-    vec3 specular;
     float shininess;
+    float reflectivity;
 };
 uniform Material material;
 
 struct Light {
-    vec3 color;
     vec3 position;
 
-    vec3 ambient;
+    vec3 attenuation;
     vec3 diffuse;
+    vec3 ambient;
     vec3 specular;
 };
 
@@ -21,7 +19,7 @@ uniform Light light[4];
 in vec2 pass_textureCoords;
 in vec3 surfaceNormal;
 in vec3 toLightVector[4];
-
+in vec3 toCameraVector;
 in vec4 worldPosition;
 in float visibility;
 
@@ -42,54 +40,52 @@ uniform float  shineDamper;
 uniform float ambientStrength;
 uniform vec3 skyColor;
 
-
-mat3 calculateLighting(vec3 unitNormal, vec3 unitVectorToCamera, vec3 toLightVector[4], Light lights[4], Material material);
-
 void main() {
-    vec4 blendMapColor = texture(blendMap, pass_textureCoords);
 
-    float backTextureAmount = 1 - (blendMapColor.r, blendMapColor.g, blendMapColor.b);
+    vec4 blendMapColour = texture(blendMap, pass_textureCoords);
+
+    float backTextureAmount = 1 - (blendMapColour.r, blendMapColour.g, blendMapColour.b);
     vec2 tiledCoords = pass_textureCoords * 40.0;
     vec4 backgroundTextureColor = texture(backgroundTexture, tiledCoords) * backTextureAmount;
-    vec4 rTextureColor = texture(rTexture, tiledCoords) * blendMapColor.r;
-    vec4 gTextureColor = texture(rTexture, tiledCoords) * blendMapColor.g;
-    vec4 bTextureColor = texture(rTexture, tiledCoords) * blendMapColor.b;
+    vec4 rTextureColor = texture(rTexture, tiledCoords) * blendMapColour.r;
+    vec4 gTextureColor = texture(rTexture, tiledCoords) * blendMapColour.g;
+    vec4 bTextureColor = texture(rTexture, tiledCoords) * blendMapColour.b;
 
-    vec4 totalColor = backgroundTextureColor + rTextureColor + gTextureColor + bTextureColor;
+    vec4 totalColour = backgroundTextureColor + rTextureColor + gTextureColor + bTextureColor;
+
 
     vec3 unitNormal = normalize(surfaceNormal);
     vec3 unitVectorToCamera = normalize(viewPosition - vec3(worldPosition));
+    unitVectorToCamera = normalize(toCameraVector); // added now to replace former line if this works
 
-    mat3 lv = calculateLighting(unitNormal, unitVectorToCamera, toLightVector, light, material);
 
-
-    out_color = vec4(lv[0], 1.0) * totalColor + vec4(lv[2], 1.0) + vec4(lv[1], 1.0);
-    out_color = mix(vec4(skyColor, 1.0), out_color, visibility);
-
-}
-
-mat3 calculateLighting(vec3 unitNormal, vec3 unitVectorToCamera, vec3 toLightVector[4], Light lights[4], Material material) {
-    vec3 totalDiffuse;
-    vec3 totalSpecular;
-    vec3 totalAmbient;
+    vec3 totalDiffuse = vec3(0.0f);
+    vec3 totalSpecular = vec3(0.0f);
 
     for (int i = 0; i < 4; i++) {
-        totalAmbient = totalAmbient + light[i].ambient * material.ambient;
+
+        float distance = length(toLightVector[i]);
+        float attFactor = light[i].attenuation.x + (light[i].attenuation.y * distance) + (light[i].attenuation.z * distance * distance);
+
         vec3 unitLightVector = normalize(toLightVector[i]);
 
         float nDot1 = dot(unitNormal, unitLightVector);
-        float brightness = max(nDot1, 0.2);
+        float brightness = max(nDot1, 0.0);
 
         vec3 lightDirection = -unitLightVector;
-        vec3 reflectedLightDirection = reflect(lightDirection, unitNormal);
+        vec3 reflectedLightDirection = reflect(lightDirection,unitNormal);
+        float specularFactor = dot(reflectedLightDirection , unitVectorToCamera);
 
-        float specularFactor = dot(unitVectorToCamera, reflectedLightDirection);
         specularFactor = max(specularFactor, 0.0);
         float dampedFactor = pow(specularFactor, material.shininess);
 
-        totalDiffuse = totalDiffuse + (brightness * light[i].color * material.diffuse) * light[i].diffuse;
-        totalSpecular =  totalSpecular + (dampedFactor * material.specular) * light[i].specular;
+        totalDiffuse = totalDiffuse + (brightness * light[i].diffuse) / attFactor;
+        totalSpecular =  totalSpecular + (dampedFactor * material.reflectivity * light[i].diffuse) / attFactor;
     }
+    totalDiffuse = max(totalDiffuse, 0.2f);
 
-    return mat3(totalDiffuse, totalSpecular, totalAmbient);
+
+    out_color = vec4(totalDiffuse, 1.0) * totalColour + vec4(totalSpecular, 1.0);
+    out_color = mix(vec4(skyColor, 1.0), out_color, visibility);
+
 }

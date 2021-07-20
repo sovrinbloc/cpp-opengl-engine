@@ -47,6 +47,7 @@ public:
     vector<MeshData> meshes;
     string directory;
     bool gammaCorrection;
+
     /**
      * @brief: constructor, expects a filepath to a 3D model.
      *
@@ -57,10 +58,9 @@ public:
     Model(string const &path,
           Material
           materials = Material{
-                  .ambient =  glm::vec3(1.0f),
-                  .diffuse =  glm::vec3(1.0f),
-                  .specular =  glm::vec3(1.0f),
-                  .shininess = 32.0f}, bool gamma = false);
+                  .shininess = 1.0f,
+                  .reflectivity = 0.5f
+          }, bool gamma = false);
 
     // draws the model, and thus all its meshes
     void render(ModelShader *shader);

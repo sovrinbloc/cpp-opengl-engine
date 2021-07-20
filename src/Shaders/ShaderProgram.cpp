@@ -5,7 +5,7 @@
 #include "ShaderProgram.h"
 
 
-Shader::Shader(std::string file, ShaderType type) {
+Shader::Shader(std::string file, ShaderType type) : fileName(std::move(file)){
     loadShader(file, type);
 }
 
@@ -45,7 +45,7 @@ void Shader::loadShader(std::string path, ShaderType type) {
     glShaderSource(shaderId, 1, &vShaderCode, NULL);
     glCompileShader(shaderId);
     checkCompileErrors(shaderId, debugType);
-    printf("finished with %s\n", path.c_str());
+    printf("finished compiling process: %s\n", path.c_str());
 }
 
 // utility function for checking shader compilation/linking errors.
@@ -67,6 +67,9 @@ void Shader::checkCompileErrors(GLuint shader, std::string type) {
             std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog
                       << "\n -- --------------------------------------------------- -- " << std::endl;
         }
+    }
+    if (!success) {
+        std::cout << "ERROR ON " + fileName << std::endl;
     }
 }
 

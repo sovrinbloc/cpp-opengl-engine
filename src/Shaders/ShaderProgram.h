@@ -27,6 +27,8 @@ private:
     // utility function for checking shader compilation/linking errors.
     // ------------------------------------------------------------------------
     void checkCompileErrors(GLuint shader, std::string type);
+
+    const std::string &fileName;
 };
 
 class ShaderProgram {
