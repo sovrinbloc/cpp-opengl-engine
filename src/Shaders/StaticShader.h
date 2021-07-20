@@ -31,10 +31,15 @@ private:
     const std::string textureNumberOfRows = "numberOfRows";
     const std::string textureOffset = "offset";
 
-    const std::string lightAmbient = "light.ambient";
-    const std::string lightDiffuse = "light.diffuse";
-    const std::string lightSpecular = "light.specular";
-    const std::string lightPosition = "light.position";
+    const std::string light = "light";
+    const std::string lightAmbient = "ambient";
+    const std::string lightDiffuse = "diffuse";
+    const std::string lightSpecular = "specular";
+    const std::string lightPosition = "position";
+    const std::string lightConstant = "constant";
+    const std::string lightLinear = "linear";
+    const std::string lightQuadratic = "quadratic";
+    const std::string lightAttenuation = "attenuation";
 
     const std::string materialShininess = "material.shininess";
     const std::string materialReflectivity = "material.reflectivity";

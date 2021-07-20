@@ -43,9 +43,9 @@ void ModelShader::loadLight(std::vector<Light *>lights) {
         if (i < lights.size()) {
             this->setVec3(location_lightAttenuation[i], lights[i]->getLighting().attenuation);
             this->setVec3(location_lightAmbient[i], lights[i]->getLighting().ambient);
-            this->setVec3(location_lightDiffuse[i], lights[i]->getColor());
-            this->setVec3(location_lightSpecular[i], lights[i]->getLighting().specular);
-            this->setVec3(location_lightPosition[i], lights[i]->getLighting().position);
+            this->setVec3(location_lightDiffuse[i], lights[i]->getLighting().diffuse);
+            this->setVec3(location_lightSpecular[i], lights[i]->getColor());
+            this->setVec3(location_lightPosition[i], lights[i]->getPosition());
         } else {
             this->setVec3(location_lightAttenuation[i], glm::vec3(0.0f));
             this->setVec3(location_lightAmbient[i], glm::vec3(0.0f));

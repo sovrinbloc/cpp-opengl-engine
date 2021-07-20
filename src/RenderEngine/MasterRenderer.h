@@ -47,7 +47,7 @@ public:
      */
     void prepare();
 
-    void render(std::vector<Light *>sun);
+    void render(const std::vector<Light *>&sun);
 
     void processTerrain(Terrain *terrain);
 

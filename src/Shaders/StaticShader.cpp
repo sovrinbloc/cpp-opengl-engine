@@ -42,9 +42,9 @@ void StaticShader::loadLight(std::vector<Light *>lights) {
         if (i < lights.size()) {
             this->setVec3(location_lightAttenuation[i], lights[i]->getLighting().attenuation);
             this->setVec3(location_lightAmbient[i], lights[i]->getLighting().ambient);
-            this->setVec3(location_lightDiffuse[i], lights[i]->getColor());
-            this->setVec3(location_lightSpecular[i], lights[i]->getLighting().specular);
-            this->setVec3(location_lightPosition[i], lights[i]->getLighting().position);
+            this->setVec3(location_lightDiffuse[i], lights[i]->getLighting().diffuse);
+            this->setVec3(location_lightSpecular[i], lights[i]->getColor());
+            this->setVec3(location_lightPosition[i], lights[i]->getPosition());
         } else {
             this->setVec3(location_lightAttenuation[i], glm::vec3(0.0f));
             this->setVec3(location_lightAmbient[i], glm::vec3(0.0f));
@@ -90,11 +90,11 @@ void StaticShader::getAllUniformLocations() {
 
     // for textures and lighting
     for(int i = 0; i < MAX_LIGHTS; i++) {
-        location_lightAttenuation[i] = getUniformLocation(Utils::shaderArray("light", i, "attenuation"));
-        location_lightPosition[i] = getUniformLocation(Utils::shaderArray("light", i, "position"));
-        location_lightAmbient[i] = getUniformLocation(Utils::shaderArray("light", i, "ambient"));
-        location_lightSpecular[i] = getUniformLocation(Utils::shaderArray("light", i, "specular"));
-        location_lightDiffuse[i] = getUniformLocation(Utils::shaderArray("light", i, "diffuse"));
+        location_lightAttenuation[i] = getUniformLocation(Utils::shaderArray(light, i, lightAttenuation));
+        location_lightPosition[i] = getUniformLocation(Utils::shaderArray(light, i, lightPosition));
+        location_lightAmbient[i] = getUniformLocation(Utils::shaderArray(light, i, lightAmbient));
+        location_lightSpecular[i] = getUniformLocation(Utils::shaderArray(light, i, lightSpecular));
+        location_lightDiffuse[i] = getUniformLocation(Utils::shaderArray(light, i, lightDiffuse));
     }
 
     location_materialShininess = getUniformLocation(materialShininess);

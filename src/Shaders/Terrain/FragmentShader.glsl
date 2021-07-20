@@ -8,10 +8,13 @@ uniform Material material;
 struct Light {
     vec3 position;
 
-    vec3 attenuation;
     vec3 diffuse;
     vec3 ambient;
     vec3 specular;
+
+    float constant;
+    float linear;
+    float quadratic;
 };
 
 uniform Light light[4];
@@ -48,24 +51,27 @@ void main() {
     vec2 tiledCoords = pass_textureCoords * 40.0;
     vec4 backgroundTextureColor = texture(backgroundTexture, tiledCoords) * backTextureAmount;
     vec4 rTextureColor = texture(rTexture, tiledCoords) * blendMapColour.r;
-    vec4 gTextureColor = texture(rTexture, tiledCoords) * blendMapColour.g;
-    vec4 bTextureColor = texture(rTexture, tiledCoords) * blendMapColour.b;
+    vec4 gTextureColor = texture(gTexture, tiledCoords) * blendMapColour.g;
+    vec4 bTextureColor = texture(bTexture, tiledCoords) * blendMapColour.b;
 
     vec4 totalColour = backgroundTextureColor + rTextureColor + gTextureColor + bTextureColor;
 
 
     vec3 unitNormal = normalize(surfaceNormal);
     vec3 unitVectorToCamera = normalize(viewPosition - vec3(worldPosition));
-    unitVectorToCamera = normalize(toCameraVector); // added now to replace former line if this works
+
+    if (dot(unitNormal, unitVectorToCamera) < 0.0)
+        unitNormal = -unitNormal;
+//    unitVectorToCamera = normalize(toCameraVector); // added now to replace former line if this works
 
 
     vec3 totalDiffuse = vec3(0.0f);
     vec3 totalSpecular = vec3(0.0f);
+    vec3 totalAmbient = vec3(0.0f);
+    vec3 runningResult = vec3(0.0f);
 
     for (int i = 0; i < 4; i++) {
-
         float distance = length(toLightVector[i]);
-        float attFactor = light[i].attenuation.x + (light[i].attenuation.y * distance) + (light[i].attenuation.z * distance * distance);
 
         vec3 unitLightVector = normalize(toLightVector[i]);
 
@@ -77,15 +83,34 @@ void main() {
         float specularFactor = dot(reflectedLightDirection , unitVectorToCamera);
 
         specularFactor = max(specularFactor, 0.0);
-        float dampedFactor = pow(specularFactor, material.shininess);
+//        float dampedFactor = pow(specularFactor, material.shininess);
+        float dampedFactor = pow(specularFactor, 32.0f);
 
-        totalDiffuse = totalDiffuse + (brightness * light[i].diffuse) / attFactor;
-        totalSpecular =  totalSpecular + (dampedFactor * material.reflectivity * light[i].diffuse) / attFactor;
+        // attenuation
+        float attenuation = 1.0 / (light[i].constant + light[i].linear * distance + light[i].quadratic * (distance * distance));
+
+        vec3 diffuse = (brightness * light[i].diffuse);
+        vec3 specular = (dampedFactor * material.reflectivity * light[i].diffuse);
+        vec3 ambient = (light[i].ambient * totalColour.rgb);
+
+        ambient *= attenuation;
+        diffuse  *= attenuation;
+        specular *= attenuation;
+
+        totalDiffuse = totalDiffuse + diffuse;
+        totalSpecular = totalSpecular + specular;
+        totalAmbient = totalAmbient + ambient;
+
+        vec3 result = (ambient + diffuse + specular);
+        runningResult += result;
     }
     totalDiffuse = max(totalDiffuse, 0.2f);
 
+    vec4 combination1 = vec4(totalDiffuse, 1.0f) + vec4(totalSpecular, 1.0f) + vec4(totalAmbient, 1.0f);
+    vec4 combination2 = vec4(totalDiffuse, 1.0f) * vec4(totalSpecular, 1.0f) * vec4(totalAmbient, 1.0f);
+    vec4 combination3 = vec4(runningResult, 1.0f);
 
-    out_color = vec4(totalDiffuse, 1.0) * totalColour + vec4(totalSpecular, 1.0);
-    out_color = mix(vec4(skyColor, 1.0), out_color, visibility);
+//    out_color = mix(vec4(skyColor, 1.0), vec4(runningResult, 1.0f), visibility);
+    out_color = mix(vec4(skyColor, 1.0), combination3, visibility);
 
 }

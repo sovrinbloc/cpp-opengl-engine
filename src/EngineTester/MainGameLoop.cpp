@@ -7,6 +7,7 @@
 #include "MainGameLoop.h"
 #include "../Toolbox/FileSystem.h"
 #include "../Toolbox/Utils.h"
+#include "../Toolbox/LighUtil.h"
 #include "../RenderEngine/DisplayManager.h"
 #include "../RenderEngine/EntityRenderer.h"
 #include "../RenderEngine/ObjLoader.h"
@@ -34,16 +35,19 @@ void MainGameLoop::main() {
             loader->loadTexture("MultiTextureTerrain/blendMap")->getId());
 
     Terrain *terrain;
-    Terrain *terrain2;
-    Terrain *terrain3;
-    Terrain *terrain4;
 
-    RawModel *grassModel, *treeModel, *fluffyTreeModel, *stallModel, *dragonModel, *fernModel, *lampModel;
-    ModelTexture *grassTexture, *treeTexture, *fluffyTreeTexture, *stallTexture, *dragonTexture, *fernTexture, *lampTexture;
+    ModelTexture *grassTexture;
     TexturedModel *staticGrass, *staticTree, *staticStall, *staticFluffyTree, *staticDragon, *staticFern, *staticLamp;
     std::vector<Light *> lights;
-    Light *light = new Light(glm::vec3(0.0, 1000., -7000.0f), glm::vec3(0.4f, 0.4f, 0.4f));
-    lights.push_back(light);
+//    Light *light = new Light(glm::vec3(0.0, 1000., -7000.0f), glm::vec3(0.4f, 0.4f, 0.4f), {
+//            .attenuation = glm::vec3(1.0f, 0.0f, 0.0f),
+//            .ambient =  glm::vec3(0.2f, 0.2f, 0.2f),
+//            .diffuse =  glm::vec3(0.5f, 0.5f, 0.5f),
+//            .constant = 1.0f,
+//            .linear = 0.09f,
+//            .quadratic = 0.032f
+//    });
+//    lights.push_back(light);
 
 
     ModelData lampData = OBJLoader::loadObjModel("lamp");
@@ -64,7 +68,7 @@ void MainGameLoop::main() {
     staticGrass = new TexturedModel(loader->loadToVAO(&grassData), grassTexture);
 
     const Material material = Material{
-            .shininess = 10.0f,
+            .shininess = 32.0f,
             .reflectivity = 0.5f
     };
 
@@ -89,17 +93,38 @@ void MainGameLoop::main() {
                           "heightMap");
 
     Entity *lampy = new Entity(staticLamp, glm::vec3(120.0f, terrain->getHeightOfTerrain(120, -50), -50.0f));
-    Light *lighty = new Light(glm::vec3(100.0f, terrain->getHeightOfTerrain(100, -50) + 4, -50.0f),
-                              glm::vec3(0.0f, 2.0f, 2.0f),
-                              {.attenuation = glm::vec3(1.0f, 0.01f, 0.002f)});
     {
-        lights.push_back(new Light(glm::vec3(120.0f, terrain->getHeightOfTerrain(120, -50) + 4, -50.0f),
+        auto d = LightUtil::AttenuationDistance(4000);
+        lights.push_back(new Light(glm::vec3(120.0f, terrain->getHeightOfTerrain(120, -50) + 10, -50.0f),
                                    glm::vec3(2.0f, 0.0f, 0.0f),
-                                   {.attenuation = glm::vec3(1.0f, 0.01f, 0.002f)}));
-        lights.push_back(lighty);
-        lights.push_back(new Light(glm::vec3(110.0f, terrain->getHeightOfTerrain(110, -20) + 4, -20.0f),
-                                   glm::vec3(2.0f, 2.0f, 0.0f),
-                                   {.attenuation = glm::vec3(1.0f, 0.01f, 0.002f)}));
+                                   {
+                                           .attenuation = glm::vec3(1.0f, 0.01f, 0.001f),
+                                           .ambient =  glm::vec3(0.2f, 0.2f, 0.2f),
+                                           .diffuse =  glm::vec3(0.5f, 0.5f, 0.5f),
+                                           .constant = d.x,
+                                           .linear = d.y,
+                                           .quadratic = d.z
+                                   }));
+//        lights.push_back(new Light(glm::vec3(100.0f, terrain->getHeightOfTerrain(100, -50) + 10, -50.0f),
+//                                   glm::vec3(0.0f, 2.0f, 2.0f),
+//                                   {
+//                                           .attenuation = glm::vec3(1.0f, 0.01f, 0.001f),
+//                                           .ambient =  glm::vec3(0.2f, 0.2f, 0.2f),
+//                                           .diffuse =  glm::vec3(0.5f, 0.5f, 0.5f),
+//                                           .constant = 1.0f,
+//                                           .linear = 0.09f,
+//                                           .quadratic = 0.032f
+//                                   }));
+//        lights.push_back(new Light(glm::vec3(110.0f, terrain->getHeightOfTerrain(110, -20) + 10, -20.0f),
+//                                   glm::vec3(2.0, 2.0, 0.0f),
+//                                   {
+//                                           .attenuation = glm::vec3(1.0f, 0.01f, 0.001f),
+//                                           .ambient =  glm::vec3(0.2f, 0.2f, 0.2f),
+//                                           .diffuse =  glm::vec3(0.5f, 0.5f, 0.5f),
+//                                           .constant = 1.0f,
+//                                           .linear = 0.09f,
+//                                           .quadratic = 0.032f
+//                                   }));
         allEntities.push_back(lampy);
         allEntities.push_back(new Entity(staticLamp, glm::vec3(100.0f, terrain->getHeightOfTerrain(100, -50), -50.0f)));
         allEntities.push_back(new Entity(staticLamp, glm::vec3(110.0f, terrain->getHeightOfTerrain(110, -20), -20.0f)));
@@ -169,10 +194,10 @@ void MainGameLoop::main() {
             renderer->processScenes(scene);
         }
 
-        light->getPosition().z += -0.02f;
-        light->getPosition().y += 0.01f;
-
-        dragonEntity->getPosition() = light->getPosition();
+//        light->getPosition().z += -0.02f;
+//        light->getPosition().y += 0.01f;
+//
+//        dragonEntity->getPosition() = light->getPosition();
 
         renderer->render(lights);
         guiRenderer->render(guis);

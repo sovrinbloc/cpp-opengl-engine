@@ -31,18 +31,32 @@ void TerrainShader::loadViewMatrix(glm::mat4 matrix) {
     this->setMat4(location_viewMatrix, matrix);
 }
 
-void TerrainShader::loadLight(std::vector<Light *>lights) {
+void TerrainShader::loadLight(std::vector<Light *> lights) {
 
     // for textures and lighting
-    for(int i = 0; i < MAX_LIGHTS; i++) {
+    for (int i = 0; i < MAX_LIGHTS; i++) {
         if (i < lights.size()) {
-            this->setVec3(location_lightAttenuation[i], lights[i]->getLighting().attenuation);
+            this->setFloat(location_lightConstant[i], lights[i]->getLighting().constant);
+            this->setFloat(location_lightLinear[i], lights[i]->getLighting().linear);
+            this->setFloat(location_lightQuadratic[i], lights[i]->getLighting().quadratic);
+
             this->setVec3(location_lightAmbient[i], lights[i]->getLighting().ambient);
-            this->setVec3(location_lightDiffuse[i], lights[i]->getColor());
-            this->setVec3(location_lightSpecular[i], lights[i]->getLighting().specular);
-            this->setVec3(location_lightPosition[i], lights[i]->getLighting().position);
+            this->setVec3(location_lightDiffuse[i], lights[i]->getLighting().diffuse);
+            this->setVec3(location_lightSpecular[i], lights[i]->getColor());
+            this->setVec3(location_lightPosition[i], lights[i]->getPosition());
+            printf("const: %f, lin: %f, quad: %f, amb: %f, %f, %f, diff: %f %f %f, col: %f %f %f, pos: %f %f %f\n",
+                lights[i]->getLighting().constant, lights[i]->getLighting().linear, lights[i]->getLighting().quadratic,
+                   lights[i]->getLighting().ambient.x,lights[i]->getLighting().ambient.y,lights[i]->getLighting().ambient.z,
+                   lights[i]->getLighting().diffuse.x, lights[i]->getLighting().diffuse.y, lights[i]->getLighting().diffuse.z,
+                   lights[i]->getColor().r,lights[i]->getColor().g,lights[i]->getColor().b,
+                   lights[i]->getPosition().x,lights[i]->getPosition().y,lights[i]->getPosition().z
+
+            );
         } else {
-            this->setVec3(location_lightAttenuation[i], glm::vec3(0.0f));
+            this->setFloat(location_lightConstant[i], 0.0f);
+            this->setFloat(location_lightLinear[i], 0.0f);
+            this->setFloat(location_lightQuadratic[i], 0.0f);
+
             this->setVec3(location_lightAmbient[i], glm::vec3(0.0f));
             this->setVec3(location_lightDiffuse[i], glm::vec3(0.0f));
             this->setVec3(location_lightSpecular[i], glm::vec3(0.0f));
@@ -81,12 +95,16 @@ void TerrainShader::getAllUniformLocations() {
     location_viewPosition = getUniformLocation(viewPosition);
 
     // for textures and lighting
-    for(int i = 0; i < MAX_LIGHTS; i++) {
-        location_lightAttenuation[i] = getUniformLocation(Utils::shaderArray("light", i, "attenuation"));
-        location_lightPosition[i] = getUniformLocation(Utils::shaderArray("light", i, "position"));
-        location_lightAmbient[i] = getUniformLocation(Utils::shaderArray("light", i, "ambient"));
-        location_lightSpecular[i] = getUniformLocation(Utils::shaderArray("light", i, "specular"));
-        location_lightDiffuse[i] = getUniformLocation(Utils::shaderArray("light", i, "diffuse"));
+    for (int i = 0; i < MAX_LIGHTS; i++) {
+        location_lightPosition[i] = getUniformLocation(Utils::shaderArray(light, i, lightPosition));
+
+        location_lightDiffuse[i] = getUniformLocation(Utils::shaderArray(light, i, lightDiffuse));
+        location_lightAmbient[i] = getUniformLocation(Utils::shaderArray(light, i, lightAmbient));
+        location_lightSpecular[i] = getUniformLocation(Utils::shaderArray(light, i, lightSpecular));
+
+        location_lightConstant[i] = getUniformLocation(Utils::shaderArray(light, i, lightConstant));
+        location_lightLinear[i] = getUniformLocation(Utils::shaderArray(light, i, lightLinear));
+        location_lightQuadratic[i] = getUniformLocation(Utils::shaderArray(light, i, lightQuadratic));
     }
 
     location_materialShininess = getUniformLocation(materialShininess);

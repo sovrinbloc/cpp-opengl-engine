@@ -2,10 +2,13 @@
 struct Light {
     vec3 position;
 
-    vec3 attenuation;
     vec3 diffuse;
     vec3 ambient;
     vec3 specular;
+
+    float constant;
+    float linear;
+    float quadratic;
 };
 uniform Light light[4];
 
