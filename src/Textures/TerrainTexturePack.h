@@ -18,8 +18,8 @@ private:
 public:
     TerrainTexturePack(TerrainTexture *backgroundTexture, TerrainTexture *rTexture,
                        TerrainTexture *gTexture, TerrainTexture *bTexture, Material material = Material{
-            .shininess = 1.0f,
-            .reflectivity = 0.5f
+            .shininess = 2.0f,
+            .reflectivity = 2.0f
     }) : backgroundTexture(
             backgroundTexture), rTexture(rTexture), gTexture(gTexture), bTexture(bTexture), material(material) {}
 

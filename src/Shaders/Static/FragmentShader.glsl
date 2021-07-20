@@ -64,7 +64,7 @@ void main() {
         float dampedFactor = pow(specularFactor, material.shininess);
 
         totalDiffuse = totalDiffuse + (brightness * light[i].diffuse) / attFactor;
-        totalSpecular =  totalSpecular + (dampedFactor * material.reflectivity * light[i].diffuse) / attFactor;
+        totalSpecular =  totalSpecular + (dampedFactor * material.reflectivity * light[i].specular) / attFactor;
     }
     totalDiffuse = max(totalDiffuse, 0.2f);
 

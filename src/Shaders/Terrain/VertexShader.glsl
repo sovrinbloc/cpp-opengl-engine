@@ -16,10 +16,11 @@ layout (location = 0) in vec3 position;
 layout (location = 1) in vec2 textureCoords;
 layout (location = 2) in vec3 normal;
 
-out vec2 pass_textureCoords;
-out vec3 surfaceNormal;
-out vec3 toLightVector[4];
 out vec4 worldPosition;
+out vec3 surfaceNormal;
+out vec2 pass_textureCoords;
+out vec3 toLightVector[4];
+
 out float visibility;
 
 uniform mat4 transformationMatrix; // model matrix
@@ -40,7 +41,8 @@ void main()
     gl_Position = projectionMatrix * positionRelativeToCam;
     pass_textureCoords = textureCoords;
 
-    surfaceNormal = (transformationMatrix * vec4(normal, 0.0)).xyz;
+    surfaceNormal = mat3(transpose(inverse(transformationMatrix))) * normal;
+//    surfaceNormal = (transformationMatrix * vec4(normal, 0.0)).xyz;
     for (int i = 0; i < 4; i++) {
         toLightVector[i] = light[i].position - worldPosition.xyz;
     }
