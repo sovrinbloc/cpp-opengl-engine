@@ -5,6 +5,7 @@
 
 bool CameraInput::cursorInvisible = false;
 
+double CameraInput::MouseX, CameraInput::MouseY;
 double CameraInput::LastMouseX, CameraInput::LastMouseY;
 float CameraInput::MouseDX, CameraInput::MouseDY;
 
@@ -68,10 +69,12 @@ void CameraInput::processInput(GLFWwindow *window) {
 }
 
 void CameraInput::mouse_callback(GLFWwindow *window, double xPos, double yPos) {
+    CameraInput::MouseX = xPos;
+    CameraInput::MouseY = yPos;
     if (cursorInvisible || glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS) {
         if (CameraInput::ResetMouse) {
-            CameraInput::LastMouseX = (GLfloat) xPos;
-            CameraInput::LastMouseY = (GLfloat) yPos;
+            CameraInput::LastMouseX = (GLfloat) CameraInput::MouseX;
+            CameraInput::LastMouseY = (GLfloat) CameraInput::MouseY;
             CameraInput::ResetMouse = false;
         }
 

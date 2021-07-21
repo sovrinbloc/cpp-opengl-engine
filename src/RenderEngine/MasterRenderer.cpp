@@ -11,8 +11,8 @@
 MasterRenderer::MasterRenderer(PlayerCamera *cameraInput, Loader *loader) : shader(new StaticShader()),
                                                             renderer(new EntityRenderer(shader)),
                                                             camera(cameraInput), projectionMatrix(
-                Maths::createProjectionMatrix(FOVY, (float) DisplayManager::SRC_WIDTH,
-                                              (float) DisplayManager::SRC_HEIGHT, NEAR_PLANE, FAR_PLANE)),
+                Maths::createProjectionMatrix(FOVY, (float) DisplayManager::Width(),
+                                              (float) DisplayManager::Height(), NEAR_PLANE, FAR_PLANE)),
                                                             terrainShader(new TerrainShader()),
                                                             sceneShader(new ModelShader()) {
     RenderStyle::enableCulling();
@@ -100,8 +100,8 @@ void MasterRenderer::processModel(Model *model) {
 
 glm::mat4 MasterRenderer::createProjectionMatrix() {
     // my additions
-    return Maths::createProjectionMatrix(PlayerCamera::Zoom, (GLfloat) DisplayManager::SRC_WIDTH,
-                                         (GLfloat) DisplayManager::SRC_HEIGHT, NEAR_PLANE,
+    return Maths::createProjectionMatrix(PlayerCamera::Zoom, (GLfloat) DisplayManager::Width(),
+                                         (GLfloat) DisplayManager::Height(), NEAR_PLANE,
                                          FAR_PLANE);
 }
 
@@ -134,6 +134,6 @@ void MasterRenderer::processScenes(Scene *scene) {
 }
 
 void MasterRenderer::updatePerspective(float width, float height) {
-    DisplayManager::SRC_WIDTH = (GLint) width;
-    DisplayManager::SRC_HEIGHT = (GLint) height;
+    DisplayManager::Width() = (GLint) width;
+    DisplayManager::Height() = (GLint) height;
 }

@@ -27,6 +27,7 @@ public:
     constexpr static const float kMinZoom = 20.0f;
     constexpr static const float kMaxZoom = 45.0f;
 
+    static double MouseX, MouseY;
     static double LastMouseX, LastMouseY;
     static float MouseDX, MouseDY;
 

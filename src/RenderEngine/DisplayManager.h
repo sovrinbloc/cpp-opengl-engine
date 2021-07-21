@@ -13,10 +13,6 @@
 class DisplayManager {
 public:
 
-    static GLint SRC_WIDTH;
-
-    static GLint SRC_HEIGHT;
-
     static GLFWwindow *window;
 
     static float delta;
@@ -39,8 +35,16 @@ public:
 
     static float getFrameTimeSeconds();
 
+    static GLint &Width();
+
+    static GLint &Height();
 
 private:
+
+
+    static GLint SRC_WIDTH;
+
+    static GLint SRC_HEIGHT;
 
     static void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 };

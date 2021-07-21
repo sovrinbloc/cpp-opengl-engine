@@ -23,7 +23,7 @@ int DisplayManager::createDisplay() {
 
     glfwWindowHint(GLFW_SAMPLES, 4);
 
-    window = glfwCreateWindow(SRC_WIDTH, SRC_HEIGHT, "GAME ENGINE: Manifest (Alpha & Omega)", nullptr, nullptr);
+    window = glfwCreateWindow(Width(), Height(), "GAME ENGINE: Manifest (Alpha & Omega)", nullptr, nullptr);
     if (window == nullptr) {
         printf("Failed to create GLFW window\n");
         glfwTerminate();
@@ -75,4 +75,12 @@ void DisplayManager::framebuffer_size_callback(GLFWwindow *window, int width, in
     // make sure the viewport matches the new window dimensions; note that width and
     // height will be significantly larger than specified on retina displays.
     glViewport(0, 0, width, height);
+}
+
+GLint &DisplayManager::Width() {
+    return SRC_WIDTH;
+}
+
+GLint &DisplayManager::Height() {
+    return SRC_HEIGHT;
 }
