@@ -178,11 +178,15 @@ void MainGameLoop::main() {
     MasterRenderer *renderer;
     renderer = new MasterRenderer(playerCamera, loader);
 
-    MousePicker *picker = new MousePicker(playerCamera, renderer->getProjectionMatrix());
+    MousePicker *picker = new MousePicker(playerCamera, renderer->getProjectionMatrix(), terrain);
     while (DisplayManager::stayOpen()) {
         playerCamera->move(terrain);
         picker->update();
-        printf("Current Ray: %f, %f, %f \n", picker->getCurrentRay().x, picker->getCurrentRay().y, picker->getCurrentRay().z);
+        glm::vec3 terrainPoint = picker->getCurrentTerrainPoint();
+        if (terrainPoint != glm::vec3()) {
+            lampy->setPosition(terrainPoint);
+            lights[1]->setPosition(glm::vec3(terrainPoint.x, terrainPoint.y + 15.0f, terrainPoint.z));
+        }
 
         for (Terrain *ter : allTerrains) {
             renderer->processTerrain(ter);
