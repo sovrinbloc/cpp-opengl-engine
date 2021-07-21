@@ -3,11 +3,15 @@
 struct Light {
     vec3 position;
 
-    vec3 attenuation;
     vec3 diffuse;
     vec3 ambient;
     vec3 specular;
+
+    float constant;
+    float linear;
+    float quadratic;
 };
+
 
 uniform Light light[4];
 
@@ -46,7 +50,8 @@ void main()
         actualNormal = vec3(0.0, 1, 0.0);
     }
 
-    surfaceNormal = (transformationMatrix * vec4(normal, 0.0)).xyz;
+    surfaceNormal = mat3(transpose(inverse(transformationMatrix))) * normal;
+
     for (int i = 0; i < 4; i++) {
         toLightVector[i] = light[i].position - worldPosition.xyz;
     }

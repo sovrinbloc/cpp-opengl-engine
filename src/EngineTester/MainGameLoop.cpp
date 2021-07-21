@@ -68,8 +68,8 @@ void MainGameLoop::main() {
     staticGrass = new TexturedModel(loader->loadToVAO(&grassData), grassTexture);
 
     const Material material = Material{
-            .shininess = 32.0f,
-            .reflectivity = 0.5f
+            .shininess = 2.0f,
+            .reflectivity = 2.0f
     };
 
     ModelData stallData = OBJLoader::loadObjModel("Stall");;

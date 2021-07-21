@@ -30,10 +30,15 @@ private:
     const std::string skyColor = "skyColor";
     const std::string viewPosition = "viewPosition";
 
-    const std::string lightAmbient = "light.ambient";
-    const std::string lightDiffuse = "light.diffuse";
-    const std::string lightSpecular = "light.specular";
-    const std::string lightPosition = "light.position";
+    const std::string light = "light";
+    const std::string lightAmbient = "ambient";
+    const std::string lightDiffuse = "diffuse";
+    const std::string lightSpecular = "specular";
+    const std::string lightPosition = "position";
+    const std::string lightConstant = "constant";
+    const std::string lightLinear = "linear";
+    const std::string lightQuadratic = "quadratic";
+    const std::string lightAttenuation = "attenuation";
 
     const std::string materialShininess = "material.shininess";
     const std::string materialReflectivity = "material.reflectivity";
@@ -46,12 +51,15 @@ private:
 
     GLint location_skyColor;
 
-    GLint location_lightAttenuation[MAX_LIGHTS];
+    GLint location_lightPosition[MAX_LIGHTS];
+
     GLint location_lightAmbient[MAX_LIGHTS];
     GLint location_lightDiffuse[MAX_LIGHTS];
     GLint location_lightSpecular[MAX_LIGHTS];
-    GLint location_lightPosition[MAX_LIGHTS];
 
+    GLint location_lightConstant[MAX_LIGHTS];
+    GLint location_lightLinear[MAX_LIGHTS];
+    GLint location_lightQuadratic[MAX_LIGHTS];
     GLint location_materialShininess;
     GLint location_materialReflectivity;
 public:

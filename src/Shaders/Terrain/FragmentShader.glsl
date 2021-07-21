@@ -44,21 +44,21 @@ uniform float ambientStrength;
 uniform vec3 skyColor;
 
 
-vec3 CalcPointLight(Light light, vec3 lightVector, vec3 unitNormal, vec3 unitVectorToCamera, vec4 totalColour);
-vec3 CalcDirLight(Light light, vec3 unitNormal, vec3 unitVectorToCamera, vec4 totalColour);
+vec3 CalcPointLight(Light light, vec3 lightVector, vec3 unitNormal, vec3 unitVectorToCamera, vec4 totalColor);
+vec3 CalcDirLight(Light light, vec3 unitNormal, vec3 unitVectorToCamera, vec4 totalColor);
 
 void main() {
 
-    vec4 blendMapColour = texture(blendMap, pass_textureCoords);
+    vec4 blendMapColor = texture(blendMap, pass_textureCoords);
 
-    float backTextureAmount = 1 - (blendMapColour.r, blendMapColour.g, blendMapColour.b);
+    float backTextureAmount = 1 - (blendMapColor.r, blendMapColor.g, blendMapColor.b);
     vec2 tiledCoords = pass_textureCoords * 40.0;
     vec4 backgroundTextureColor = texture(backgroundTexture, tiledCoords) * backTextureAmount;
-    vec4 rTextureColor = texture(rTexture, tiledCoords) * blendMapColour.r;
-    vec4 gTextureColor = texture(gTexture, tiledCoords) * blendMapColour.g;
-    vec4 bTextureColor = texture(bTexture, tiledCoords) * blendMapColour.b;
+    vec4 rTextureColor = texture(rTexture, tiledCoords) * blendMapColor.r;
+    vec4 gTextureColor = texture(gTexture, tiledCoords) * blendMapColor.g;
+    vec4 bTextureColor = texture(bTexture, tiledCoords) * blendMapColor.b;
 
-    vec4 totalColour = backgroundTextureColor + rTextureColor + gTextureColor + bTextureColor;
+    vec4 totalColor = backgroundTextureColor + rTextureColor + gTextureColor + bTextureColor;
 
 
     vec3 unitNormal = normalize(surfaceNormal);
@@ -66,15 +66,15 @@ void main() {
     //    unitVectorToCamera = normalize(toCameraVector); // added now to replace former line if this works
 
     if (dot(unitNormal, unitVectorToCamera) < 0.0)
-    unitNormal = -unitNormal;
+        unitNormal = -unitNormal;
 
     vec3 runningResult = vec3(0.0f);
 
     for (int i = 0; i < 4; i++) {
         if (light[i].constant != -1) {
-            runningResult = runningResult + CalcPointLight(light[i], toLightVector[i], unitNormal, unitVectorToCamera, totalColour);
+            runningResult = runningResult + CalcPointLight(light[i], toLightVector[i], unitNormal, unitVectorToCamera, totalColor);
         } else {
-            runningResult = runningResult + CalcDirLight(light[i], unitNormal, unitVectorToCamera, totalColour);
+            runningResult = runningResult + CalcDirLight(light[i], unitNormal, unitVectorToCamera, totalColor);
         }
     }
 
@@ -84,8 +84,8 @@ void main() {
 
 }
 
-vec3 CalcPointLight(Light light, vec3 lightVector, vec3 unitNormal, vec3 unitVectorToCamera, vec4 totalColour) {
-    vec3 unitLightVector = normalize(lightVector);
+vec3 CalcPointLight(Light light, vec3 lightVector, vec3 unitNormal, vec3 unitVectorToCamera, vec4 totalColor) {
+    vec3 unitLightVector = normalize(unitVectorToCamera); // changed from lightVector to unitVectorToCamera
 
     float nDot1 = dot(unitNormal, unitLightVector);
     float brightness = max(nDot1, 0.0);
@@ -101,9 +101,9 @@ vec3 CalcPointLight(Light light, vec3 lightVector, vec3 unitNormal, vec3 unitVec
     float distance = length(lightVector);// checks out
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
 
-    //        dampedFactor = max(dampedFactor, .65);
+            dampedFactor = max(dampedFactor, .65);
 
-    vec3 ambient = (light.ambient * totalColour.rgb);
+    vec3 ambient = (light.ambient * totalColor.rgb);
     vec3 diffuse = (brightness * light.diffuse);
     vec3 specular = (dampedFactor * material.reflectivity * light.specular);
 
@@ -115,7 +115,7 @@ vec3 CalcPointLight(Light light, vec3 lightVector, vec3 unitNormal, vec3 unitVec
 }
 
 
-vec3 CalcDirLight(Light light, vec3 unitNormal, vec3 unitVectorToCamera, vec4 totalColour)
+vec3 CalcDirLight(Light light, vec3 unitNormal, vec3 unitVectorToCamera, vec4 totalColor)
 {
     if (dot(unitNormal, unitVectorToCamera) < 0.0) {
         unitNormal = -unitNormal;
@@ -131,8 +131,8 @@ vec3 CalcDirLight(Light light, vec3 unitNormal, vec3 unitVectorToCamera, vec4 to
     float spec = pow(max(dot(unitVectorToCamera, reflectDirection), 0.0), material.shininess);
 
     // combine results
-    vec3 diffuse  = light.diffuse  * diff * totalColour.rgb;
-    vec3 specular = light.specular * spec * totalColour.rgb;
-    vec3 ambient  = light.ambient  * totalColour.rgb;
+    vec3 diffuse  = light.diffuse  * diff * totalColor.rgb;
+    vec3 specular = light.specular * spec * totalColor.rgb;
+    vec3 ambient  = light.ambient  * totalColor.rgb;
     return (ambient + diffuse + specular);
 }

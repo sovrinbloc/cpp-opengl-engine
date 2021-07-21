@@ -42,7 +42,6 @@ void main()
     pass_textureCoords = textureCoords;
 
     surfaceNormal = mat3(transpose(inverse(transformationMatrix))) * normal;
-//    surfaceNormal = (transformationMatrix * vec4(normal, 0.0)).xyz;
     for (int i = 0; i < 4; i++) {
         toLightVector[i] = light[i].position - worldPosition.xyz;
     }

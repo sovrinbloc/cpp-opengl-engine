@@ -55,11 +55,15 @@ private:
 
     GLint location_textureOffset;
 
-    GLint location_lightAttenuation[MAX_LIGHTS];
+    GLint location_lightPosition[MAX_LIGHTS];
+
     GLint location_lightAmbient[MAX_LIGHTS];
     GLint location_lightDiffuse[MAX_LIGHTS];
     GLint location_lightSpecular[MAX_LIGHTS];
-    GLint location_lightPosition[MAX_LIGHTS];
+
+    GLint location_lightConstant[MAX_LIGHTS];
+    GLint location_lightLinear[MAX_LIGHTS];
+    GLint location_lightQuadratic[MAX_LIGHTS];
 
     GLint location_materialShininess;
     GLint location_materialReflectivity;
