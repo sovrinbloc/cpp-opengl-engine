@@ -7,7 +7,7 @@
 #include "MainGameLoop.h"
 #include "../Toolbox/FileSystem.h"
 #include "../Toolbox/Utils.h"
-#include "../Toolbox/LighUtil.h"
+#include "../Toolbox/LightUtil.h"
 #include "../RenderEngine/DisplayManager.h"
 #include "../RenderEngine/EntityRenderer.h"
 #include "../RenderEngine/ObjLoader.h"

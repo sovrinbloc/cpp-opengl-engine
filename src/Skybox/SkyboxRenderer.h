@@ -10,63 +10,6 @@
 #include "../Models/RawModel.h"
 #include "SkyboxShader.h"
 
-namespace {
-    std::vector<float> initVertices(float SIZE) {
-        return std::vector<float>{
-                -SIZE,  SIZE, -SIZE,
-                -SIZE, -SIZE, -SIZE,
-                SIZE, -SIZE, -SIZE,
-                SIZE, -SIZE, -SIZE,
-                SIZE,  SIZE, -SIZE,
-                -SIZE,  SIZE, -SIZE,
-
-                -SIZE, -SIZE,  SIZE,
-                -SIZE, -SIZE, -SIZE,
-                -SIZE,  SIZE, -SIZE,
-                -SIZE,  SIZE, -SIZE,
-                -SIZE,  SIZE,  SIZE,
-                -SIZE, -SIZE,  SIZE,
-
-                SIZE, -SIZE, -SIZE,
-                SIZE, -SIZE,  SIZE,
-                SIZE,  SIZE,  SIZE,
-                SIZE,  SIZE,  SIZE,
-                SIZE,  SIZE, -SIZE,
-                SIZE, -SIZE, -SIZE,
-
-                -SIZE, -SIZE,  SIZE,
-                -SIZE,  SIZE,  SIZE,
-                SIZE,  SIZE,  SIZE,
-                SIZE,  SIZE,  SIZE,
-                SIZE, -SIZE,  SIZE,
-                -SIZE, -SIZE,  SIZE,
-
-                -SIZE,  SIZE, -SIZE,
-                SIZE,  SIZE, -SIZE,
-                SIZE,  SIZE,  SIZE,
-                SIZE,  SIZE,  SIZE,
-                -SIZE,  SIZE,  SIZE,
-                -SIZE,  SIZE, -SIZE,
-
-                -SIZE, -SIZE, -SIZE,
-                -SIZE, -SIZE,  SIZE,
-                SIZE, -SIZE, -SIZE,
-                SIZE, -SIZE, -SIZE,
-                -SIZE, -SIZE,  SIZE,
-                SIZE, -SIZE,  SIZE
-        };
-    }
-    std::vector<std::string> initTextureFiles() {
-        return {
-                FileSystem::Skybox("right"),
-                FileSystem::Skybox("left"),
-                FileSystem::Skybox("top"),
-                FileSystem::Skybox("bottom"),
-                FileSystem::Skybox("back"),
-                FileSystem::Skybox("front")
-        };
-    }
-}
 
 class SkyboxRenderer {
 
@@ -75,15 +18,23 @@ private:
     const std::vector<float> sBoxVertices;
 
     const std::vector<std::string> sTextureFiles;
+    const std::vector<std::string> sNightTextureFiles;
+
+    float time = 0.0f;
 
     RawModel *cube;
-    unsigned int textureId;
+    unsigned int dayTextureId;
+    unsigned int nightTextureId;
     SkyboxShader *shader;
+    glm::vec3 *skyColor;
 
 public:
-    SkyboxRenderer(Loader *loader, glm::mat4 projectionMatrix);
+    SkyboxRenderer(Loader *loader, glm::mat4 projectionMatrix, glm::vec3 *skyColor);
 
-    void render(Camera *camera, glm::vec3 color);
+    void render(Camera *camera);
+
+    void bindTextures();
+
 };
 
 

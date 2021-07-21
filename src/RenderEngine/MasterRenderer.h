@@ -39,7 +39,6 @@ private:
     std::vector<Model *> *models;
 
     SkyboxRenderer *skyboxRenderer;
-
 public:
     explicit MasterRenderer(PlayerCamera *cameraInput, Loader *loader);
 
@@ -49,6 +48,8 @@ public:
      * @brief prepares and clears buffer and screen for each iteration of loop
      */
     void prepare();
+
+    static glm::vec3 skyColor;
 
     void render(const std::vector<Light *>&sun);
 

@@ -26,8 +26,20 @@ void SkyboxShader::getAllUniformLocations() {
     location_projectionMatrix = this->getUniformLocation("projectionMatrix");
     location_viewMatrix = this->getUniformLocation("viewMatrix");
     location_fogColor = this->getUniformLocation("fogColor");
+    location_blendFactor = this->getUniformLocation("blendFactor");
+    location_cubeMap = this->getUniformLocation("cubeMap");
+    location_cubeMap2 = this->getUniformLocation("cubeMap2");
 }
 
 void SkyboxShader::bindAttributes() {
     this->bindAttribute(0, "position");
+}
+
+void SkyboxShader::loadBlendFactor(float blend) {
+    this->setFloat(location_blendFactor, blend);
+}
+
+void SkyboxShader::connectTextureUnits() {
+    this->setInt(location_cubeMap, 0);
+    this->setInt(location_cubeMap2, 1);
 }

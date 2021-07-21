@@ -76,7 +76,7 @@ public:
         return this->scale;
     }
 
-    float
+    void
     setTransformation(glm::vec3 translate = glm::vec3(1.0f), glm::vec3 rotate = glm::vec3(0.0f), float scalar = 1.0f) {
         this->position = translate;
         this->rotation = rotate;

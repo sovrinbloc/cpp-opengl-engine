@@ -69,7 +69,7 @@ public:
 
     ModelShader();
 
-    void bindAttributes() ;
+    void bindAttributes() override ;
 
     void loadTransformationMatrix(glm::mat4 matrix = glm::mat4(1.0f)) ;
 

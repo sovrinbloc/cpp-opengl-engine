@@ -18,6 +18,9 @@ private:
     int location_projectionMatrix;
     int location_viewMatrix;
     int location_fogColor;
+    int location_blendFactor;
+    int location_cubeMap;
+    int location_cubeMap2;
 
     constexpr static float kRotationSpeed = 1.0f;
     float rotation = 0.0f;
@@ -30,6 +33,10 @@ public:
     void loadViewMatrix(glm::mat4 matrix);
 
     void loadFogColor(glm::vec3 color);
+
+    void loadBlendFactor(float blend);
+
+    void connectTextureUnits();
 
 protected:
     void getAllUniformLocations() override;

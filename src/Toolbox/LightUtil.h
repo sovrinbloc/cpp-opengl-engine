@@ -2,8 +2,8 @@
 // Created by Joseph Alai on 7/20/21.
 //
 
-#ifndef ENGINE_LIGHUTIL_H
-#define ENGINE_LIGHUTIL_H
+#ifndef ENGINE_LIGHTUTIL_H
+#define ENGINE_LIGHTUTIL_H
 
 #include "glm/glm.hpp"
 
@@ -38,4 +38,4 @@ public:
     }
 };
 
-#endif //ENGINE_LIGHUTIL_H
+#endif //ENGINE_LIGHTUTIL_H

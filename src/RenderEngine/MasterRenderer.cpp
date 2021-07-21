@@ -6,6 +6,7 @@
 #include "DisplayManager.h"
 #include "RenderStyle.h"
 #include "SceneLoader.h"
+#include "../Toolbox/ColorNames.h"
 
 MasterRenderer::MasterRenderer(PlayerCamera *cameraInput, Loader *loader) : shader(new StaticShader()),
                                                             renderer(new EntityRenderer(shader)),
@@ -21,7 +22,7 @@ MasterRenderer::MasterRenderer(PlayerCamera *cameraInput, Loader *loader) : shad
     models = new std::vector<Model *>;
     terrainRenderer = new TerrainRenderer(terrainShader, this->projectionMatrix);
     sceneRenderer = new SceneRenderer(sceneShader);
-    skyboxRenderer = new SkyboxRenderer(loader, this->projectionMatrix);
+    skyboxRenderer = new SkyboxRenderer(loader, this->projectionMatrix, &skyColor);
 }
 
 void MasterRenderer::cleanUp() {
@@ -30,6 +31,8 @@ void MasterRenderer::cleanUp() {
     sceneShader->cleanUp();
 }
 
+glm::vec3 MasterRenderer::skyColor = const_cast<glm::vec3 &>(ColorNames::Skyblue);
+
 /**
  * @brief prepares and clears buffer and screen for each iteration of loop
  */
@@ -37,8 +40,8 @@ void MasterRenderer::prepare() {
     // render
     // ------
     glClearColor(.529, .808, .98, 1);
-    shader->loadSkyColorVariable(glm::vec3(.529, .808, .98));
-    terrainShader->loadSkyColorVariable(glm::vec3(.529, .808, .98));
+    shader->loadSkyColorVariable(skyColor);
+    terrainShader->loadSkyColorVariable(skyColor);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 }
@@ -48,7 +51,6 @@ void MasterRenderer::render(const std::vector<Light *>&suns) {
 
     shader->start();
 
-    const glm::vec3 &skyColor = glm::vec3(.529, .808, .98);
     shader->loadSkyColorVariable(skyColor);
     shader->loadLight(suns);
     shader->loadViewPosition(camera);
@@ -82,7 +84,7 @@ void MasterRenderer::render(const std::vector<Light *>&suns) {
     terrainShader->loadProjectionMatrix(MasterRenderer::createProjectionMatrix());
     terrainRenderer->render(terrains);
 
-    skyboxRenderer->render(camera, skyColor);
+    skyboxRenderer->render(camera);
     terrains->clear();
     terrainShader->stop();
 
