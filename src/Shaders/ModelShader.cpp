@@ -3,7 +3,7 @@
 //
 
 #include "ModelShader.h"
-#include "../Toolbox/Utils.h"
+#include "../Util/Utils.h"
 
 
 ModelShader::ModelShader() : ShaderProgram(VertexPath, FragmentPath, nullptr) {

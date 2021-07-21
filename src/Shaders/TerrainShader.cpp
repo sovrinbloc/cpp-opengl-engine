@@ -3,7 +3,7 @@
 //
 
 #include "TerrainShader.h"
-#include "../Toolbox/Utils.h"
+#include "../Util/Utils.h"
 
 TerrainShader::TerrainShader() : ShaderProgram(VertexPath, FragmentPath, nullptr) {
     this->initialize();

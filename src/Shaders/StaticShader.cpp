@@ -3,7 +3,7 @@
 //
 
 #include "StaticShader.h"
-#include "../Toolbox/Utils.h"
+#include "../Util/Utils.h"
 
 StaticShader::StaticShader() : ShaderProgram(VertexPath, FragmentPath, nullptr) {
     this->initialize();

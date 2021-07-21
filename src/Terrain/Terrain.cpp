@@ -4,7 +4,7 @@
 
 #include "Terrain.h"
 #include "../Toolbox/Maths.h"
-#include "../Toolbox/FileSystem.h"
+#include "../Util/FileSystem.h"
 
 Terrain::Terrain(int gridX, int gridZ, Loader *loader, TerrainTexturePack *texturePack, TerrainTexture *blendMap,
                  const std::string &heightMap) : heightMap(Heightmap(FileSystem::Texture(heightMap))) {

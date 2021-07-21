@@ -5,7 +5,7 @@
 #include "ModelTexture.h"
 
 #include <utility>
-#include "../Toolbox/FileSystem.h"
+#include "../Util/FileSystem.h"
 
 ModelTexture::ModelTexture(std::string filename, ImageType type, Material materials) :
         material(materials) ,TextureLoader(FileSystem::Texture(std::move(filename)), type) {}

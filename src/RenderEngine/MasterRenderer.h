@@ -61,9 +61,9 @@ public:
 
     void processEntity(Entity *entity);
 
-    void processModel(Model *model);
-
     void processScenes(Scene *scene);
+
+    void processModel(Model *model);
 
     void updatePerspective(float width, float height);
 

@@ -5,15 +5,16 @@
 #define PRINTXYZ(VEC){printf("%f, %f, %f\n", VEC[0], VEC[1], VEC[2]);};
 
 #include "MainGameLoop.h"
-#include "../Toolbox/FileSystem.h"
-#include "../Toolbox/Utils.h"
-#include "../Toolbox/LightUtil.h"
+#include "../Util/FileSystem.h"
+#include "../Util/Utils.h"
+#include "../Util/LightUtil.h"
 #include "../RenderEngine/DisplayManager.h"
 #include "../RenderEngine/EntityRenderer.h"
 #include "../RenderEngine/ObjLoader.h"
 #include "../RenderEngine/MasterRenderer.h"
 #include "../Guis/GuiTexture.h"
 #include "../Guis/GuiRenderer.h"
+#include "../Toolbox/MousePicker.h"
 
 void MainGameLoop::main() {
     DisplayManager::createDisplay();
@@ -177,10 +178,11 @@ void MainGameLoop::main() {
     MasterRenderer *renderer;
     renderer = new MasterRenderer(playerCamera, loader);
 
+    MousePicker *picker = new MousePicker(playerCamera, renderer->getProjectionMatrix());
     while (DisplayManager::stayOpen()) {
-
         playerCamera->move(terrain);
-
+        picker->update();
+        printf("Current Ray: %f, %f, %f \n", picker->getCurrentRay().x, picker->getCurrentRay().y, picker->getCurrentRay().z);
 
         for (Terrain *ter : allTerrains) {
             renderer->processTerrain(ter);
@@ -193,11 +195,6 @@ void MainGameLoop::main() {
         for (Scene *scene : allScenes) {
             renderer->processScenes(scene);
         }
-
-//        lights[0]->getPosition().z += -0.02f;
-//        lights[0]->getPosition().y += 0.01f;
-
-//        dragonEntity->getPosition() = light->getPosition();
 
         renderer->render(lights);
         guiRenderer->render(guis);

@@ -5,7 +5,7 @@
 
 bool CameraInput::cursorInvisible = false;
 
-double CameraInput::LastMouseX, CameraInput::lastMouseY;
+double CameraInput::LastMouseX, CameraInput::LastMouseY;
 float CameraInput::MouseDX, CameraInput::MouseDY;
 
 bool CameraInput::ResetMouse = true;
@@ -20,7 +20,7 @@ CameraInput::CameraInput(glm::vec3 position) : Camera(position) {
     MouseSensitivity = (kSensitivity);
     Zoom = kZoom;
     glfwSetInputMode(DisplayManager::window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-    glfwGetCursorPos(DisplayManager::window, &CameraInput::LastMouseX, &CameraInput::lastMouseY);
+    glfwGetCursorPos(DisplayManager::window, &CameraInput::LastMouseX, &CameraInput::LastMouseY);
     glfwSetCursorPosCallback(DisplayManager::window, mouse_callback);
     glfwSetScrollCallback(DisplayManager::window, scroll_callback);
 }
@@ -71,17 +71,17 @@ void CameraInput::mouse_callback(GLFWwindow *window, double xPos, double yPos) {
     if (cursorInvisible || glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS) {
         if (CameraInput::ResetMouse) {
             CameraInput::LastMouseX = (GLfloat) xPos;
-            CameraInput::lastMouseY = (GLfloat) yPos;
+            CameraInput::LastMouseY = (GLfloat) yPos;
             CameraInput::ResetMouse = false;
         }
 
         CameraInput::MouseDX = (GLfloat) xPos - (GLfloat) CameraInput::LastMouseX;
 
         // reversed since y-coordinates go from bottom to top
-        CameraInput::MouseDY = (GLfloat) CameraInput::lastMouseY - (GLfloat) yPos;
+        CameraInput::MouseDY = (GLfloat) CameraInput::LastMouseY - (GLfloat) yPos;
 
         CameraInput::LastMouseX = (GLfloat) xPos;
-        CameraInput::lastMouseY = (GLfloat) yPos;
+        CameraInput::LastMouseY = (GLfloat) yPos;
         ProcessMouseMovement(MouseDX, MouseDY);
         return;
     }

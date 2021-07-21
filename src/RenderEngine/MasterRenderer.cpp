@@ -6,7 +6,7 @@
 #include "DisplayManager.h"
 #include "RenderStyle.h"
 #include "SceneLoader.h"
-#include "../Toolbox/ColorNames.h"
+#include "../Util/ColorNames.h"
 
 MasterRenderer::MasterRenderer(PlayerCamera *cameraInput, Loader *loader) : shader(new StaticShader()),
                                                             renderer(new EntityRenderer(shader)),
@@ -106,7 +106,7 @@ glm::mat4 MasterRenderer::createProjectionMatrix() {
 }
 
 glm::mat4 MasterRenderer::getProjectionMatrix() {
-    return this->projectionMatrix;
+    return projectionMatrix;
 }
 
 void MasterRenderer::processEntity(Entity *entity) {

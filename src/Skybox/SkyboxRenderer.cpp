@@ -3,7 +3,7 @@
 //
 
 #include "SkyboxRenderer.h"
-#include "../Toolbox/ColorNames.h"
+#include "../Util/ColorNames.h"
 
 
 namespace {
@@ -111,22 +111,22 @@ void SkyboxRenderer::bindTextures() {
     if(time >= 0 && time < 5000){
         texture1 = nightTextureId;
         texture2 = nightTextureId;
-        *skyColor = ColorNames::Midnightblue;
+        *skyColor = ColorNames::Skyblue;
         blendFactor = (time - 0)/(5000 - 0);
     }else if(time >= 5000 && time < 8000){
         texture1 = nightTextureId;
         texture2 = dayTextureId;
         blendFactor = (time - 5000)/(8000 - 5000);
-        *skyColor = ColorNames::Lightgray;
+        *skyColor = ColorNames::Lightgrey;
     }else if(time >= 8000 && time < 21000){
         texture1 = dayTextureId;
         texture2 = dayTextureId;
-        *skyColor = ColorNames::Skyblue;
+        *skyColor = ColorNames::Whitesmoke;
         blendFactor = (time - 8000)/(21000 - 8000);
     }else{
         texture1 = dayTextureId;
         texture2 = nightTextureId;
-        *skyColor = ColorNames::Skyblue;
+        *skyColor = ColorNames::Black;
         blendFactor = (time - 21000)/(24000 - 21000);
     }
 
