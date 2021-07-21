@@ -13,6 +13,9 @@
 class StaticShader : public ShaderProgram {
 private:
 
+    constexpr static const char *VertexPath = "/src/Shaders/Static/VertexShader.glsl";
+    constexpr static const char *FragmentPath = "/src/Shaders/Static/FragmentShader.glsl";
+
     static const int MAX_LIGHTS = 4;
     // attribute names
     const std::string position = "position";

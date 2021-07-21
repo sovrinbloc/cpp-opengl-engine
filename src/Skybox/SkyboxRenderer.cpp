@@ -4,9 +4,9 @@
 
 #include "SkyboxRenderer.h"
 
-SkyboxRenderer::SkyboxRenderer(Loader *loader, glm::mat4 projectionMatrix) {
-    cube = loader->loadToVAO(VERTICES, 3);
-    texture = loader->loadCubeMap(TEXTURE_FILES);
+SkyboxRenderer::SkyboxRenderer(Loader *loader, glm::mat4 projectionMatrix)  : sBoxVertices(initVertices(sBoxSize)), sTextureFiles(initTextureFiles())  {
+    cube = loader->loadToVAO(sBoxVertices, 3);
+    textureId = loader->loadCubeMap(sTextureFiles);
     shader = new SkyboxShader();
     shader->start();
     shader->loadProjectionMatrix(projectionMatrix);
@@ -22,7 +22,7 @@ void SkyboxRenderer::render(Camera *camera, glm::vec3 color) {
     glBindVertexArray(cube->getVaoID());
     glEnableVertexAttribArray(0);
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, textureId);
     glDrawArrays(GL_TRIANGLES, 0, cube->getVertexCount());
     glDisableVertexAttribArray(0);
     glBindVertexArray(0);

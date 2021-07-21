@@ -4,9 +4,6 @@
 
 #include "GuiShader.h"
 
-static const char *VertexPath = "/src/Guis/Shaders/VertexShader.glsl";
-static const char *FragmentPath = "/src/Guis/Shaders/FragmentShader.glsl";
-
 GuiShader::GuiShader() : ShaderProgram(VertexPath, FragmentPath, nullptr) {
     this->initialize();
     this->loadTransformationMatrix();

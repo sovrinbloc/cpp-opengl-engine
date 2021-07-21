@@ -29,10 +29,6 @@ public:
         return this->model;
     }
 
-    void setModel(TexturedModel *texturedModel) {
-        this->model = texturedModel;
-    }
-
     float getTextureYOffset() {
         int column = textureIndex % model->getModelTexture()->getNumberOfRows();
         return (float)column / (float)model->getModelTexture()->getNumberOfRows();
@@ -76,7 +72,7 @@ public:
         this->scale = scaleSize;
     }
 
-    float getScale() {
+    float getScale() const {
         return this->scale;
     }
 

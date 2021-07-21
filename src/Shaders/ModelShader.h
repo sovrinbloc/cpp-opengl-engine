@@ -16,7 +16,10 @@ class ModelShader : public ShaderProgram {
 private:
     static const int MAX_LIGHTS = 4;
 
-    // attribute names
+    constexpr static const char *VertexPath = "/src/Shaders/Scene/VertexShader.glsl";
+    constexpr static const char *FragmentPath = "/src/Shaders/Scene/FragmentShader.glsl";
+
+        // attribute names
     const std::string position = "position";
     const std::string texture = "textureCoords";
     const std::string normal = "normal";

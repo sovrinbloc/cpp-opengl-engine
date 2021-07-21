@@ -3,12 +3,12 @@
 //
 
 #include "ModelTexture.h"
+
+#include <utility>
 #include "../Toolbox/FileSystem.h"
 
 ModelTexture::ModelTexture(std::string filename, ImageType type, Material materials) :
-        TextureLoader(FileSystem::Texture(filename), type) {
-    this->material = materials;
-}
+        material(materials) ,TextureLoader(FileSystem::Texture(std::move(filename)), type) {}
 
 int ModelTexture::getNumberOfRows() const {
     return numberOfRows;

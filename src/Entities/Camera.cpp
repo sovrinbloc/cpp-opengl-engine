@@ -11,7 +11,6 @@ glm::vec3 Camera::WorldUp;
 // euler Angles
 float Camera::Yaw = 90.0f;
 float Camera::Pitch;
-float Camera::Roll = 0.0f;
 
 // constructor with vectors
 Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch) {

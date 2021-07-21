@@ -7,13 +7,13 @@
 
 class TerrainTexture {
 private:
-    int textureID;
+    int textureId;
     Material material;
 public:
-    TerrainTexture(int textureID) : textureID(textureID) {}
+    TerrainTexture(int textureID) : textureId(textureID) {}
 
     int getTextureID() {
-        return this->textureID;
+        return this->textureId;
     }
 };
 

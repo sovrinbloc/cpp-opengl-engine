@@ -5,9 +5,6 @@
 #include "StaticShader.h"
 #include "../Toolbox/Utils.h"
 
-static const char *VertexPath = "/src/Shaders/Static/VertexShader.glsl";
-static const char *FragmentPath = "/src/Shaders/Static/FragmentShader.glsl";
-
 StaticShader::StaticShader() : ShaderProgram(VertexPath, FragmentPath, nullptr) {
     this->initialize();
     this->loadTransformationMatrix();

@@ -29,7 +29,7 @@ uniform mat4 projectionMatrix; // projection matrix
 
 out vec3 toCameraVector;
 
-const float density = 0.0035;
+const float density = 0;
 const float gradient = 5.0;
 
 void main()

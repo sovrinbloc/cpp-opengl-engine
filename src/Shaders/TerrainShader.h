@@ -13,6 +13,10 @@
 
 
 class TerrainShader : public ShaderProgram {
+
+    constexpr static const char *VertexPath = "/src/Shaders/Terrain/VertexShader.glsl";
+    constexpr static const char *FragmentPath = "/src/Shaders/Terrain/FragmentShader.glsl";
+
     static const int MAX_LIGHTS = 4;
 // attribute names
     const std::string position = "position";

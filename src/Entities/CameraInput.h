@@ -18,18 +18,19 @@ enum Camera_Movement {
     RIGHT
 };
 
-const float SPEED = 12.5f;
-const float SENSITIVITY = 0.1f;
-const float ZOOM = 45.0f;
-const float MIN_ZOOM = 20.0f;
-const float MAX_ZOOM = 45.0f;
 
 class CameraInput : public Camera {
 public:
-    static double lastX, lastY;
-    static float mouseDX, mouseDY;
+    constexpr static const float kSpeed = 12.5f;
+    constexpr static const float kSensitivity = 0.1f;
+    constexpr static const float kZoom = 45.0f;
+    constexpr static const float kMinZoom = 20.0f;
+    constexpr static const float kMaxZoom = 45.0f;
 
-    static bool resetMouse;
+    static double LastMouseX, lastMouseY;
+    static float MouseDX, MouseDY;
+
+    static bool ResetMouse;
 
     // camera options
     static float MovementSpeed;
@@ -39,7 +40,7 @@ public:
 
     explicit CameraInput(glm::vec3 position = glm::vec3(0.0f, 4.5f, 0.0f));
 
-    virtual void move();
+    void move() override;
 
     static void toggleCursorStyle();
 
@@ -47,31 +48,23 @@ public:
     // ---------------------------------------------------------------------------------------------------------
     void processInput(GLFWwindow *window);
 
-    static void mouse_callback(GLFWwindow *window, double xpos, double ypos);
+    static void mouse_callback(GLFWwindow *window, double xPos, double yPos);
 
-    static void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
+    static void scroll_callback(GLFWwindow *window, double xOffset, double yOffset);
 
     // processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
-    void ProcessKeyboard(Camera_Movement direction, float deltaTime);
+    static void ProcessKeyboard(Camera_Movement direction, float deltaTime) ;
 
     // processes input received from a mouse input system. Expects the offset value in both the x and y direction.
-    static void ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch = true);
+    static void ProcessMouseMovement(float xOffset, float yOffset, GLboolean constrainPitch = true);
 
     // processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
-    static void ProcessMouseScroll(float yoffset);
-
-    void toggleFirstPersonShooter(bool enabled);
-
-    void ToggleChangeSpeed(float velocity) {
-        this->MovementSpeed = velocity;
-    }
+    static void ProcessMouseScroll(float yOffset);
 
     virtual void updateCameraVectors();
 
     static bool cursorInvisible;
-private:
 
-    bool fps = false;
 };
 
 #endif //ENGINE_CAMERAINPUT_H

@@ -43,7 +43,7 @@ void MainGameLoop::main() {
             .attenuation = glm::vec3(1.0f, 0.0f, 0.0f),
             .ambient =  glm::vec3(0.2f, 0.2f, 0.2f),
             .diffuse =  glm::vec3(0.5f, 0.5f, 0.5f),
-            .constant = Light::DIRECTIONAL,
+            .constant = Light::kDirectional,
             .linear = 0.09f,
             .quadratic = 0.032f
     });

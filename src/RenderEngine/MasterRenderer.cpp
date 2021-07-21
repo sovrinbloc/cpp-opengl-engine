@@ -48,7 +48,7 @@ void MasterRenderer::render(const std::vector<Light *>&suns) {
 
     shader->start();
 
-    const vec<3, float, defaultp> &skyColor = glm::vec3(.529, .808, .98);
+    const glm::vec3 &skyColor = glm::vec3(.529, .808, .98);
     shader->loadSkyColorVariable(skyColor);
     shader->loadLight(suns);
     shader->loadViewPosition(camera);

@@ -10,64 +10,74 @@
 #include "../Models/RawModel.h"
 #include "SkyboxShader.h"
 
+namespace {
+    std::vector<float> initVertices(float SIZE) {
+        return std::vector<float>{
+                -SIZE,  SIZE, -SIZE,
+                -SIZE, -SIZE, -SIZE,
+                SIZE, -SIZE, -SIZE,
+                SIZE, -SIZE, -SIZE,
+                SIZE,  SIZE, -SIZE,
+                -SIZE,  SIZE, -SIZE,
+
+                -SIZE, -SIZE,  SIZE,
+                -SIZE, -SIZE, -SIZE,
+                -SIZE,  SIZE, -SIZE,
+                -SIZE,  SIZE, -SIZE,
+                -SIZE,  SIZE,  SIZE,
+                -SIZE, -SIZE,  SIZE,
+
+                SIZE, -SIZE, -SIZE,
+                SIZE, -SIZE,  SIZE,
+                SIZE,  SIZE,  SIZE,
+                SIZE,  SIZE,  SIZE,
+                SIZE,  SIZE, -SIZE,
+                SIZE, -SIZE, -SIZE,
+
+                -SIZE, -SIZE,  SIZE,
+                -SIZE,  SIZE,  SIZE,
+                SIZE,  SIZE,  SIZE,
+                SIZE,  SIZE,  SIZE,
+                SIZE, -SIZE,  SIZE,
+                -SIZE, -SIZE,  SIZE,
+
+                -SIZE,  SIZE, -SIZE,
+                SIZE,  SIZE, -SIZE,
+                SIZE,  SIZE,  SIZE,
+                SIZE,  SIZE,  SIZE,
+                -SIZE,  SIZE,  SIZE,
+                -SIZE,  SIZE, -SIZE,
+
+                -SIZE, -SIZE, -SIZE,
+                -SIZE, -SIZE,  SIZE,
+                SIZE, -SIZE, -SIZE,
+                SIZE, -SIZE, -SIZE,
+                -SIZE, -SIZE,  SIZE,
+                SIZE, -SIZE,  SIZE
+        };
+    }
+    std::vector<std::string> initTextureFiles() {
+        return {
+                FileSystem::Skybox("right"),
+                FileSystem::Skybox("left"),
+                FileSystem::Skybox("top"),
+                FileSystem::Skybox("bottom"),
+                FileSystem::Skybox("back"),
+                FileSystem::Skybox("front")
+        };
+    }
+}
+
 class SkyboxRenderer {
 
 private:
-    constexpr  static float SIZE = 500.0f;
-    std::vector<float> VERTICES = {
-            -SIZE,  SIZE, -SIZE,
-            -SIZE, -SIZE, -SIZE,
-            SIZE, -SIZE, -SIZE,
-            SIZE, -SIZE, -SIZE,
-            SIZE,  SIZE, -SIZE,
-            -SIZE,  SIZE, -SIZE,
+    const float sBoxSize = 500.0f;
+    const std::vector<float> sBoxVertices;
 
-            -SIZE, -SIZE,  SIZE,
-            -SIZE, -SIZE, -SIZE,
-            -SIZE,  SIZE, -SIZE,
-            -SIZE,  SIZE, -SIZE,
-            -SIZE,  SIZE,  SIZE,
-            -SIZE, -SIZE,  SIZE,
-
-            SIZE, -SIZE, -SIZE,
-            SIZE, -SIZE,  SIZE,
-            SIZE,  SIZE,  SIZE,
-            SIZE,  SIZE,  SIZE,
-            SIZE,  SIZE, -SIZE,
-            SIZE, -SIZE, -SIZE,
-
-            -SIZE, -SIZE,  SIZE,
-            -SIZE,  SIZE,  SIZE,
-            SIZE,  SIZE,  SIZE,
-            SIZE,  SIZE,  SIZE,
-            SIZE, -SIZE,  SIZE,
-            -SIZE, -SIZE,  SIZE,
-
-            -SIZE,  SIZE, -SIZE,
-            SIZE,  SIZE, -SIZE,
-            SIZE,  SIZE,  SIZE,
-            SIZE,  SIZE,  SIZE,
-            -SIZE,  SIZE,  SIZE,
-            -SIZE,  SIZE, -SIZE,
-
-            -SIZE, -SIZE, -SIZE,
-            -SIZE, -SIZE,  SIZE,
-            SIZE, -SIZE, -SIZE,
-            SIZE, -SIZE, -SIZE,
-            -SIZE, -SIZE,  SIZE,
-            SIZE, -SIZE,  SIZE
-    };
-
-    std::vector<std::string> TEXTURE_FILES = {
-            FileSystem::Skybox("right"),
-            FileSystem::Skybox("left"),
-            FileSystem::Skybox("top"),
-            FileSystem::Skybox("bottom"),
-            FileSystem::Skybox("back"),
-            FileSystem::Skybox("front")};
+    const std::vector<std::string> sTextureFiles;
 
     RawModel *cube;
-    int texture;
+    unsigned int textureId;
     SkyboxShader *shader;
 
 public:

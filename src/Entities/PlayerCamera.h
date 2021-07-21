@@ -14,7 +14,7 @@ public:
     float distanceFromPlayer = 55.0f;
     float angleAroundPlayer = 0.0f;
 
-    PlayerCamera(Player *player) : player(player), CameraInput(){
+    explicit PlayerCamera(Player *player) : player(player), CameraInput(){
         Pitch = -20.0f;
     }
 
@@ -23,14 +23,14 @@ public:
     void calculateCameraPosition(float horizDistance, float verticDistance) const;
 
     // returns the view matrix calculated using Euler Angles and the LookAt Matrix
-    glm::mat4 GetViewMatrix();
+    glm::mat4 GetViewMatrix() override;
 
     void calculateAngleAroundPlayer();
 private:
     float calculateHorizontalDistance() const;
     float calculateVerticalDistance() const;
 
-    void updateCameraVectors();
+    void updateCameraVectors() override;
 
     void calculateZoom();
 

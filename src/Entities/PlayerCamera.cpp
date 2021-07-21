@@ -7,6 +7,7 @@ void PlayerCamera::move(Terrain *terrain) {
     this->processInput(DisplayManager::window);
     DisplayManager::uniformMovement();
     updateCameraVectors();
+    calculateZoom();
     calculateAngleAroundPlayer();
     player->move(terrain);
     float horizontalDistance = calculateHorizontalDistance();
@@ -38,7 +39,7 @@ glm::mat4 PlayerCamera::GetViewMatrix() {
 
 void PlayerCamera::calculateAngleAroundPlayer() {
     if (glfwGetMouseButton(DisplayManager::window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS || cursorInvisible) {
-        float angleChange = mouseDX * 0.1f;
+        float angleChange = MouseDX * 0.1f;
         angleAroundPlayer -= angleChange;
     }
 }
@@ -59,7 +60,7 @@ void PlayerCamera::updateCameraVectors() {
 
 void PlayerCamera::calculateZoom() {
     float zoomLevel = ZoomOffset * 0.03f;
-    distanceFromPlayer -= zoomLevel;
+    distanceFromPlayer += zoomLevel;
     if (distanceFromPlayer < 5) {
         distanceFromPlayer = 5;
     }

@@ -15,6 +15,8 @@
 class GuiShader : public ShaderProgram {
 
 private:
+    constexpr static const char *VertexPath = "/src/Guis/Shaders/VertexShader.glsl";
+    constexpr static const char *FragmentPath = "/src/Guis/Shaders/FragmentShader.glsl";
     // attribute names
     const std::string position = "position";
 

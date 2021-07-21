@@ -19,8 +19,7 @@ public:
                  Material materials = Material{
                          .shininess = 1.0f,
                          .reflectivity = 0.5f
-                 }
-    );
+                 });
 
 private:
     bool hasTransparency = false;

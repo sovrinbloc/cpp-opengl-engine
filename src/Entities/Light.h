@@ -7,12 +7,10 @@
 
 #include "glm/glm.hpp"
 
-using namespace glm;
-
 struct Lighting {
-    vec3 attenuation;
-    vec3 ambient;
-    vec3 diffuse;
+    glm::vec3 attenuation;
+    glm::vec3 ambient;
+    glm::vec3 diffuse;
 
     float constant;
     float linear;
@@ -21,11 +19,11 @@ struct Lighting {
 
 class Light {
 private:
-    vec3 position;
-    vec3 color;
+    glm::vec3 position;
+    glm::vec3 color;
     Lighting lighting;
 public:
-    explicit Light(vec3 position = vec3(1.2f, 1.0f, 2.0f), vec3 color = vec3(1.0f, 1.0f, 1.0f),
+    explicit Light(glm::vec3 position = glm::vec3(1.2f, 1.0f, 2.0f), glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f),
                    Lighting lighting = {
                            .attenuation = glm::vec3(1.0f, 0.0f, 0.0f),
                            .ambient =  glm::vec3(0.2f, 0.2f, 0.2f),
@@ -44,28 +42,28 @@ public:
         this->lighting = lighting;
     }
 
-    vec3 &getPosition() {
+    glm::vec3 &getPosition() {
         return this->position;
     }
 
-    void setPosition(vec3 position) {
+    void setPosition(glm::vec3 position) {
         this->position = position;
     }
 
-    void addToPosition(vec3 position) {
+    void addToPosition(glm::vec3 position) {
         this->position += position;
     }
 
-    vec3 & getColor() {
+    glm::vec3 & getColor() {
         return color;
     }
 
-    void setColor(vec3 color) {
+    void setColor(glm::vec3 color) {
         this->color = color;
     }
 
 public:
-    constexpr static float DIRECTIONAL = -1.0f;
+    constexpr static float kDirectional = -1.0f;
 };
 
 #endif //ENGINE_LIGHT_H

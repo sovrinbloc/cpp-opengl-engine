@@ -2,14 +2,13 @@
 // Created by Joseph Alai on 7/6/21.
 //
 #include "CameraInput.h"
-#include "../RenderEngine/DisplayManager.h"
 
 bool CameraInput::cursorInvisible = false;
 
-double CameraInput::lastX, CameraInput::lastY;
-float CameraInput::mouseDX, CameraInput::mouseDY;
+double CameraInput::LastMouseX, CameraInput::lastMouseY;
+float CameraInput::MouseDX, CameraInput::MouseDY;
 
-bool CameraInput::resetMouse = true;
+bool CameraInput::ResetMouse = true;
 // camera options
 float CameraInput::MovementSpeed;
 float CameraInput::MouseSensitivity;
@@ -17,11 +16,11 @@ float CameraInput::Zoom;
 float CameraInput::ZoomOffset;
 
 CameraInput::CameraInput(glm::vec3 position) : Camera(position) {
-    MovementSpeed = (SPEED);
-    MouseSensitivity = (SENSITIVITY);
-    Zoom = ZOOM;
+    MovementSpeed = (kSpeed);
+    MouseSensitivity = (kSensitivity);
+    Zoom = kZoom;
     glfwSetInputMode(DisplayManager::window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-    glfwGetCursorPos(DisplayManager::window, &CameraInput::lastX, &CameraInput::lastY);
+    glfwGetCursorPos(DisplayManager::window, &CameraInput::LastMouseX, &CameraInput::lastMouseY);
     glfwSetCursorPosCallback(DisplayManager::window, mouse_callback);
     glfwSetScrollCallback(DisplayManager::window, scroll_callback);
 }
@@ -30,7 +29,7 @@ void CameraInput::toggleCursorStyle() {
     cursorInvisible = !cursorInvisible;
     GLint cursorStyle = cursorInvisible ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL;
     glfwSetInputMode(DisplayManager::window, GLFW_CURSOR, cursorStyle);
-    resetMouse = true;
+    ResetMouse = true;
 }
 
 void CameraInput::move() {
@@ -61,61 +60,58 @@ void CameraInput::processInput(GLFWwindow *window) {
         ProcessKeyboard(RIGHT, DisplayManager::delta);
     }
     if (glfwGetKey(window, GLFW_KEY_TAB) == GLFW_PRESS) {
-        MovementSpeed = SPEED * 4.5;
+        MovementSpeed = kSpeed * 4.5;
     }
     if (glfwGetKey(window, GLFW_KEY_BACKSLASH) == GLFW_PRESS) {
-        MovementSpeed = SPEED;
+        MovementSpeed = kSpeed;
     }
 }
 
-void CameraInput::mouse_callback(GLFWwindow *window, double xpos, double ypos) {
+void CameraInput::mouse_callback(GLFWwindow *window, double xPos, double yPos) {
     if (cursorInvisible || glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS) {
-        if (CameraInput::resetMouse) {
-            CameraInput::lastX = (GLfloat) xpos;
-            CameraInput::lastY = (GLfloat) ypos;
-            CameraInput::resetMouse = false;
+        if (CameraInput::ResetMouse) {
+            CameraInput::LastMouseX = (GLfloat) xPos;
+            CameraInput::lastMouseY = (GLfloat) yPos;
+            CameraInput::ResetMouse = false;
         }
 
-        CameraInput::mouseDX = (GLfloat) xpos - (GLfloat) CameraInput::lastX;
+        CameraInput::MouseDX = (GLfloat) xPos - (GLfloat) CameraInput::LastMouseX;
 
         // reversed since y-coordinates go from bottom to top
-        CameraInput::mouseDY = (GLfloat) CameraInput::lastY - (GLfloat) ypos;
+        CameraInput::MouseDY = (GLfloat) CameraInput::lastMouseY - (GLfloat) yPos;
 
-        CameraInput::lastX = (GLfloat) xpos;
-        CameraInput::lastY = (GLfloat) ypos;
-        ProcessMouseMovement(mouseDX, mouseDY);
+        CameraInput::LastMouseX = (GLfloat) xPos;
+        CameraInput::lastMouseY = (GLfloat) yPos;
+        ProcessMouseMovement(MouseDX, MouseDY);
         return;
     }
-    CameraInput::resetMouse = true;
+    CameraInput::ResetMouse = true;
 }
 
-void CameraInput::scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
-    ProcessMouseScroll((GLfloat) yoffset);
+void CameraInput::scroll_callback(__attribute__((unused)) GLFWwindow *window, __attribute__((unused)) double xOffset, double yOffset) {
+    ProcessMouseScroll((GLfloat) yOffset);
 }
 
-// processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
+// processes input received from any keyboard-like input system.
+// Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
 void CameraInput::ProcessKeyboard(Camera_Movement direction, float deltaTime) {
-    float velocity = this->MovementSpeed * deltaTime;
+    float velocity = CameraInput::MovementSpeed * deltaTime;
     if (direction == FORWARD)
-        this->Position += this->Front * velocity;
+        CameraInput::Position += CameraInput::Front * velocity;
     if (direction == BACKWARD)
-        this->Position -= this->Front * velocity;
+        CameraInput::Position -= CameraInput::Front * velocity;
     if (direction == LEFT)
-        this->Position -= this->Right * velocity;
+        CameraInput::Position -= CameraInput::Right * velocity;
     if (direction == RIGHT)
-        this->Position += this->Right * velocity;
-    if (this->fps) {
-        this->Position.y = 3;
-    }
-
+        CameraInput::Position += CameraInput::Right * velocity;
 }
 
 // processes input received from a mouse input system. Expects the offset value in both the x and y direction.
-void CameraInput::ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch) {
-    xoffset *= MouseSensitivity;
-    yoffset *= MouseSensitivity;
-    Yaw   += xoffset;
-    Pitch += yoffset;
+void CameraInput::ProcessMouseMovement(float xOffset, float yOffset, GLboolean constrainPitch) {
+    xOffset *= MouseSensitivity;
+    yOffset *= MouseSensitivity;
+    Yaw   += xOffset;
+    Pitch += yOffset;
 
     // make sure that when pitch is out of bounds, screen doesn't get flipped
     if (constrainPitch) {
@@ -126,18 +122,24 @@ void CameraInput::ProcessMouseMovement(float xoffset, float yoffset, GLboolean c
     }
 }
 
-// processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
-void CameraInput::ProcessMouseScroll(float yoffset) {
-    Zoom += (float)yoffset;
-    ZoomOffset = yoffset;
-    if (Zoom < MIN_ZOOM)
-        Zoom = MIN_ZOOM;
-    if (Zoom > MAX_ZOOM)
-        Zoom = MAX_ZOOM;
-}
-
-void CameraInput::toggleFirstPersonShooter(bool enabled) {
-    this->fps = enabled;
+//
+/**
+ * @brief processes input received from a mouse scroll-wheel event.
+ *        Only requires input on the vertical wheel-axis
+ *
+ *
+ * @param yOffset
+ */
+void CameraInput::ProcessMouseScroll(float yOffset) {
+    // zoom in with occlusion with SHIFT
+    if (glfwGetKey(DisplayManager::window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+        Zoom += (float)yOffset;
+    }
+    ZoomOffset = yOffset;
+    if (Zoom < kMinZoom)
+        Zoom = kMinZoom;
+    if (Zoom > kMaxZoom)
+        Zoom = kMaxZoom;
 }
 
 void CameraInput::updateCameraVectors() {

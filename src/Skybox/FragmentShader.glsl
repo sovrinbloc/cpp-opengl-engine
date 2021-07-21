@@ -4,7 +4,7 @@ in vec3 textureCoords;
 out vec4 out_Color;
 
 uniform samplerCube cubeMap;
-uniform vec3 fogColor;
+uniform vec3 fogColor; // the sky color
 
 const float lowerLimit = 0.0f;
 const float upperLimit = 30.0f;

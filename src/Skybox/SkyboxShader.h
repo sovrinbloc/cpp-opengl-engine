@@ -12,9 +12,15 @@
 
 class SkyboxShader : public ShaderProgram {
 private:
+    constexpr static const char *VertexPath = "/src/Skybox/VertexShader.glsl";
+    constexpr static const char *FragmentPath = "/src/Skybox/FragmentShader.glsl";
+
     int location_projectionMatrix;
     int location_viewMatrix;
     int location_fogColor;
+
+    constexpr static float kRotationSpeed = 1.0f;
+    float rotation = 0.0f;
 
 public:
     SkyboxShader();
@@ -26,9 +32,9 @@ public:
     void loadFogColor(glm::vec3 color);
 
 protected:
-    void getAllUniformLocations();
+    void getAllUniformLocations() override;
 
-    void bindAttributes();
+    void bindAttributes() override;
 };
 
 

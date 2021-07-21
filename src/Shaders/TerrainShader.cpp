@@ -5,9 +5,6 @@
 #include "TerrainShader.h"
 #include "../Toolbox/Utils.h"
 
-static const char *VertexPath = "/src/Shaders/Terrain/VertexShader.glsl";
-static const char *FragmentPath = "/src/Shaders/Terrain/FragmentShader.glsl";
-
 TerrainShader::TerrainShader() : ShaderProgram(VertexPath, FragmentPath, nullptr) {
     this->initialize();
     this->loadTransformationMatrix();

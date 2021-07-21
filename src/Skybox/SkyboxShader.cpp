@@ -4,9 +4,6 @@
 
 #include "SkyboxShader.h"
 
-static const char *VertexPath = "/src/Skybox/VertexShader.glsl";
-static const char *FragmentPath = "/src/Skybox/FragmentShader.glsl";
-
 SkyboxShader::SkyboxShader() : ShaderProgram (VertexPath, FragmentPath) {
     this->initialize();
 }
@@ -16,6 +13,8 @@ void SkyboxShader::loadProjectionMatrix(glm::mat4 matrix) {
 }
 
 void SkyboxShader::loadViewMatrix(glm::mat4 matrix) {
+    rotation += kRotationSpeed * DisplayManager::getFrameTimeSeconds();
+    matrix = glm::rotate(matrix, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 0.0f));
     this->setMat4(location_viewMatrix, matrix);
 }
 
