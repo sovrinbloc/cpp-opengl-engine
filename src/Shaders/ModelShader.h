@@ -38,7 +38,6 @@ private:
     const std::string lightConstant = "constant";
     const std::string lightLinear = "linear";
     const std::string lightQuadratic = "quadratic";
-    const std::string lightAttenuation = "attenuation";
 
     const std::string materialShininess = "material.shininess";
     const std::string materialReflectivity = "material.reflectivity";

@@ -10,7 +10,7 @@ GuiRenderer::GuiRenderer(Loader *loader) {
     for (float & position : positions) {
         position = -position;
     }
-    quad = loader->loadToVAO(positions);
+    quad = loader->loadToVAO(positions, 2);
     shader = new GuiShader();
 }
 

@@ -175,7 +175,7 @@ void MainGameLoop::main() {
     GuiRenderer *guiRenderer = new GuiRenderer(loader);
 
     MasterRenderer *renderer;
-    renderer = new MasterRenderer(playerCamera);
+    renderer = new MasterRenderer(playerCamera, loader);
 
     while (DisplayManager::stayOpen()) {
 

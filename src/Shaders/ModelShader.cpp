@@ -49,20 +49,6 @@ void ModelShader::loadLight(std::vector<Light *>lights) {
             this->setVec3(location_lightDiffuse[i], lights[i]->getLighting().diffuse);
             this->setVec3(location_lightSpecular[i], lights[i]->getColor());
             this->setVec3(location_lightPosition[i], lights[i]->getPosition());
-            if (0) {
-
-                printf("const: %f, lin: %f, quad: %f, amb: %f, %f, %f, diff: %f %f %f, col: %f %f %f, pos: %f %f %f\n",
-                       lights[i]->getLighting().constant, lights[i]->getLighting().linear,
-                       lights[i]->getLighting().quadratic,
-                       lights[i]->getLighting().ambient.x, lights[i]->getLighting().ambient.y,
-                       lights[i]->getLighting().ambient.z,
-                       lights[i]->getLighting().diffuse.x, lights[i]->getLighting().diffuse.y,
-                       lights[i]->getLighting().diffuse.z,
-                       lights[i]->getColor().r, lights[i]->getColor().g, lights[i]->getColor().b,
-                       lights[i]->getPosition().x, lights[i]->getPosition().y, lights[i]->getPosition().z
-
-                );
-            }
         } else {
             this->setFloat(location_lightConstant[i], 0.0f);
             this->setFloat(location_lightLinear[i], 0.0f);

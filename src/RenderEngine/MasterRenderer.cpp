@@ -7,7 +7,7 @@
 #include "RenderStyle.h"
 #include "SceneLoader.h"
 
-MasterRenderer::MasterRenderer(PlayerCamera *cameraInput) : shader(new StaticShader()),
+MasterRenderer::MasterRenderer(PlayerCamera *cameraInput, Loader *loader) : shader(new StaticShader()),
                                                             renderer(new EntityRenderer(shader)),
                                                             camera(cameraInput), projectionMatrix(
                 Maths::createProjectionMatrix(FOVY, (float) DisplayManager::SRC_WIDTH,
@@ -21,6 +21,7 @@ MasterRenderer::MasterRenderer(PlayerCamera *cameraInput) : shader(new StaticSha
     models = new std::vector<Model *>;
     terrainRenderer = new TerrainRenderer(terrainShader, this->projectionMatrix);
     sceneRenderer = new SceneRenderer(sceneShader);
+    skyboxRenderer = new SkyboxRenderer(loader, this->projectionMatrix);
 }
 
 void MasterRenderer::cleanUp() {
@@ -81,6 +82,7 @@ void MasterRenderer::render(const std::vector<Light *>&suns) {
     terrainShader->loadProjectionMatrix(MasterRenderer::createProjectionMatrix());
     terrainRenderer->render(terrains);
 
+    skyboxRenderer->render(camera);
     terrains->clear();
     terrainShader->stop();
 

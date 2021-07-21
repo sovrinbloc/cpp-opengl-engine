@@ -17,6 +17,8 @@ public:
     static std::string Model(std::string in);
     static std::string Texture(std::string in);
     static std::string TerrainTexture(std::string in);
+    static std::string Skybox(std::string in);
+
 
 };
 #endif //ENGINE_FILESYSTEM_H

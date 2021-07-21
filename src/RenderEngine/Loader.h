@@ -25,9 +25,11 @@ public:
     RawModel *loadToVAO(ModelData *data);
 
     // for GUI rendering: we only need a 2d square with things rendered on it.
-    RawModel *loadToVAO(std::vector<float> positions);
+    RawModel *loadToVAO(std::vector<float> positions, int dimensions);
 
     TextureLoader *loadTexture(std::string fileName);
+
+    unsigned int loadCubeMap(std::vector<std::string> faces);
 
     void cleanUp();
 

@@ -25,3 +25,7 @@ std::string FileSystem::Texture(std::string in) {
 std::string FileSystem::TerrainTexture(std::string in) {
     return HOME_PATH + "/src/Resources/Tutorial/MultiTextureTerrain/" + in + ".png";
 }
+
+std::string FileSystem::Skybox(std::string in) {
+    return HOME_PATH + "/src/Resources/Tutorial/skybox/" + in + ".png";
+}

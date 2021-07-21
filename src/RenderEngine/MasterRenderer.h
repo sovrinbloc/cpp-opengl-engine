@@ -15,6 +15,7 @@
 #include "../Shaders/ModelShader.h"
 #include "SceneLoader.h"
 #include "../Entities/PlayerCamera.h"
+#include "../Skybox/SkyboxRenderer.h"
 
 static const float FOVY = 45.0f;
 static const float NEAR_PLANE = 0.1f;
@@ -37,8 +38,10 @@ private:
     ModelShader *sceneShader;
     std::vector<Model *> *models;
 
+    SkyboxRenderer *skyboxRenderer;
+
 public:
-    explicit MasterRenderer(PlayerCamera *cameraInput);
+    explicit MasterRenderer(PlayerCamera *cameraInput, Loader *loader);
 
     void cleanUp();
 
