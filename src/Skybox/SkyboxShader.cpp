@@ -19,9 +19,14 @@ void SkyboxShader::loadViewMatrix(glm::mat4 matrix) {
     this->setMat4(location_viewMatrix, matrix);
 }
 
+void SkyboxShader::loadFogColor(glm::vec3 color) {
+    this->setVec3(location_fogColor, color);
+}
+
 void SkyboxShader::getAllUniformLocations() {
     location_projectionMatrix = this->getUniformLocation("projectionMatrix");
     location_viewMatrix = this->getUniformLocation("viewMatrix");
+    location_fogColor = this->getUniformLocation("fogColor");
 }
 
 void SkyboxShader::bindAttributes() {

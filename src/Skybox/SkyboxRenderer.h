@@ -73,7 +73,7 @@ private:
 public:
     SkyboxRenderer(Loader *loader, glm::mat4 projectionMatrix);
 
-    void render(Camera *camera);
+    void render(Camera *camera, glm::vec3 color);
 };
 
 

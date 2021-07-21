@@ -82,7 +82,7 @@ void MasterRenderer::render(const std::vector<Light *>&suns) {
     terrainShader->loadProjectionMatrix(MasterRenderer::createProjectionMatrix());
     terrainRenderer->render(terrains);
 
-    skyboxRenderer->render(camera);
+    skyboxRenderer->render(camera, skyColor);
     terrains->clear();
     terrainShader->stop();
 

@@ -14,6 +14,7 @@ class SkyboxShader : public ShaderProgram {
 private:
     int location_projectionMatrix;
     int location_viewMatrix;
+    int location_fogColor;
 
 public:
     SkyboxShader();
@@ -21,6 +22,8 @@ public:
     void loadProjectionMatrix(glm::mat4 matrix);
 
     void loadViewMatrix(glm::mat4 matrix);
+
+    void loadFogColor(glm::vec3 color);
 
 protected:
     void getAllUniformLocations();
