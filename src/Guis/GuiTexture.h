@@ -9,7 +9,7 @@
 
 class GuiTexture {
 private:
-    int texture;
+    int textureId;
     glm::vec2 position;
     glm::vec2 scale;
 public:
@@ -19,7 +19,7 @@ public:
 
     const glm::vec2 &getScale() const;
 
-    GuiTexture(int texture, const glm::vec2 &position, const glm::vec2 &scale);
+    GuiTexture(int textureId, const glm::vec2 &position, const glm::vec2 &scale);
 };
 
 #endif //ENGINE_GUITEXTURE_H

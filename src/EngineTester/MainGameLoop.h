@@ -17,5 +17,7 @@ public:
     static glm::vec3 generateRandomRotation();
 
     static float generateRandomScale(float min, float max);
+
+    static void unnamed();
 };
 #endif //CRAFTPROJ_MAINGAMELOOP_H

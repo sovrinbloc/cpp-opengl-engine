@@ -6,20 +6,37 @@
 #include "../Toolbox/Maths.h"
 #include "../Util/FileSystem.h"
 
+/**
+ * @brief Terrain generates terrain coordinates and Stores them in a Vao, inputs the texturePack
+ *        and the blendMap and stores those too. It also stores the height information for x,z,
+ *        so that you can get the Y position from any X, Z coordinates.
+ *        
+ *        It loads in a heightMap image, which is converted into a
+ *        3d mesh. There is a grid system, wherein if you want to generate multiple terrains,
+ *        you would simply pass the coordinates, [0, 0], [0, 1], [1, 1], [1, 0]..., for each
+ *        terrain respectively, to be able to switch between terrains.
+ *
+ * @param gridX
+ * @param gridZ
+ * @param loader
+ * @param texturePack
+ * @param blendMap
+ * @param heightMap
+ */
 Terrain::Terrain(int gridX, int gridZ, Loader *loader, TerrainTexturePack *texturePack, TerrainTexture *blendMap,
                  const std::string &heightMap) : heightMap(Heightmap(FileSystem::Texture(heightMap))) {
     this->texturePack = texturePack;
     this->blendMap = blendMap;
-    this->x = (float) gridX * SIZE;
-    this->z = (float) gridZ * SIZE;
+    this->x = (float) gridX * kTerrainSize;
+    this->z = (float) gridZ * kTerrainSize;
     this->model = generateTerrain(loader);
 }
 
 RawModel *Terrain::generateTerrain(Loader *loader) {
-    int VERTEX_COUNT = heightMap.getImageInfo().height;
-    heights = std::vector<std::vector<float>>(VERTEX_COUNT, std::vector<float>(VERTEX_COUNT));
+    int vertexCount = heightMap.getImageInfo().height;
+    heights = std::vector<std::vector<float>>(vertexCount, std::vector<float>(vertexCount));
 
-    int count = VERTEX_COUNT * VERTEX_COUNT;
+    int count = vertexCount * vertexCount;
 
     std::vector<GLfloat> vertices(count * 3);
     vertices.reserve(count * 3);
@@ -27,32 +44,32 @@ RawModel *Terrain::generateTerrain(Loader *loader) {
     normals.reserve(count * 3);
     std::vector<GLfloat> textureCoords(count * 2);
     textureCoords.reserve(count * 2);
-    std::vector<GLint> indices(6 * (VERTEX_COUNT - 1) * (VERTEX_COUNT - 1));
-    indices.reserve(6 * (VERTEX_COUNT - 1) * (VERTEX_COUNT - 1));
+    std::vector<GLint> indices(6 * (vertexCount - 1) * (vertexCount - 1));
+    indices.reserve(6 * (vertexCount - 1) * (vertexCount - 1));
 
     int vertexPointer = 0;
-    for (int i = 0; i < VERTEX_COUNT; i++) {
-        for (int j = 0; j < VERTEX_COUNT; j++) {
-            vertices[vertexPointer * 3] = (float) j / ((float) VERTEX_COUNT - 1) * SIZE;
+    for (int i = 0; i < vertexCount; i++) {
+        for (int j = 0; j < vertexCount; j++) {
+            vertices[vertexPointer * 3] = (float) j / ((float) vertexCount - 1) * kTerrainSize;
             float height = heightMap.getHeight(j, i);
             heights[j][i] = height;
             vertices[vertexPointer * 3 + 1] = height;
-            vertices[vertexPointer * 3 + 2] = (float) i / ((float) VERTEX_COUNT - 1) * SIZE;
+            vertices[vertexPointer * 3 + 2] = (float) i / ((float) vertexCount - 1) * kTerrainSize;
             glm::vec3 normal = calculateNormal(j, i);
             normals[vertexPointer * 3] = normal.x;
             normals[vertexPointer * 3 + 1] = normal.y;
             normals[vertexPointer * 3 + 2] = normal.z;
-            textureCoords[vertexPointer * 2] = (float) j / ((float) VERTEX_COUNT - 1);
-            textureCoords[vertexPointer * 2 + 1] = (float) i / ((float) VERTEX_COUNT - 1);
+            textureCoords[vertexPointer * 2] = (float) j / ((float) vertexCount - 1);
+            textureCoords[vertexPointer * 2 + 1] = (float) i / ((float) vertexCount - 1);
             vertexPointer++;
         }
     }
     int pointer = 0;
-    for (int gz = 0; gz < VERTEX_COUNT - 1; gz++) {
-        for (int gx = 0; gx < VERTEX_COUNT - 1; gx++) {
-            int topLeft = (gz * VERTEX_COUNT) + gx;
+    for (int gz = 0; gz < vertexCount - 1; gz++) {
+        for (int gx = 0; gx < vertexCount - 1; gx++) {
+            int topLeft = (gz * vertexCount) + gx;
             int topRight = topLeft + 1;
-            int bottomLeft = ((gz + 1) * VERTEX_COUNT) + gx;
+            int bottomLeft = ((gz + 1) * vertexCount) + gx;
             int bottomRight = bottomLeft + 1;
             indices[pointer++] = topLeft;
             indices[pointer++] = bottomLeft;
@@ -81,7 +98,7 @@ Heightmap Terrain::getHeightMap() {
 float Terrain::getHeightOfTerrain(float worldX, float worldZ) {
     float terrainX = worldX - this->x;
     float terrainZ = worldZ - this->z;
-    float gridSquareSize = SIZE / ((float) heights.size() - 1);
+    float gridSquareSize = kTerrainSize / ((float) heights.size() - 1);
     int gridX = (int) floor(terrainX / gridSquareSize);
     int gridZ = (int) floor(terrainZ / gridSquareSize);
 

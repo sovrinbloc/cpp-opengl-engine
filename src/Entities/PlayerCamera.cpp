@@ -3,6 +3,12 @@
 //
 #include "PlayerCamera.h"
 
+/**
+ * @brief move (MAIN LOOP), modifies the actual camera vectors based on the
+ *        modification of the Player's vectors. This includes Zooming, rotating,
+ *        and movement.
+ * @param terrain
+ */
 void PlayerCamera::move(Terrain *terrain) {
     this->processInput(DisplayManager::window);
     DisplayManager::uniformMovement();

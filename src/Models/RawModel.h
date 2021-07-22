@@ -5,20 +5,25 @@
 #ifndef ENGINE_RAWMODEL_H
 #define ENGINE_RAWMODEL_H
 
+/**
+ * @brief: RawModel is a reference class.
+ *          It stores the vaoId and vertices count
+ *          that was loaded into Loader (VAO)
+ */
 class RawModel {
 private:
-    int vaoID;
+    unsigned int vaoId;
     long vertexCount;
 public:
-    RawModel(int vaoID, long vertexCount) {
-        this->vaoID = vaoID;
+    RawModel(unsigned int vaoId, unsigned long vertexCount) {
+        this->vaoId = vaoId;
         this->vertexCount = vertexCount;
     }
-    unsigned int getVaoID() {
-        return this->vaoID;
+    unsigned int getVaoId() {
+        return vaoId;
     }
     int getVertexCount() {
-        return this->vertexCount;
+        return vertexCount;
     }
 };
 #endif //ENGINE_RAWMODEL_H

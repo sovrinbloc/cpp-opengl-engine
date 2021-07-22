@@ -81,6 +81,12 @@ ModelData OBJLoader::loadAssImp(
 }
 
 
+/**
+ * @brief loadObjModel loads in an .obj file, and returns the vertices,
+ *        normals, textureCoords, and indices in vector format.
+ * @param filename
+ * @return
+ */
 ModelData OBJLoader::loadObjModel(std::string filename) {
     std::vector<Vertex*> vertices;
     std::vector<glm::vec3> normals;

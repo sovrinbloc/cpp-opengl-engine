@@ -4,10 +4,16 @@
 
 #include "GuiTexture.h"
 
-GuiTexture::GuiTexture(int texture, const glm::vec2 & position, const glm::vec2 & scale):texture(texture),position(position),scale(scale){}
+/**
+ * @brief GuiTexture stores the textureId, scale, and the position of the GUI
+ * @param textureId
+ * @param position
+ * @param scale
+ */
+GuiTexture::GuiTexture(int textureId, const glm::vec2 & position, const glm::vec2 & scale): textureId(textureId), position(position), scale(scale){}
 
 int GuiTexture::getTexture() const {
-    return texture;
+    return textureId;
 }
 
 const glm::vec2 &GuiTexture::getPosition() const {

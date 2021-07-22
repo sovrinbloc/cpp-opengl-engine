@@ -13,8 +13,7 @@
 
 class Terrain {
 private:
-    const float SIZE = 800;
-    const int VERTEX_COUNT = 128;
+    const float kTerrainSize = 800;
 
     float x;
     float z;

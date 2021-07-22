@@ -13,8 +13,23 @@ struct Material {
     float reflectivity;
 };
 
+/**
+ * ModelTexture is a child of TextureLoader, which ultimately
+ * just loads a texture, but also specifies other details, such as
+ * how many textures in an atlas (if so chosen), using fake lighting,
+ * transparency, and materials.
+ */
 class ModelTexture : public TextureLoader {
 public:
+    /**
+     * @brief ModelTexture is a child of TextureLoader, which then ultimately
+     *        adds more features for loading and returning the textureIds of
+     *        images. But in this case, it also allows for texture atlases,
+     *        materials, decisions of fake lighting, and transparency.
+     * @param filename
+     * @param type
+     * @param materials
+     */
     ModelTexture(std::string filename, ImageType type,
                  Material materials = Material{
                          .shininess = 1.0f,

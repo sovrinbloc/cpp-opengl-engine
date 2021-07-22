@@ -42,7 +42,7 @@ void EntityRenderer::prepareTexturedModel(TexturedModel *model) {
     RawModel *rawModel = model->getRawModel();
 
     // bind the current vao
-    glBindVertexArray(rawModel->getVaoID());
+    glBindVertexArray(rawModel->getVaoId());
 
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
@@ -58,7 +58,7 @@ void EntityRenderer::prepareTexturedModel(TexturedModel *model) {
     shader->loadFakeLightingVariable(texture->isUseFakeLighting());
     glActiveTexture(GL_TEXTURE0);
     // bind texture
-    model->getModelTexture()->bindTexture();
+    glBindTexture(GL_TEXTURE_2D, model->getModelTexture()->getId());
 }
 
 /**

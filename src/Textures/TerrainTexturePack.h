@@ -7,15 +7,29 @@
 
 #include "TerrainTexture.h"
 
+/**
+ * TerrainTexturePack stores the TerrainTextures of all the different
+ * Terrain Textures to be blended. Each TerrainTexture has one textureId
+ * which will later be bound.
+ */
 class TerrainTexturePack {
 private:
     TerrainTexture *backgroundTexture;
     TerrainTexture *rTexture;
     TerrainTexture *gTexture;
     TerrainTexture *bTexture;
-    Material material;
+    Material material{};
 
 public:
+    /**
+     * @brief TerrainTexturePack stores the previously loaded Textures and material
+     *         to be able to blend later.
+     * @param backgroundTexture
+     * @param rTexture
+     * @param gTexture
+     * @param bTexture
+     * @param material
+     */
     TerrainTexturePack(TerrainTexture *backgroundTexture, TerrainTexture *rTexture,
                        TerrainTexture *gTexture, TerrainTexture *bTexture, Material material = Material{
             .shininess = 2.0f,

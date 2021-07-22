@@ -8,31 +8,64 @@
 #define STB_IMAGE_IMPLEMENTATION
 
 #include <iostream>
+#include <utility>
 
+/**
+ * @name loadToVAO
+ * @brief inputs positions, textureCoords, normals, and indices,
+ *        creates a Vao, binds an indices buffer, stores the data
+ *        in the Data Attribute Lists, unbinds, and creates and
+ *        returns a RawModel (for terrains and entities mainly)
+ * @param positions
+ * @param textureCoords
+ * @param normals
+ * @param indices
+ * @return
+ */
 RawModel *Loader::loadToVAO(std::vector<GLfloat> positions, std::vector<GLfloat> textureCoords, std::vector<GLfloat> normals, std::vector<GLint> indices) {
-    int vaoID = this->createVAO();
+    unsigned int vaoId = createVAO();
     this->bindIndicesBuffer(indices);
-    this->storeDataInAttributeList(0, 3, positions);
-    this->storeDataInAttributeList(1, 2, textureCoords);
-    this->storeDataInAttributeList(2, 3, normals);
+    this->storeDataInAttributeList(0, 3, std::move(positions));
+    this->storeDataInAttributeList(1, 2, std::move(textureCoords));
+    this->storeDataInAttributeList(2, 3, std::move(normals));
     this->unbindVAO();
-    return new RawModel(vaoID, indices.size());
+    return new RawModel(vaoId, indices.size());
 }
 
+/**
+ * @name loadToVAO
+ * @brief inputs a ModelData *data object, which includes all the vectors of position,
+ *        normals, texCoords, and indices to store as VAO and return a RawModel. Used for
+ *        meshes and terrains
+ * @param data
+ * @return
+ */
 RawModel *Loader::loadToVAO(ModelData *data) {
     return loadToVAO(data->getVertices(), data->getTextureCoords(), data->getNormals(), data->getIndices());
 }
 
+/**
+ * @brief inputs positions and dimensions, creates VAO, return RawModel
+ *        this is mainly for 2D models (gui, sky boxes).
+ * @param positions
+ * @param dimensions
+ * @return
+ */
 RawModel *Loader::loadToVAO(std::vector<GLfloat> positions, int dimensions) {
-    int vaoID = this->createVAO();
+    int vaoID = createVAO();
     this->storeDataInAttributeList(0, dimensions, positions);
     this->unbindVAO();
     return new RawModel(vaoID, positions.size() / dimensions);
 }
 
+/**
+ * Loads a texture and returns it's id.
+ * @param fileName
+ * @return
+ */
 TextureLoader *Loader::loadTexture(std::string fileName) {
-    TextureLoader *tex = new TextureLoader(FileSystem::Texture(fileName), PNG);
-    textures.push_back(tex->id);
+    TextureLoader *tex = new TextureLoader(FileSystem::Texture(std::move(fileName)), PNG);
+    textures.push_back(tex->getId());
     return tex;
 }
 

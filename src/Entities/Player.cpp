@@ -5,6 +5,12 @@
 //
 float Player::SPEED_HACK = 1.0f;
 
+/**
+ * @brief move (Main Loop), takes the terrain and moves the character based on the
+ *        inputs. It MOVES / ROTATES it on the current terrain. It's utilizing Entity's
+ *        information, as well as the DisplayManager to move around.
+ * @param terrain
+ */
 void Player::move(Terrain *terrain) {
     checkInputs();
     rotate(glm::vec3(0.0f, currentTurnSpeed * DisplayManager::getFrameTimeSeconds(), 0.0f));
@@ -12,9 +18,8 @@ void Player::move(Terrain *terrain) {
     float dx = distance * sin(glm::radians(getRotation().y));
     float dz = distance * cos(glm::radians(getRotation().y));
     increasePosition(glm::vec3(dx, 0.0f, dz));
-    this->upwardsSpeed += GRAVITY * DisplayManager::getFrameTimeSeconds();
+    this->upwardsSpeed += kGravity * DisplayManager::getFrameTimeSeconds();
     increasePosition(glm::vec3(0, upwardsSpeed * DisplayManager::getFrameTimeSeconds(), 0.0f));
-//    printf("%f, %f, %f\n", getPosition().x, getPosition().y, getPosition().z);
 
     float terrainHeight = terrain->getHeightOfTerrain(getPosition().x, getPosition().z);
     if (getPosition().y <= terrainHeight) {
@@ -26,7 +31,7 @@ void Player::move(Terrain *terrain) {
 
 void Player::jump() {
     if (!isInAir) {
-        this->upwardsSpeed = JUMP_POWER;
+        this->upwardsSpeed = kJumpPower;
         this->isInAir = true;
     }
 }
@@ -34,17 +39,17 @@ void Player::jump() {
 void Player::checkInputs() {
 
     if (glfwGetKey(DisplayManager::window, GLFW_KEY_UP) == GLFW_PRESS) {
-        this->currentSpeed = RUN_SPEED * SPEED_HACK;
+        this->currentSpeed = kRunSpeed * SPEED_HACK;
     } else if (glfwGetKey(DisplayManager::window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-        this->currentSpeed = -RUN_SPEED * SPEED_HACK;
+        this->currentSpeed = -kRunSpeed * SPEED_HACK;
     } else {
         this->currentSpeed = 0.0f;
     }
 
     if (glfwGetKey(DisplayManager::window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-        this->currentTurnSpeed = -TURN_SPEED * SPEED_HACK / 2;
+        this->currentTurnSpeed = -kTurnSpeed * SPEED_HACK / 2;
     } else if (glfwGetKey(DisplayManager::window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-        this->currentTurnSpeed = TURN_SPEED * SPEED_HACK / 2;
+        this->currentTurnSpeed = kTurnSpeed * SPEED_HACK / 2;
     } else {
         this->currentTurnSpeed = 0.0f;
     }

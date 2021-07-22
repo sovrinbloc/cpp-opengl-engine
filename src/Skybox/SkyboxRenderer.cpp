@@ -92,7 +92,7 @@ void SkyboxRenderer::render(Camera *camera) {
     glm::mat4 view = glm::mat4(glm::mat3(camera->GetViewMatrix()));
     shader->loadViewMatrix(view);
     shader->loadFogColor(*skyColor);
-    glBindVertexArray(cube->getVaoID());
+    glBindVertexArray(cube->getVaoId());
     glEnableVertexAttribArray(0);
     bindTextures();
     glDrawArrays(GL_TRIANGLES, 0, cube->getVertexCount());

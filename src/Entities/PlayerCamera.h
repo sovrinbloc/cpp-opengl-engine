@@ -4,6 +4,7 @@
 
 #ifndef ENGINE_PLAYERCAMERA_H
 #define ENGINE_PLAYERCAMERA_H
+
 #include "Camera.h"
 #include "CameraInput.h"
 
@@ -14,7 +15,19 @@ public:
     float distanceFromPlayer = 55.0f;
     float angleAroundPlayer = 0.0f;
 
-    explicit PlayerCamera(Player *player) : player(player), CameraInput(){
+    /**
+     * @brief PlayerCamera (extending CameraInput), is modified based on the player's movements.
+     *        This in turn updates vectors and matrices in CameraInput, which then modifies the
+     *        vectors and matrices in Camera, which ultimately, later is retrieved by:
+     *        getViewMatrix(), loaded into a shader, and rendered on the screen.
+     *
+     *        When the player modifies the vectors (transformations), by the keyboad and mouse,
+     *        the camera actually modifies itself based on those movements. Again, this is all
+     *        just manipulation of vectors. Nothing is being rendered yet.
+     *
+     * @param player
+     */
+    explicit PlayerCamera(Player *player) : player(player), CameraInput() {
         Pitch = -20.0f;
     }
 
@@ -26,8 +39,10 @@ public:
     glm::mat4 GetViewMatrix() override;
 
     void calculateAngleAroundPlayer();
+
 private:
     float calculateHorizontalDistance() const;
+
     float calculateVerticalDistance() const;
 
     void updateCameraVectors() override;
@@ -36,4 +51,5 @@ private:
 
 
 };
+
 #endif //ENGINE_PLAYERCAMERA_H

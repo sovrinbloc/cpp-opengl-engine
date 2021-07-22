@@ -5,6 +5,12 @@
 #include "GuiRenderer.h"
 #include "../Toolbox/Maths.h"
 
+/**
+ * @brief GuiRenderer loads the position of a square (2d) into a Vao (RawModel).
+ *        It also binds the textures, builds a shader, and renders the GUI to whatever
+ *        position asked for.
+ * @param loader
+ */
 GuiRenderer::GuiRenderer(Loader *loader) {
     std::vector<float> positions = {-1, 1, -1, -1, 1, 1, 1, -1};
     for (float & position : positions) {
@@ -14,9 +20,16 @@ GuiRenderer::GuiRenderer(Loader *loader) {
     shader = new GuiShader();
 }
 
+/**
+ * @brief render (MAIN LOOP) starts the shader, binds the Vao,
+ *        binds the texture, loads the transformations to the
+ *        shader, draws the quad, and then unbinds it all, and stops
+ *        the shader.
+ * @param guis
+ */
 void GuiRenderer::render(std::vector<GuiTexture*> guis) {
     shader->start();
-    glBindVertexArray(quad->getVaoID());
+    glBindVertexArray(quad->getVaoId());
     glEnableVertexAttribArray(0);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

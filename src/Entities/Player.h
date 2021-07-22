@@ -10,12 +10,12 @@
 class Player : public Entity {
 private:
     static float SPEED_HACK;
-    constexpr static const float RUN_SPEED = 20;
-    constexpr static const float TURN_SPEED = 160;
-    constexpr static const float GRAVITY = -50;
-    constexpr static const float JUMP_POWER = 30;
+    constexpr static const float kRunSpeed = 20;
+    constexpr static const float kTurnSpeed = 160;
+    constexpr static const float kGravity = -50;
+    constexpr static const float kJumpPower = 30;
 
-    constexpr static const float TERRAIN_HEIGHT = 0;
+    constexpr static const float kTerrainHeight = 0;
 
     float currentSpeed = 0.0f;
     float currentTurnSpeed = 0.0f;
@@ -25,6 +25,15 @@ private:
     void jump();
 
 public:
+    /**
+     * @brief Player extends Entity: so it stores TexturedModel, as well as its' vectors
+     *        to be able to manipulate the model. It also checks for input, and allows
+     *        the user to move around, zoom in and out, etc.
+     * @param model
+     * @param position
+     * @param rotation
+     * @param scale
+     */
     Player(TexturedModel *model, glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 rotation = glm::vec3(0),
             float scale = 1.0f) : Entity(model, position, rotation, scale){}
 

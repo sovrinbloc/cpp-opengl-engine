@@ -19,9 +19,30 @@ protected:
 
 public:
 
+    /**
+     * @brief Entity stores the TexturedModel (RawModel & Texture), and stores vectors
+     *        to manipulate its' position, rotation, scale, (transformation).  It also
+     *        stores the textureOffsets for textures in case there is a texture atlas.
+     *
+     * @param model
+     * @param position
+     * @param rotation
+     * @param scale
+     */
     explicit Entity(TexturedModel *model, glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 rotation = glm::vec3(0),
            float scale = 1.0f) : model(model), position(position), rotation(rotation), scale(scale) {}
 
+    /**
+      * @brief Entity stores the TexturedModel (RawModel & Texture), and stores vectors
+      *        to manipulate its' position, rotation, scale, (transformation).  It also
+      *        stores the textureOffsets and indices for textures in case there is a
+      *        texture atlas.
+      *
+      * @param model
+      * @param position
+      * @param rotation
+      * @param scale
+      */
     explicit Entity(TexturedModel *model, int textureIndex, glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 rotation = glm::vec3(0),
            float scale = 1.0f) : model(model), textureIndex(textureIndex), position(position), rotation(rotation), scale(scale) {}
 
@@ -29,11 +50,19 @@ public:
         return this->model;
     }
 
+    /**
+     * @brief gets the yOffset for the texture
+     * @return
+     */
     float getTextureYOffset() {
         int column = textureIndex % model->getModelTexture()->getNumberOfRows();
         return (float)column / (float)model->getModelTexture()->getNumberOfRows();
     }
 
+    /**
+     * @brief gets the xOffset for the texture
+     * @return
+     */
     float getTextureXOffset() {
         int row = textureIndex % model->getModelTexture()->getNumberOfRows();
         return (float)row / (float)model->getModelTexture()->getNumberOfRows();

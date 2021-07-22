@@ -12,12 +12,16 @@
 class TexturedModel {
 private:
     RawModel *rawModel;
-public:
-    void setRawModel(RawModel *rawModel);
-
-private:
     ModelTexture *texture;
 public:
+    /**
+     * @brief TexturedModel stores the RawModel [the VaoId] (from loaded mesh details),
+     *        the ModelTexture [textureId], as well as other texture information such
+     *        as transparency, number of columns for the textureAtlas
+     *
+     * @param model
+     * @param texture
+     */
     TexturedModel(RawModel *model, ModelTexture *texture) {
         TexturedModel::rawModel = model;
         TexturedModel::texture = texture;

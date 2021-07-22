@@ -19,6 +19,11 @@ enum Camera_Movement {
 };
 
 
+/**
+ * Holds the data for input for all it's children's class. Mouse, keys, etc.
+ * It also registers with OpenGL the mouse callbacks, scroll callbacks, and
+ * the base ProcessMovement which exists when a Player doesn't.
+ */
 class CameraInput : public Camera {
 public:
     constexpr static const float kSpeed = 12.5f;

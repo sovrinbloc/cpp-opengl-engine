@@ -12,7 +12,10 @@
 const float YAW         = -90.0f;
 const float PITCH       =  0.0f;
 
-// An abstract camera class that processes input and calculates the corresponding Euler Angles, Vectors and Matrices for use in OpenGL
+/**
+ * @brief An abstract camera class that processes input and calculates the corresponding
+ *        Euler Angles, Vectors and Matrices for use in OpenGL
+ */
 class Camera {
 public:
     // camera Attributes
@@ -25,7 +28,12 @@ public:
     static float Yaw;
     static float Pitch;
 
-    // constructor with vectors
+    /**
+     * @brief A constructor with vectors... An abstract camera class
+     *        that processes input and calculates the corresponding
+     *        Euler Angles, Vectors and Matrices for use in OpenGL.
+     *
+     */
     explicit Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH);
 
     // updates the sight vector;
