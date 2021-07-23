@@ -104,7 +104,7 @@ void SkyboxRenderer::render(Camera *camera) {
 
 void SkyboxRenderer::bindTextures() {
     time += DisplayManager::getFrameTimeSeconds() * 1000;
-    time = (float)(int(time) % 24000);
+    time = (float)(static_cast<int>(time) % 24000);
     unsigned int texture1;
     unsigned int texture2;
     float blendFactor;

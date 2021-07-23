@@ -6,9 +6,9 @@
 #include "../Toolbox/Maths.h"
 
 /**
- * @brief GuiRenderer loads the position of a square (2d) into a Vao (RawModel).
+ * @brief GuiRenderer loads the vertex of a square (2d) into a Vao (RawModel).
  *        It also binds the textures, builds a shader, and renders the GUI to whatever
- *        position asked for.
+ *        vertex asked for.
  * @param loader
  */
 GuiRenderer::GuiRenderer(Loader *loader) {

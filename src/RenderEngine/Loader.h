@@ -12,6 +12,7 @@
 #define GL_SILENCE_DEPRECATION
 #define GLFW_INCLUDE_GLCOREARB
 #include <GLFW/glfw3.h>
+#include "../FontMeshCreator/FontModel.h"
 
 class Loader {
 public:
@@ -26,6 +27,8 @@ public:
 
     // for GUI rendering: we only need a 2d square with things rendered on it.
     RawModel *loadToVAO(std::vector<float> positions, int dimensions);
+
+    FontModel *loadFontVAO(int vertices, int size, int bitSize);
 
     TextureLoader *loadTexture(std::string fileName);
 
@@ -44,8 +47,11 @@ private:
 
     void bindIndicesBuffer(std::vector<GLint> indices);
 
+    void initDynamicAttributeList(GLuint attributeNumber, GLuint vboNumber, int vertices, int size, int bitSize);
+
     void unbindVAO();
 
+    GLuint createVBO();
 };
 
 #endif //ENGINE_LOADER_H

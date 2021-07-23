@@ -25,7 +25,7 @@ public:
     }
 
     static glm::mat4 createProjectionMatrix(float fovy = 45.0f, float width = 800.0f, float height = 600.0f, float zNear = 0.1f, float zFar = 100.0f) {
-        return glm::perspective(glm::radians(fovy), (float) width / (float) height, zNear,zFar);
+        return glm::perspective(glm::radians(fovy), static_cast<float>(width) / static_cast<float>(height), zNear,zFar);
     }
 
     static float barryCentric(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec2 pos) {

@@ -9,7 +9,7 @@
 /**
  * @brief Terrain generates terrain coordinates and Stores them in a Vao, inputs the texturePack
  *        and the blendMap and stores those too. It also stores the height information for x,z,
- *        so that you can get the Y position from any X, Z coordinates.
+ *        so that you can get the Y vertex from any X, Z coordinates.
  *        
  *        It loads in a heightMap image, which is converted into a
  *        3d mesh. There is a grid system, wherein if you want to generate multiple terrains,
@@ -27,8 +27,8 @@ Terrain::Terrain(int gridX, int gridZ, Loader *loader, TerrainTexturePack *textu
                  const std::string &heightMap) : heightMap(Heightmap(FileSystem::Texture(heightMap))) {
     this->texturePack = texturePack;
     this->blendMap = blendMap;
-    this->x = (float) gridX * kTerrainSize;
-    this->z = (float) gridZ * kTerrainSize;
+    this->x = static_cast<float>( gridX) * kTerrainSize;
+    this->z = static_cast<float>( gridZ) * kTerrainSize;
     this->model = generateTerrain(loader);
 }
 
@@ -50,17 +50,17 @@ RawModel *Terrain::generateTerrain(Loader *loader) {
     int vertexPointer = 0;
     for (int i = 0; i < vertexCount; i++) {
         for (int j = 0; j < vertexCount; j++) {
-            vertices[vertexPointer * 3] = (float) j / ((float) vertexCount - 1) * kTerrainSize;
+            vertices[vertexPointer * 3] = static_cast<float>(j) / (static_cast<float>(vertexCount) - 1) * kTerrainSize;
             float height = heightMap.getHeight(j, i);
             heights[j][i] = height;
             vertices[vertexPointer * 3 + 1] = height;
-            vertices[vertexPointer * 3 + 2] = (float) i / ((float) vertexCount - 1) * kTerrainSize;
+            vertices[vertexPointer * 3 + 2] = static_cast<float>(i) / (static_cast<float>(vertexCount) - 1) * kTerrainSize;
             glm::vec3 normal = calculateNormal(j, i);
             normals[vertexPointer * 3] = normal.x;
             normals[vertexPointer * 3 + 1] = normal.y;
             normals[vertexPointer * 3 + 2] = normal.z;
-            textureCoords[vertexPointer * 2] = (float) j / ((float) vertexCount - 1);
-            textureCoords[vertexPointer * 2 + 1] = (float) i / ((float) vertexCount - 1);
+            textureCoords[vertexPointer * 2] = static_cast<float>(j) / (static_cast<float>(vertexCount) - 1);
+            textureCoords[vertexPointer * 2 + 1] = static_cast<float>(i) / (static_cast<float>(vertexCount) - 1);
             vertexPointer++;
         }
     }
@@ -98,16 +98,16 @@ Heightmap Terrain::getHeightMap() {
 float Terrain::getHeightOfTerrain(float worldX, float worldZ) {
     float terrainX = worldX - this->x;
     float terrainZ = worldZ - this->z;
-    float gridSquareSize = kTerrainSize / ((float) heights.size() - 1);
-    int gridX = (int) floor(terrainX / gridSquareSize);
-    int gridZ = (int) floor(terrainZ / gridSquareSize);
+    float gridSquareSize = kTerrainSize / (static_cast<float>(heights.size()) - 1);
+    int gridX = static_cast<int> (floor(terrainX / gridSquareSize));
+    int gridZ = static_cast<int> (floor(terrainZ / gridSquareSize));
 
     if (gridX >= heights.size() - 1 || gridZ >= heights.size() - 1 || gridX < 0 || gridZ < 0) {
         return 0;
     }
 
-    float xCoord = (float) ((int) terrainX % (int) gridSquareSize) / gridSquareSize;
-    float zCoord = (float) ((int) terrainZ % (int) gridSquareSize) / gridSquareSize;
+    float xCoord = (float) (static_cast<int>(terrainX) % static_cast<int>(gridSquareSize)) / gridSquareSize;
+    float zCoord = (float) (static_cast<int>(terrainZ) % static_cast<int>(gridSquareSize)) / gridSquareSize;
 
     if (xCoord <= (1 - zCoord)) {
         return Maths::barryCentric(glm::vec3(0, heights[gridX][gridZ], 0), glm::vec3(1,

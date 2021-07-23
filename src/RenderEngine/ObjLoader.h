@@ -17,9 +17,7 @@
 
 class OBJLoader {
 public:
-    static ModelData loadAssImp(
-            std::string path
-    );
+    static ModelData loadAssImp(std::string path);
 
 
     static ModelData loadObjModel(std::string filename);

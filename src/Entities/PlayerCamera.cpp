@@ -30,7 +30,7 @@ void PlayerCamera::calculateCameraPosition(float horizDistance, float verticDist
     Position.y = player->getPosition().y - verticDistance + 4;
 
     if (glfwGetMouseButton(DisplayManager::window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS || cursorInvisible) {
-        Yaw = int(180 - player->getRotation().y + angleAroundPlayer - 90) % 360;
+        Yaw = static_cast<int>(180 - player->getRotation().y + angleAroundPlayer - 90) % 360;
     }
 }
 

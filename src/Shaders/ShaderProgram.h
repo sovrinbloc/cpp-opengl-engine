@@ -69,7 +69,7 @@ public:
     // utility uniform functions with a string.
     // ------------------------------------------------------------------------
     void setBool(const std::string &name, bool value) const {
-        glUniform1i(glGetUniformLocation(programID, name.c_str()), (int) value);
+        glUniform1i(glGetUniformLocation(programID, name.c_str()), static_cast<int>(value));
     }
 
     // ------------------------------------------------------------------------
@@ -129,7 +129,7 @@ public:
     // utility uniform functions
     // ------------------------------------------------------------------------
     void setBool(GLuint location, bool value) const {
-        glUniform1i(location, (int) value);
+        glUniform1i(location, static_cast<int>(value));
     }
 
     // ------------------------------------------------------------------------

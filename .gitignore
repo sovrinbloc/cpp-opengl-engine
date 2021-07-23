@@ -17,3 +17,4 @@ lib/*
 src/Resources/Models/Tutorial/*
 src/Resources/Tutorial/Backpack/*
 src/Resources/Tutorial/*
+CPack*

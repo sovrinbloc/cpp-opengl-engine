@@ -21,7 +21,7 @@ public:
 
     /**
      * @brief Entity stores the TexturedModel (RawModel & Texture), and stores vectors
-     *        to manipulate its' position, rotation, scale, (transformation).  It also
+     *        to manipulate its' vertex, rotation, scale, (transformation).  It also
      *        stores the textureOffsets for textures in case there is a texture atlas.
      *
      * @param model
@@ -34,7 +34,7 @@ public:
 
     /**
       * @brief Entity stores the TexturedModel (RawModel & Texture), and stores vectors
-      *        to manipulate its' position, rotation, scale, (transformation).  It also
+      *        to manipulate its' vertex, rotation, scale, (transformation).  It also
       *        stores the textureOffsets and indices for textures in case there is a
       *        texture atlas.
       *
@@ -56,7 +56,7 @@ public:
      */
     float getTextureYOffset() {
         int column = textureIndex % model->getModelTexture()->getNumberOfRows();
-        return (float)column / (float)model->getModelTexture()->getNumberOfRows();
+        return static_cast<float>(column) / static_cast<float>(model->getModelTexture()->getNumberOfRows());
     }
 
     /**
@@ -65,7 +65,7 @@ public:
      */
     float getTextureXOffset() {
         int row = textureIndex % model->getModelTexture()->getNumberOfRows();
-        return (float)row / (float)model->getModelTexture()->getNumberOfRows();
+        return static_cast<float>(row) / static_cast<float>(model->getModelTexture()->getNumberOfRows());
     }
 
 

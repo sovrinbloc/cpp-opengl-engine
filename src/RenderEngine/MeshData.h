@@ -12,7 +12,7 @@
 using namespace std;
 
 struct VertexData {
-    // position
+    // vertex
     glm::vec3 Position;
     // normal
     glm::vec3 Normal;

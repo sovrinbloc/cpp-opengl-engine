@@ -5,7 +5,7 @@
 #include "GuiTexture.h"
 
 /**
- * @brief GuiTexture stores the textureId, scale, and the position of the GUI
+ * @brief GuiTexture stores the textureId, scale, and the vertex of the GUI
  * @param textureId
  * @param position
  * @param scale

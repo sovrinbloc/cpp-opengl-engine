@@ -11,8 +11,8 @@
 MasterRenderer::MasterRenderer(PlayerCamera *cameraInput, Loader *loader) : shader(new StaticShader()),
                                                             renderer(new EntityRenderer(shader)),
                                                             camera(cameraInput), projectionMatrix(
-                Maths::createProjectionMatrix(FOVY, (float) DisplayManager::Width(),
-                                              (float) DisplayManager::Height(), NEAR_PLANE, FAR_PLANE)),
+                Maths::createProjectionMatrix(FOVY, static_cast<float>(DisplayManager::Width()),
+                                              static_cast<float>(DisplayManager::Height()), NEAR_PLANE, FAR_PLANE)),
                                                             terrainShader(new TerrainShader()),
                                                             sceneShader(new ModelShader()) {
     RenderStyle::enableCulling();
@@ -39,7 +39,7 @@ glm::vec3 MasterRenderer::skyColor = const_cast<glm::vec3 &>(ColorNames::Skyblue
 void MasterRenderer::prepare() {
     // render
     // ------
-    glClearColor(.529, .808, .98, 1);
+    glClearColor(skyColor.x, skyColor.y, skyColor.z, 1);
     shader->loadSkyColorVariable(skyColor);
     terrainShader->loadSkyColorVariable(skyColor);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -94,14 +94,10 @@ void MasterRenderer::processTerrain(Terrain *terrain) {
     terrains->push_back(terrain);
 }
 
-void MasterRenderer::processModel(Model *model) {
-    models->push_back(model);
-}
-
 glm::mat4 MasterRenderer::createProjectionMatrix() {
     // my additions
-    return Maths::createProjectionMatrix(PlayerCamera::Zoom, (GLfloat) DisplayManager::Width(),
-                                         (GLfloat) DisplayManager::Height(), NEAR_PLANE,
+    return Maths::createProjectionMatrix(PlayerCamera::Zoom, static_cast<GLfloat>(DisplayManager::Width()),
+                                         static_cast<GLfloat>(DisplayManager::Height()), NEAR_PLANE,
                                          FAR_PLANE);
 }
 
@@ -133,7 +129,11 @@ void MasterRenderer::processScenes(Scene *scene) {
     }
 }
 
+void MasterRenderer::processModel(Model *model) {
+    models->push_back(model);
+}
+
 void MasterRenderer::updatePerspective(float width, float height) {
-    DisplayManager::Width() = (GLint) width;
-    DisplayManager::Height() = (GLint) height;
+    DisplayManager::Width() = static_cast<GLint>(width);
+    DisplayManager::Height() = static_cast<GLint>(height);
 }

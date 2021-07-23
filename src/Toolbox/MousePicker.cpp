@@ -48,8 +48,8 @@ glm::vec4 MousePicker::toEyeCoords(glm::vec4 clipCoords) {
 }
 
 glm::vec2 MousePicker::getNormalizedDeviceCoords() {
-    float x = (2.0f * (float)CameraInput::MouseX) / (float)DisplayManager::Width() - 1;
-    float y = (2.0f * (float)CameraInput::MouseY) / (float)DisplayManager::Height() - 1;
+    float x = (2.0f * static_cast<float>(CameraInput::MouseX)) / static_cast<float>(DisplayManager::Width()) - 1;
+    float y = (2.0f * static_cast<float>(CameraInput::MouseY)) / static_cast<float>(DisplayManager::Height()) - 1;
     return glm::vec2(x, -y);
 }
 

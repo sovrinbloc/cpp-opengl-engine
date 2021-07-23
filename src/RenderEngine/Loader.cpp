@@ -5,6 +5,7 @@
 #include "Loader.h"
 #include "../Util/FileSystem.h"
 #include "../Libraries/images/stb_image.h"
+
 #define STB_IMAGE_IMPLEMENTATION
 
 #include <iostream>
@@ -34,7 +35,7 @@ RawModel *Loader::loadToVAO(std::vector<GLfloat> positions, std::vector<GLfloat>
 
 /**
  * @name loadToVAO
- * @brief inputs a ModelData *data object, which includes all the vectors of position,
+ * @brief inputs a ModelData *data object, which includes all the vectors of vertex,
  *        normals, texCoords, and indices to store as VAO and return a RawModel. Used for
  *        meshes and terrains
  * @param data
@@ -56,6 +57,21 @@ RawModel *Loader::loadToVAO(std::vector<GLfloat> positions, int dimensions) {
     this->storeDataInAttributeList(0, dimensions, positions);
     this->unbindVAO();
     return new RawModel(vaoID, positions.size() / dimensions);
+}
+
+FontModel *Loader::loadFontVAO(int vertices, int size, int bitSize) {
+    GLuint vaoID = createVAO();
+    GLuint vboID = createVBO();
+    this->initDynamicAttributeList(vaoID, vboID, vertices, size, bitSize);
+    this->unbindVAO();
+    return new FontModel(vaoID, vboID, vertices);
+}
+
+GLuint Loader::createVBO() {
+    GLuint vboID;
+    glGenBuffers(1, &vboID);
+    vbos.push_back(vboID);
+    return vboID;
 }
 
 /**
@@ -90,9 +106,7 @@ GLuint Loader::createVAO() {
 }
 
 void Loader::storeDataInAttributeList(GLuint attributeNumber, int coordinateSize, std::vector<GLfloat> positions) {
-    GLuint vboID;
-    glGenBuffers(1, &vboID);
-    this->vbos.push_back(vboID);
+    GLuint vboID = createVBO();
     glBindBuffer(GL_ARRAY_BUFFER, vboID);
     glBufferData(GL_ARRAY_BUFFER, positions.size() * sizeof(positions[0]), &positions.front(), GL_STATIC_DRAW);
     glVertexAttribPointer(attributeNumber, coordinateSize, GL_FLOAT, GL_FALSE, coordinateSize * sizeof(float), (void *) 0);
@@ -106,10 +120,18 @@ void Loader::bindIndicesBuffer(std::vector<GLint> indices) {
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(indices[0]), &indices.front(), GL_STATIC_DRAW);
 }
 
+
+void Loader::initDynamicAttributeList(GLuint attributeNumber, GLuint vboNumber, int vertices, int size, int bitSize) {
+    glBindBuffer(GL_ARRAY_BUFFER, vboNumber);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, size, GL_FLOAT, GL_FALSE, size * bitSize, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
 void Loader::unbindVAO() {
     glBindVertexArray(0);
 }
-
 
 unsigned int Loader::loadCubeMap(std::vector<std::string> faces) {
 

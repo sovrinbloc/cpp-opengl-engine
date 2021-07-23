@@ -32,7 +32,7 @@ void SkyboxShader::getAllUniformLocations() {
 }
 
 void SkyboxShader::bindAttributes() {
-    this->bindAttribute(0, "position");
+    this->bindAttribute(0, "vertex");
 }
 
 void SkyboxShader::loadBlendFactor(float blend) {

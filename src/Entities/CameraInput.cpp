@@ -73,18 +73,18 @@ void CameraInput::mouse_callback(GLFWwindow *window, double xPos, double yPos) {
     CameraInput::MouseY = yPos;
     if (cursorInvisible || glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS) {
         if (CameraInput::ResetMouse) {
-            CameraInput::LastMouseX = (GLfloat) CameraInput::MouseX;
-            CameraInput::LastMouseY = (GLfloat) CameraInput::MouseY;
+            CameraInput::LastMouseX = static_cast<GLfloat>(CameraInput::MouseX);
+            CameraInput::LastMouseY = static_cast<GLfloat>(CameraInput::MouseY);
             CameraInput::ResetMouse = false;
         }
 
-        CameraInput::MouseDX = (GLfloat) xPos - (GLfloat) CameraInput::LastMouseX;
+        CameraInput::MouseDX = static_cast<GLfloat>(xPos) - static_cast<GLfloat>(CameraInput::LastMouseX);
 
         // reversed since y-coordinates go from bottom to top
-        CameraInput::MouseDY = (GLfloat) CameraInput::LastMouseY - (GLfloat) yPos;
+        CameraInput::MouseDY = static_cast<GLfloat>(CameraInput::LastMouseY) - static_cast<GLfloat>(yPos);
 
-        CameraInput::LastMouseX = (GLfloat) xPos;
-        CameraInput::LastMouseY = (GLfloat) yPos;
+        CameraInput::LastMouseX = static_cast<GLfloat>(xPos);
+        CameraInput::LastMouseY = static_cast<GLfloat>(yPos);
         ProcessMouseMovement(MouseDX, MouseDY);
         return;
     }
@@ -92,7 +92,7 @@ void CameraInput::mouse_callback(GLFWwindow *window, double xPos, double yPos) {
 }
 
 void CameraInput::scroll_callback(__attribute__((unused)) GLFWwindow *window, __attribute__((unused)) double xOffset, double yOffset) {
-    ProcessMouseScroll((GLfloat) yOffset);
+    ProcessMouseScroll(static_cast<GLfloat>(yOffset));
 }
 
 // processes input received from any keyboard-like input system.
@@ -136,7 +136,7 @@ void CameraInput::ProcessMouseMovement(float xOffset, float yOffset, GLboolean c
 void CameraInput::ProcessMouseScroll(float yOffset) {
     // zoom in with occlusion with SHIFT
     if (glfwGetKey(DisplayManager::window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
-        Zoom += (float)yOffset;
+        Zoom += static_cast<float>(yOffset);
     }
     ZoomOffset = yOffset;
     if (Zoom < kMinZoom)

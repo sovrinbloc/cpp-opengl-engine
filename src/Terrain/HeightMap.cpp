@@ -32,7 +32,7 @@ void Heightmap::calculateMapFromImage() {
     auto pixelPtr = &imageData[0];
     for (auto i = 0; i < imageInfo.height; i++) {
         for (auto j = 0; j < imageInfo.width; j++) {
-            result[i][j] = float(*pixelPtr) / 255.0f;
+            result[i][j] = static_cast<float>(*pixelPtr) / 255.0f;
             pixelPtr += bytesPerPixel;
         }
     }

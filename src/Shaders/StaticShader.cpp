@@ -72,7 +72,7 @@ void StaticShader::loadSkyColorVariable(glm::vec3 skyColor) {
 }
 
 void StaticShader::loadNumberOfRows(int rows) {
-    this->setFloat(location_textureNumberOfRows, (float)rows);
+    this->setFloat(location_textureNumberOfRows, static_cast<float>(rows));
 }
 
 void StaticShader::loadOffset(float x, float y) {
