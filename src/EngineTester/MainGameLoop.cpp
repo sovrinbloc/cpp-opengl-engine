@@ -36,7 +36,7 @@ void MainGameLoop::main() {
     /**
      * Font Configuration
      */
-    // Initialize Texting todo: implement
+    // Initialize Texting
     TextMaster::init(loader);
 
     FontRenderer *fontRenderer = new FontRenderer();
@@ -45,8 +45,12 @@ void MainGameLoop::main() {
 
     std::vector<GUIText *> *texts = new std::vector<GUIText *>();
     FontModel *fonty = loader->loadFontVAO();
-    texts->push_back(new GUIText("This is sample text because I know what I am doing whether you like it or not so I am joe.This is sample text because I know what I am doing whether you like it or not so I am joe.", 1.0f, fonty, &noodle, glm::vec2(25.0f, 225.0f), ColorNames::Lime, 0.50f * DisplayManager::Width(), false));
-    texts->push_back(new GUIText("Joseph Alai MCMXII", 0.5f, fonty, &arial, glm::vec2(540.0f, 570.0f), ColorNames::Cyan, 0.75f * DisplayManager::Width(), false));
+    texts->push_back(new GUIText(
+            "This is sample text because I know what I am doing whether you like it or not so I am joe.This is sample text because I know what I am doing whether you like it or not so I am joe.",
+            0.50f, fonty, &noodle, glm::vec2(25.0f, 225.0f), ColorNames::Whitesmoke, 0.50f * DisplayManager::Width(),
+            false));
+    texts->push_back(new GUIText("Joseph Alai MCMXII", 0.5f, fonty, &arial, glm::vec2(540.0f, 570.0f), ColorNames::Cyan,
+                                 0.75f * DisplayManager::Width(), false));
 
 
     /**
@@ -133,41 +137,19 @@ void MainGameLoop::main() {
     /**
      * Light Generation
      */
+    auto d = LightUtil::AttenuationDistance(65);
+    Lighting l = Lighting{glm::vec3(0.2f, 0.2f, 0.2f), glm::vec3(0.5f, 0.5f, 0.5f), d.x, d.y, d.z};
     lights.push_back(new Light(glm::vec3(0.0, 1000., -7000.0f), glm::vec3(0.4f, 0.4f, 0.4f), {
             .ambient =  glm::vec3(0.2f, 0.2f, 0.2f),
             .diffuse =  glm::vec3(0.5f, 0.5f, 0.5f),
             .constant = Light::kDirectional,
-            .linear = 0.09f,
-            .quadratic = 0.032f
     }));
-    auto d = LightUtil::AttenuationDistance(65);
     lights.push_back(new Light(glm::vec3(120.0f, terrain->getHeightOfTerrain(120, -50) + 10, -50.0f),
-                               glm::vec3(0.0f, 0.0f, 2.0f),
-                               {
-                                       .ambient =  glm::vec3(0.2f, 0.2f, 0.2f),
-                                       .diffuse =  glm::vec3(0.5f, 0.5f, 0.5f),
-                                       .constant = d.x,
-                                       .linear = d.y,
-                                       .quadratic = d.z
-                               }));
+                               glm::vec3(0.0f, 0.0f, 2.0f), l));
     lights.push_back(new Light(glm::vec3(100.0f, terrain->getHeightOfTerrain(100, -50) + 10, -50.0f),
-                               glm::vec3(2.0f, 0.0f, 0.0f),
-                               {
-                                       .ambient =  glm::vec3(0.2f, 0.2f, 0.2f),
-                                       .diffuse =  glm::vec3(0.5f, 0.5f, 0.5f),
-                                       .constant = d.x,
-                                       .linear = d.y,
-                                       .quadratic = d.z
-                               }));
+                               glm::vec3(2.0f, 0.0f, 0.0f), l));
     lights.push_back(new Light(glm::vec3(110.0f, terrain->getHeightOfTerrain(110, -20) + 10, -20.0f),
-                               glm::vec3(0.0, 2.0, 0.0f),
-                               {
-                                       .ambient =  glm::vec3(0.2f, 0.2f, 0.2f),
-                                       .diffuse =  glm::vec3(0.5f, 0.5f, 0.5f),
-                                       .constant = d.x,
-                                       .linear = d.y,
-                                       .quadratic = d.z
-                               }));
+                               glm::vec3(0.0, 2.0, 0.0f), l));
 
 
 
@@ -267,9 +249,8 @@ void MainGameLoop::main() {
 
         renderer->render(lights);
         guiRenderer->render(guis);
-//        fontRenderer->render(texts);
-        TextMaster::render(); // added todo: implement
 
+        TextMaster::render();
         DisplayManager::updateDisplay();
     }
 
