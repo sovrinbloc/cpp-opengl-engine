@@ -4,9 +4,13 @@
 
 #include "Line.h"
 
-Line::Line(double spaceWidth, double fontSize, double maxLength) {
-    this->spaceSize = spaceWidth * fontSize;
+Line::Line(float fontSize, double maxLength) {
     this->maxLength = maxLength;
+    this->fontSize = fontSize;
+}
+
+float Line::getFontSize() const {
+    return fontSize;
 }
 
 /**
@@ -21,9 +25,8 @@ Line::Line(double spaceWidth, double fontSize, double maxLength) {
 
 bool Line::attemptToAddWord(Word word) {
     double additionalLength = word.getWordWidth();
-    additionalLength += !words.empty() ? spaceSize : 0;
     if (currentLineLength + additionalLength <= maxLength) {
-        words.push_back(word);
+        words.push_back(&word);
         currentLineLength += additionalLength;
         return true;
     } else {
@@ -34,20 +37,36 @@ bool Line::attemptToAddWord(Word word) {
 /**
  * @return The max length of the line.
  */
-double Line::getMaxLength() {
+double Line::getMaxLength() const {
     return maxLength;
 }
 
 /**
  * @return The current screen-space length of the line.
  */
-double Line::getLineLength() {
+double Line::getLineLength() const {
     return currentLineLength;
 }
 
 /**
  * @return The list of words in the line.
  */
-std::vector <Word> Line::getWords() {
+std::vector <Word*> Line::getWords() {
     return words;
+}
+
+double Line::getOffsetX() const {
+    return offsetX;
+}
+
+void Line::setOffsetX(double offsetX) {
+    Line::offsetX = offsetX;
+}
+
+double Line::getOffsexY() const {
+    return offsexY;
+}
+
+void Line::setOffsetY(double offsexY) {
+    Line::offsexY = offsexY;
 }

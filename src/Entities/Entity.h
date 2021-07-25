@@ -21,7 +21,7 @@ public:
 
     /**
      * @brief Entity stores the TexturedModel (RawModel & Texture), and stores vectors
-     *        to manipulate its' vertex, rotation, scale, (transformation).  It also
+     *        to manipulate its' vertex, rotation, fontSize, (transformation).  It also
      *        stores the textureOffsets for textures in case there is a texture atlas.
      *
      * @param model
@@ -34,7 +34,7 @@ public:
 
     /**
       * @brief Entity stores the TexturedModel (RawModel & Texture), and stores vectors
-      *        to manipulate its' vertex, rotation, scale, (transformation).  It also
+      *        to manipulate its' vertex, rotation, fontSize, (transformation).  It also
       *        stores the textureOffsets and indices for textures in case there is a
       *        texture atlas.
       *

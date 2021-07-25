@@ -7,7 +7,7 @@
 
 #include <iostream>
 #include "glm/glm.hpp"
-#include "TextMeshCreator.h"
+#include "TextMeshData.h"
 #include "FontModel.h"
 
 class GUIText {
@@ -18,27 +18,50 @@ private:
 
     std::string textString;
 
-    float scale;
+    float fontSize;
 
     glm::vec2 position;
 
     glm::vec3 color = glm::vec3(0.0f, 0.0f, 0.0f);
 
-    float fontSize;
+    float lineMaxLength = 1.0f;
+
+    int numberOfLines;
 
     int textMeshVao;
 
     int vertexCount;
 
-    float lineMaxSize;
-
-    int numberOfLines;
-
     bool centerText = false;
 public:
 
-    GUIText(FontModel *font, FontType *fontType, const std::string &text, float x, float y, float scale,
-            glm::vec3 color);
+    /**
+     * Creates a new textString, loads the textString's quads into a VAO, and adds the textString
+     * to the screen.
+     *
+     * @param textString
+     *            - the textString.
+     * @param fontSize
+     *            - the font fontSize of the textString, where a font fontSize of 1 is the
+     *            default fontSize.
+     * @param font
+     *            - the font that this textString should use.
+     * @param position
+     *            - the position on the screen where the top left corner of the
+     *            textString should be rendered. The top left corner of the screen is
+     *            (0, 0) and the bottom right is (1, 1).
+     * @param maxLineLength
+     *            - basically the width of the virtual page in terms of screen
+     *            width (1 is full screen width, 0.5 is half the width of the
+     *            screen, etc.) Text cannot go off the edge of the page, so if
+     *            the textString is longer than this length it will go onto the next
+     *            line. When textString is centered it is centered into the middle of
+     *            the line, based on this line length value.
+     * @param centered
+     *            - whether the textString should be centered or not.
+     */
+    GUIText(const std::string &textString, float fontSize, FontModel *font, FontType *fontType, glm::vec2(position),
+            glm::vec3 color, float maxLineLength, bool centered);
 
     glm::vec2 &getPosition();
 
@@ -46,7 +69,7 @@ public:
 
     FontModel *getFont();
 
-    float getScale() const;
+    float getFontSize() const;
 
     const std::string &getText() const;
 
@@ -54,27 +77,23 @@ public:
 
     void setColor(glm::vec3 color);
 
-    GUIText(std::string text, FontType font, float x, float y, float scale, glm::vec3 color);
-
     void remove();
 
-    int getNumberOfLines();
+    int getNumberOfLines() const;
 
     int getMesh();
 
-    void setMeshInto(int vao, int verticesCount);
+    void setMeshInfo(int vao, int verticesCount);
 
     int getVertexCount();
 
-protected:
-
-    float getFontSize();
+    float getMaxLineSize() const;
 
     void setNumberOfLines(int number);
 
-    void isCentered();
+    bool isCentered() const;
 
-    float getMaxLineSize();
+protected:
 
 };
 

@@ -17,13 +17,11 @@
 #include "../Toolbox/MousePicker.h"
 #include <ft2build.h>
 #include FT_FREETYPE_H
-#include "../FontMeshCreator/TextMeshCreator.h"
+#include "../FontMeshCreator/TextMeshData.h"
 #include "../FontMeshCreator/GUIText.h"
-#include "../FontRendering/FontShader.h"
 #include "../FontRendering/FontRenderer.h"
-
-void RenderText(FontModel *font, FontShader *shader, FontType fontType, std::string text, float x, float y, float scale,
-                glm::vec3 color);
+#include "../Util/ColorNames.h"
+#include "../FontRendering/TextMaster.h"
 
 
 void MainGameLoop::main() {
@@ -33,6 +31,23 @@ void MainGameLoop::main() {
 
     // Initialize VAO / VBO Loader
     Loader *loader = new Loader();
+
+
+    /**
+     * Font Configuration
+     */
+    // Initialize Texting todo: implement
+    TextMaster::init(loader);
+
+    FontRenderer *fontRenderer = new FontRenderer();
+    FontType arial = TextMeshData::loadFont("arial", 48);
+    FontType noodle = TextMeshData::loadFont("noodle", 48);
+
+    std::vector<GUIText *> *texts = new std::vector<GUIText *>();
+    FontModel *fonty = loader->loadFontVAO();
+    texts->push_back(new GUIText("This is sample text", 1.0f, fonty, &noodle, glm::vec2(25.0f, 25.0f), ColorNames::Lime, 1.0f, true));
+    texts->push_back(new GUIText("Joseph Alai MCMXII", 0.5f, fonty, &arial, glm::vec2(540.0f, 570.0f), ColorNames::Cyan, 0.75f, false));
+
 
     /**
      * Loader Textures and Models
@@ -157,7 +172,7 @@ void MainGameLoop::main() {
 
 
     /**
-     * Load each entity into the vector, including position, scale, and rotation
+     * Load each entity into the vector, including position, fontSize, and rotation
      */
     Entity *lampy = new Entity(staticLamp, glm::vec3(120.0f, terrain->getHeightOfTerrain(120, -50), -50.0f));
     allEntities.push_back(lampy);
@@ -215,23 +230,12 @@ void MainGameLoop::main() {
      */
     MasterRenderer *renderer = new MasterRenderer(playerCamera, loader);
     GuiRenderer *guiRenderer = new GuiRenderer(loader);
-    FontRenderer *fontRenderer = new FontRenderer();
 
 
     /**
      * Mouse Picker
      */
     MousePicker *picker = new MousePicker(playerCamera, renderer->getProjectionMatrix(), terrain);
-
-
-    /**
-     * Font Configuration
-     */
-    std::vector<GUIText *> *texts = new std::vector<GUIText *>();
-    FontType font = TextMeshCreator::loadFont("arial", "arial");
-    FontModel *fonty = loader->loadFontVAO(6, 4, sizeof(float));
-    texts->push_back(new GUIText(fonty, &font, "This is sample text", 25.0f, 25.0f, 1.0f, glm::vec3(0.5, 0.8f, 0.2f)));
-    texts->push_back(new GUIText(fonty, &font, "Joseph Alai MCMXII", 540.0f, 570.0f, 0.5f, glm::vec3(0.3, 0.7f, 0.9f)));
 
 
     /**
@@ -264,6 +268,7 @@ void MainGameLoop::main() {
         renderer->render(lights);
         guiRenderer->render(guis);
         fontRenderer->render(texts);
+        TextMaster::render(); // added todo: implement
 
         DisplayManager::updateDisplay();
     }
@@ -271,6 +276,7 @@ void MainGameLoop::main() {
     /**
      * Clean up renderers and loaders
      */
+    TextMaster::cleanUp(); // added todo: implement
     fontRenderer->cleanUp();
     guiRenderer->cleanUp();
     renderer->cleanUp();

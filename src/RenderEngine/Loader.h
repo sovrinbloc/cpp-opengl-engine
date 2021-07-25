@@ -10,13 +10,12 @@
 #include "../Textures/TextureLoader.h"
 #include "ModelData.h"
 #define GL_SILENCE_DEPRECATION
-#define GLFW_INCLUDE_GLCOREARB
 #include <GLFW/glfw3.h>
 #include "../FontMeshCreator/FontModel.h"
 
 class Loader {
 public:
-    RawModel *loadToVAO(std::vector<GLfloat> positions, std::vector<GLfloat> textureCoords, std::vector<GLfloat> normals, std::vector<GLint> indices);
+    RawModel *loadToVAO(std::vector<GLfloat> positions, std::vector<GLfloat> textureCoords, std::vector<GLfloat> normals, const std::vector<GLint>& indices);
 
     /**
      * @brief loadToVAO inputs all the positions, indices, textureCoords, and normals inside an object
@@ -26,9 +25,9 @@ public:
     RawModel *loadToVAO(ModelData *data);
 
     // for GUI rendering: we only need a 2d square with things rendered on it.
-    RawModel *loadToVAO(std::vector<float> positions, int dimensions);
+    RawModel *loadToVAO(const std::vector<float>& positions, int dimensions);
 
-    FontModel *loadFontVAO(int vertices, int size, int bitSize);
+    FontModel *loadFontVAO();
 
     TextureLoader *loadTexture(std::string fileName);
 
@@ -47,7 +46,7 @@ private:
 
     void bindIndicesBuffer(std::vector<GLint> indices);
 
-    void initDynamicAttributeList(GLuint attributeNumber, GLuint vboNumber, int vertices, int size, int bitSize);
+    void initDynamicAttributeList(GLuint vboNumber);
 
     void unbindVAO();
 

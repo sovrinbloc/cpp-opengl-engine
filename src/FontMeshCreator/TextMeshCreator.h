@@ -1,27 +1,32 @@
 //
-// Created by Joseph Alai on 7/22/21.
+// Created by Joseph Alai on 7/24/21.
 //
 
 #ifndef ENGINE_TEXTMESHCREATOR_H
 #define ENGINE_TEXTMESHCREATOR_H
 
 #include <iostream>
-#include "glm/glm.hpp"
-#include <map>
+#include "TextMeshData.h"
+#include "Line.h"
 #include "Character.h"
-
-class FontType {
-public:
-    FontType(std::string fontName, std::map<char, Character> Characters);
-    Character getCharacter(char c);
-private:
-    std::string fontName;
-    std::map<char, Character> Characters;
-};
+#include "Word.h"
+#include "GUIText.h"
 
 class TextMeshCreator {
-public:
-    static FontType loadFont(const std::string& fontName, const std::string& location);
+protected:
+    constexpr static double kLineHeight = 0.03f;
+    constexpr static int kSpaceAscii = 32;
+    constexpr static int kNewLineAscii = 10;
+
+protected:
+    TextMeshData *createTextMesh(GUIText *text);
+
+    std::vector<Line *> *createStructure(GUIText *text);
+
+private:
+    void completeStructure(std::vector<Line *> *lines, Line *currentLine, Word *currentWord, GUIText *text);
+
+    TextMeshData *createQuadVertices(GUIText *text, std::vector<Line *> *lines);
 };
 
 

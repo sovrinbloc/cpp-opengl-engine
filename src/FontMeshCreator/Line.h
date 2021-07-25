@@ -13,23 +13,37 @@ class Line {
 private:
     double maxLength;
     double spaceSize;
+    float fontSize;
+    float offsetX;
+    float offsexY;
 
-    std::vector<Word> words = std::vector<Word>();
+public:
+    double getOffsetX() const;
+
+    void setOffsetX(double offsetX);
+
+    double getOffsexY() const;
+
+    void setOffsetY(double offsexY);
+
+private:
+
+    std::vector<Word*> words = std::vector<Word*>();
     double currentLineLength = 0;
 
     /**
-	 * Creates an empty line.
-	 * 
-	 * @param spaceWidth
-	 *            - the screen-space width of a space character.
-	 * @param fontSize
-	 *            - the size of font being used.
-	 * @param maxLength
-	 *            - the screen-space maximum length of a line.
-	 */
-protected:
+     * Creates an empty line.
+     *
+     * @param spaceWidth
+     *            - the screen-space width of a space character.
+     * @param fontSize
+     *            - the size of font being used.
+     * @param maxLength
+     *            - the screen-space maximum length of a line.
+     */
+public:
 
-    Line(double spaceWidth, double fontSize, double maxLength);
+    Line(float fontSize, double maxLength);
 
     /**
      * Attempt to add a word to the line. If the line can fit the word in
@@ -46,17 +60,19 @@ protected:
     /**
      * @return The max length of the line.
      */
-    double getMaxLength();
+    double getMaxLength() const;
 
     /**
      * @return The current screen-space length of the line.
      */
-    double getLineLength();
+    double getLineLength() const;
 
     /**
      * @return The list of words in the line.
      */
-    std::vector <Word> getWords();
+    std::vector <Word*> getWords();
+
+    float getFontSize() const;
 
 };
 

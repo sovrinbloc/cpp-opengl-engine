@@ -9,18 +9,20 @@ Word::Word(double fontSize){
 }
 
 /**
- * Adds a character to the end of the current word and increases the screen-space width of the word.
+ * @brief Adds a character to the end of the current word and increases the
+ *        screen-space width of the word.
+ *
  * @param character - the character to be added.
  */
-void Word::addCharacter(Character character){
-    characters.push_back(character);
-    width += character.advance * fontSize;
+void Word::addCharacter(Character *character){
+    characters->push_back(character);
+    width += character->getAdvance() * fontSize;
 }
 
 /**
  * @return The list of characters in the word.
  */
-std::vector<Character> Word::getCharacters(){
+std::vector<Character*> *Word::getCharacters(){
     return characters;
 }
 

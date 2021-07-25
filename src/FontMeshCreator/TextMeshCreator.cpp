@@ -1,87 +1,67 @@
 //
-// Created by Joseph Alai on 7/22/21.
+// Created by Joseph Alai on 7/24/21.
 //
 
 #include "TextMeshCreator.h"
-#include "../Util/FileSystem.h"
-#include <ft2build.h>
-#include FT_FREETYPE_H
-
-#include <utility>
-
-#define GL_SILENCE_DEPRECATION
-#define GLFW_INCLUDE_GLCOREARB
-
-#include "GLFW/glfw3.h"
-
-
-FontType::FontType(std::string fontName, std::map<char, Character> C)
-        : fontName(std::move(fontName)), Characters(std::move(C)) {
-
+TextMeshData *TextMeshCreator::createTextMesh(GUIText *text) {
+    std::vector<Line *> *lines = createStructure(text);
+    return createQuadVertices(text, lines);
 }
 
-Character FontType::getCharacter(char c) {
-    return Characters.at(c);
-}
-
-FontType TextMeshCreator::loadFont(const std::string &fontName, const std::string &location) {
-    FT_Library ft;
-    if (FT_Init_FreeType(&ft)) {
-        std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
-    }
-
-    FT_Face face;
-    if (FT_New_Face(ft, FileSystem::Font(location).c_str(), 0, &face)) {
-        std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
-    }
-
-    FT_Set_Pixel_Sizes(face, 0, 48);
-
-    if (FT_Load_Char(face, 'X', FT_LOAD_RENDER)) {
-        std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
-    }
-
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // disable byte-alignment restriction
-    std::map<char, Character> FontCharacters;
-    for (unsigned char c = 0; c < 128; c++) {
-        // load character glyph
-        if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
-            std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
+std::vector<Line *> *TextMeshCreator::createStructure(GUIText *text) {
+    char chars[text->getText().length()];
+    strcpy(chars, text->getText().c_str());
+    auto *lines = new std::vector<Line *>();
+    Line *currentLine = new Line(text->getFontSize(), text->getMaxLineSize());
+    Word *currentWord = new Word(text->getFontSize());
+    for (char c : chars) {
+        int ascii = static_cast<int>(static_cast<unsigned char>(c));
+        if (ascii == kSpaceAscii) {
+            bool added = currentLine->attemptToAddWord(*currentWord);
+            if (!added) {
+                lines->push_back(currentLine);
+                currentLine = new Line(text->getFontSize(), text->getMaxLineSize());
+                currentLine->attemptToAddWord(*currentWord);
+            }
+            currentWord = new Word(text->getFontSize());
+            continue;
+        } else if (ascii == kNewLineAscii) {
+            lines->push_back(currentLine);
+            currentLine = new Line(text->getFontSize(), text->getMaxLineSize());
+            currentLine->attemptToAddWord(*currentWord);
+            currentWord = new Word(text->getFontSize());
             continue;
         }
-        // generate texture
-        unsigned int texture;
-        glGenTextures(1, &texture);
-        glBindTexture(GL_TEXTURE_2D, texture);
-        glTexImage2D(
-                GL_TEXTURE_2D,
-                0,
-                GL_RED,
-                face->glyph->bitmap.width,
-                face->glyph->bitmap.rows,
-                0,
-                GL_RED,
-                GL_UNSIGNED_BYTE,
-                face->glyph->bitmap.buffer
-        );
-        // set texture options
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        // now store character for later use
-        Character character = {
-                .textureId = texture,
-                .size = glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
-                .bearing = glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
-                .advance = static_cast<unsigned int>(face->glyph->advance.x)
-        };
-        FontCharacters.insert(std::pair<char, Character>(c, character));
-//        printf("character at %f, %f, %d, %d, %d, %d\n", static_cast<float>(character.size.x), static_cast<float>(character.size.y), character.bearing.x, character.bearing.y, character.advance, character.textureId);
-        glBindTexture(GL_TEXTURE_2D, 0);
+        Character *character = text->getFontType()->getCharacter(c);
+        currentWord->addCharacter(character);
     }
-    FT_Done_Face(face);
-    FT_Done_FreeType(ft);
+    completeStructure(lines, currentLine, currentWord, text);
+    return lines;
+}
 
-    return FontType(fontName, FontCharacters);
+void TextMeshCreator::completeStructure(std::vector<Line *> *lines, Line *currentLine, Word *currentWord, GUIText *text) {
+    bool added = currentLine->attemptToAddWord(*currentWord);
+    if (!added) {
+        lines->push_back(currentLine);
+        currentLine = new Line(text->getFontSize(), text->getMaxLineSize());
+        currentLine->attemptToAddWord(*currentWord);
+    }
+    lines->push_back(currentLine);
+}
+
+TextMeshData *TextMeshCreator::createQuadVertices(GUIText *text, std::vector<Line *> *lines) {
+    text->setNumberOfLines(static_cast<int>(lines->size()));
+    double cursorX = 0.0f;
+    double cursorY = 0.0f;
+    for (int i = 0; i < lines->size(); i++) {
+        if (text->isCentered()) {
+            cursorX = ((*lines)[i]->getMaxLength() - (*lines)[i]->getLineLength()) / 2;
+        }
+
+        cursorY += kLineHeight * text->getFontSize() * i;
+        (*lines)[i]->setOffsetX(text->getPosition().x + cursorX);
+        (*lines)[i]->setOffsetY(text->getPosition().y + cursorY);
+    }
+    return new TextMeshData(lines, kLineHeight * text->getFontSize() * static_cast<double>(lines->size()) +
+                                   text->getFontSize() * kLineHeight);
 }

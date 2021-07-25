@@ -10,6 +10,7 @@ GLFWwindow *DisplayManager::window;
 
 float DisplayManager::delta;
 float DisplayManager::lastFrameTime;
+bool DisplayManager::resetMouse = true;
 
 int DisplayManager::createDisplay() {
     glfwInit();
@@ -31,7 +32,7 @@ int DisplayManager::createDisplay() {
     }
     glEnable(GL_MULTISAMPLE);
     glfwMakeContextCurrent(window);
-    glfwSetFramebufferSizeCallback(window, (GLFWframebuffersizefun) framebuffer_size_callback);
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 #ifndef __APPLE__
     if (glewInit() != GLEW_OK) {
@@ -55,12 +56,12 @@ void DisplayManager::updateDisplay() {
 
 void DisplayManager::uniformMovement() {
     float currentFrame = glfwGetTime();
-    DisplayManager::delta = currentFrame - DisplayManager::lastFrameTime;
-    DisplayManager::lastFrameTime = currentFrame;
+    delta = currentFrame - lastFrameTime;
+    lastFrameTime = currentFrame;
 }
 
 float DisplayManager::getFrameTimeSeconds() {
-    return DisplayManager::delta;
+    return delta;
 }
 
 bool DisplayManager::stayOpen() {
@@ -75,6 +76,8 @@ void DisplayManager::framebuffer_size_callback(GLFWwindow *window, int width, in
     // make sure the viewport matches the new window dimensions; note that width and
     // height will be significantly larger than specified on retina displays.
     glViewport(0, 0, width, height);
+    updatePerspective(width, height);
+    resetMouse = false;
 }
 
 GLint &DisplayManager::Width() {
@@ -83,4 +86,9 @@ GLint &DisplayManager::Width() {
 
 GLint &DisplayManager::Height() {
     return SRC_HEIGHT;
+}
+
+void DisplayManager::updatePerspective(int width, int height) {
+    DisplayManager::Width() = static_cast<GLint>(width);
+    DisplayManager::Height() = static_cast<GLint>(height);
 }

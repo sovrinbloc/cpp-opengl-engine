@@ -23,7 +23,7 @@
  * @param indices
  * @return
  */
-RawModel *Loader::loadToVAO(std::vector<GLfloat> positions, std::vector<GLfloat> textureCoords, std::vector<GLfloat> normals, std::vector<GLint> indices) {
+RawModel *Loader::loadToVAO(std::vector<GLfloat> positions, std::vector<GLfloat> textureCoords, std::vector<GLfloat> normals, const std::vector<GLint>& indices) {
     unsigned int vaoId = createVAO();
     this->bindIndicesBuffer(indices);
     this->storeDataInAttributeList(0, 3, std::move(positions));
@@ -52,26 +52,26 @@ RawModel *Loader::loadToVAO(ModelData *data) {
  * @param dimensions
  * @return
  */
-RawModel *Loader::loadToVAO(std::vector<GLfloat> positions, int dimensions) {
-    int vaoID = createVAO();
+RawModel *Loader::loadToVAO(const std::vector<GLfloat>& positions, int dimensions) {
+    GLuint vaoId = createVAO();
     this->storeDataInAttributeList(0, dimensions, positions);
     this->unbindVAO();
-    return new RawModel(vaoID, positions.size() / dimensions);
+    return new RawModel(vaoId, positions.size() / dimensions);
 }
 
-FontModel *Loader::loadFontVAO(int vertices, int size, int bitSize) {
-    GLuint vaoID = createVAO();
-    GLuint vboID = createVBO();
-    this->initDynamicAttributeList(vaoID, vboID, vertices, size, bitSize);
+FontModel *Loader::loadFontVAO() {
+    GLuint vaoId = createVAO();
+    GLuint vboId = createVBO();
+    this->initDynamicAttributeList(vboId);
     this->unbindVAO();
-    return new FontModel(vaoID, vboID, vertices);
+    return new FontModel(vaoId, vboId, FontModel::kVertexCount);
 }
 
 GLuint Loader::createVBO() {
-    GLuint vboID;
-    glGenBuffers(1, &vboID);
-    vbos.push_back(vboID);
-    return vboID;
+    GLuint vboId;
+    glGenBuffers(1, &vboId);
+    vbos.push_back(vboId);
+    return vboId;
 }
 
 /**
@@ -80,7 +80,7 @@ GLuint Loader::createVBO() {
  * @return
  */
 TextureLoader *Loader::loadTexture(std::string fileName) {
-    TextureLoader *tex = new TextureLoader(FileSystem::Texture(std::move(fileName)), PNG);
+    auto *tex = new TextureLoader(FileSystem::Texture(std::move(fileName)), PNG);
     textures.push_back(tex->getId());
     return tex;
 }
@@ -98,34 +98,39 @@ void Loader::cleanUp() {
 }
 
 GLuint Loader::createVAO() {
-    GLuint vaoID;
-    glGenVertexArrays(1, &vaoID);
-    this->vaos.push_back(vaoID);
-    glBindVertexArray(vaoID);
-    return vaoID;
+    GLuint vaoId;
+    glGenVertexArrays(1, &vaoId);
+    this->vaos.push_back(vaoId);
+    glBindVertexArray(vaoId);
+    return vaoId;
 }
 
 void Loader::storeDataInAttributeList(GLuint attributeNumber, int coordinateSize, std::vector<GLfloat> positions) {
-    GLuint vboID = createVBO();
-    glBindBuffer(GL_ARRAY_BUFFER, vboID);
-    glBufferData(GL_ARRAY_BUFFER, positions.size() * sizeof(positions[0]), &positions.front(), GL_STATIC_DRAW);
-    glVertexAttribPointer(attributeNumber, coordinateSize, GL_FLOAT, GL_FALSE, coordinateSize * sizeof(float), (void *) 0);
+    GLuint vboId = createVBO();
+    glBindBuffer(GL_ARRAY_BUFFER, vboId);
+    glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(positions.size() * sizeof(positions[0])), &positions.front(), GL_STATIC_DRAW);
+    glVertexAttribPointer(attributeNumber, coordinateSize, GL_FLOAT, GL_FALSE, coordinateSize * static_cast<GLsizei>(sizeof(float)), (void *) 0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void Loader::bindIndicesBuffer(std::vector<GLint> indices) {
-    GLuint vboID;
-    glGenBuffers(1, &vboID);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboID);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(indices[0]), &indices.front(), GL_STATIC_DRAW);
+    GLuint vboId;
+    glGenBuffers(1, &vboId);
+    vbos.push_back(vboId);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboId);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLsizeiptr>(indices.size() * sizeof(indices[0])), &indices.front(), GL_STATIC_DRAW);
 }
 
-
-void Loader::initDynamicAttributeList(GLuint attributeNumber, GLuint vboNumber, int vertices, int size, int bitSize) {
+/**
+ * @brief Used for loading dynamic data allocation of for fonts.
+ *
+ * @param vboNumber
+ */
+void Loader::initDynamicAttributeList(GLuint vboNumber) {
     glBindBuffer(GL_ARRAY_BUFFER, vboNumber);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * FontModel::kVertexCount * FontModel::kVertexSize, NULL, GL_DYNAMIC_DRAW);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, size, GL_FLOAT, GL_FALSE, size * bitSize, 0);
+    glVertexAttribPointer(0, FontModel::kVertexSize, GL_FLOAT, GL_FALSE, FontModel::kVertexSize * static_cast<GLsizei>(sizeof(float)), (void *)0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 

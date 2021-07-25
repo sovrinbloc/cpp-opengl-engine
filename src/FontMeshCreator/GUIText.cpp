@@ -3,17 +3,19 @@
 //
 
 #include "GUIText.h"
+#include "../FontRendering/TextMaster.h"
 
-#include <utility>
-
-GUIText::GUIText(FontModel *font, FontType *fontType, const std::string& text, float x, float y, float scale,
-                 glm::vec3 color) {
-    this->textString = text;
+GUIText::GUIText(const std::string &textString, float fontSize, FontModel *font, FontType *fontType, glm::vec2(position),
+                 glm::vec3 color, float maxLineLength = 1.0f, bool centered = false) {
+    this->textString = textString;
     this->font = font;
     this->fontType = fontType;
-    this->position = glm::vec2(x, y);
-    this->scale = scale;
+    this->position = position;
+    this->fontSize = fontSize;
     this->color = color;
+    this->lineMaxLength = maxLineLength;
+    this->centerText = centered;
+    TextMaster::loadText(this);
 }
 
 const std::string &GUIText::getText() const {
@@ -32,8 +34,8 @@ glm::vec2 &GUIText::getPosition() {
     return this->position;
 }
 
-float GUIText::getScale() const {
-    return this->scale;
+float GUIText::getFontSize() const {
+    return this->fontSize;
 }
 
 glm::vec3 GUIText::getColor() {
@@ -42,4 +44,24 @@ glm::vec3 GUIText::getColor() {
 
 void GUIText::setColor(glm::vec3 color) {
     this->color = color;
+}
+
+void GUIText::remove() {
+    TextMaster::remove(this);
+}
+
+int GUIText::getNumberOfLines() const {
+    return numberOfLines;
+}
+
+float GUIText::getMaxLineSize() const {
+    return this->lineMaxLength;
+}
+
+void GUIText::setNumberOfLines(int number) {
+    this->numberOfLines = number;
+}
+
+bool GUIText::isCentered() const {
+    return centerText;
 }

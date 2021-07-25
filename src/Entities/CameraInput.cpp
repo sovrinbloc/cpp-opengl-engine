@@ -9,7 +9,6 @@ double CameraInput::MouseX, CameraInput::MouseY;
 double CameraInput::LastMouseX, CameraInput::LastMouseY;
 float CameraInput::MouseDX, CameraInput::MouseDY;
 
-bool CameraInput::ResetMouse = true;
 // camera options
 float CameraInput::MovementSpeed;
 float CameraInput::MouseSensitivity;
@@ -30,7 +29,7 @@ void CameraInput::toggleCursorStyle() {
     cursorInvisible = !cursorInvisible;
     GLint cursorStyle = cursorInvisible ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL;
     glfwSetInputMode(DisplayManager::window, GLFW_CURSOR, cursorStyle);
-    ResetMouse = true;
+    DisplayManager::resetMouse = true;
 }
 
 void CameraInput::move() {
@@ -72,10 +71,10 @@ void CameraInput::mouse_callback(GLFWwindow *window, double xPos, double yPos) {
     CameraInput::MouseX = xPos;
     CameraInput::MouseY = yPos;
     if (cursorInvisible || glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS) {
-        if (CameraInput::ResetMouse) {
+        if (DisplayManager::resetMouse) {
             CameraInput::LastMouseX = static_cast<GLfloat>(CameraInput::MouseX);
             CameraInput::LastMouseY = static_cast<GLfloat>(CameraInput::MouseY);
-            CameraInput::ResetMouse = false;
+            DisplayManager::resetMouse = false;
         }
 
         CameraInput::MouseDX = static_cast<GLfloat>(xPos) - static_cast<GLfloat>(CameraInput::LastMouseX);
@@ -88,7 +87,7 @@ void CameraInput::mouse_callback(GLFWwindow *window, double xPos, double yPos) {
         ProcessMouseMovement(MouseDX, MouseDY);
         return;
     }
-    CameraInput::ResetMouse = true;
+    DisplayManager::resetMouse = true;
 }
 
 void CameraInput::scroll_callback(__attribute__((unused)) GLFWwindow *window, __attribute__((unused)) double xOffset, double yOffset) {
