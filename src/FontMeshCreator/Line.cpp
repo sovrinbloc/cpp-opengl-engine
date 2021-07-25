@@ -3,7 +3,6 @@
 //
 
 #include "Line.h"
-
 Line::Line(float fontSize, double maxLength) {
     this->maxLength = maxLength;
     this->fontSize = fontSize;
@@ -26,7 +25,7 @@ float Line::getFontSize() const {
 bool Line::attemptToAddWord(Word word) {
     double additionalLength = word.getWordWidth();
     if (currentLineLength + additionalLength <= maxLength) {
-        words.push_back(&word);
+        words.push_back(word);
         currentLineLength += additionalLength;
         return true;
     } else {
@@ -51,22 +50,14 @@ double Line::getLineLength() const {
 /**
  * @return The list of words in the line.
  */
-std::vector <Word*> Line::getWords() {
+std::vector <Word> Line::getWords() {
     return words;
 }
 
-double Line::getOffsetX() const {
-    return offsetX;
+const glm::vec2 &Line::getOffset() const {
+    return offset;
 }
 
-void Line::setOffsetX(double offsetX) {
-    Line::offsetX = offsetX;
-}
-
-double Line::getOffsexY() const {
-    return offsexY;
-}
-
-void Line::setOffsetY(double offsexY) {
-    Line::offsexY = offsexY;
+void Line::setOffset(double offsetX, double offsetY) {
+    Line::offset = glm::vec2(offsetX, offsetY);
 }

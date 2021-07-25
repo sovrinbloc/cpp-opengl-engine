@@ -45,8 +45,8 @@ void MainGameLoop::main() {
 
     std::vector<GUIText *> *texts = new std::vector<GUIText *>();
     FontModel *fonty = loader->loadFontVAO();
-    texts->push_back(new GUIText("This is sample text", 1.0f, fonty, &noodle, glm::vec2(25.0f, 25.0f), ColorNames::Lime, 1.0f, true));
-    texts->push_back(new GUIText("Joseph Alai MCMXII", 0.5f, fonty, &arial, glm::vec2(540.0f, 570.0f), ColorNames::Cyan, 0.75f, false));
+    texts->push_back(new GUIText("This is sample text because I know what I am doing whether you like it or not so I am joe.This is sample text because I know what I am doing whether you like it or not so I am joe.", 1.0f, fonty, &noodle, glm::vec2(25.0f, 225.0f), ColorNames::Lime, 0.50f * DisplayManager::Width(), false));
+    texts->push_back(new GUIText("Joseph Alai MCMXII", 0.5f, fonty, &arial, glm::vec2(540.0f, 570.0f), ColorNames::Cyan, 0.75f * DisplayManager::Width(), false));
 
 
     /**
@@ -267,7 +267,7 @@ void MainGameLoop::main() {
 
         renderer->render(lights);
         guiRenderer->render(guis);
-        fontRenderer->render(texts);
+//        fontRenderer->render(texts);
         TextMaster::render(); // added todo: implement
 
         DisplayManager::updateDisplay();

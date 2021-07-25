@@ -30,7 +30,6 @@ void TextMaster::loadText(GUIText *text) {
 
 void TextMaster::render() {
     renderer->render(texts);
-
 }
 
 void TextMaster::cleanUp() {

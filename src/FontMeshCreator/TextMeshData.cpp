@@ -12,7 +12,7 @@
 #define GL_SILENCE_DEPRECATION
 #define GLFW_INCLUDE_GLCOREARB
 #include "GLFW/glfw3.h"
-
+#include "GUIText.h"
 FontType::FontType(std::map<char, Character*> *characters)
         : characters(characters) {
 }
@@ -82,7 +82,24 @@ FontType TextMeshData::loadFont(const std::string &location, const int size) {
     return FontType(fontCharacters);
 }
 
-TextMeshData::TextMeshData(std::vector<Line *> *lines, double lineHeight) {
+TextMeshData::TextMeshData(glm::vec2 startPos, std::vector<Line > lines, double lineHeight) {
     this->lines = lines;
     this->lineHeight = lineHeight;
+    this->startPosition = startPos;
+}
+
+std::vector<Line > TextMeshData::getLines() const {
+    return lines;
+}
+
+double TextMeshData::getLineHeight() const {
+    return lineHeight;
+}
+
+glm::vec2 TextMeshData::getStartPos() const {
+    return startPosition;
+}
+
+void TextMeshData::setStartPos(glm::vec2 position) {
+    TextMeshData::startPosition = position;
 }

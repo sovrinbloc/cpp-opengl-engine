@@ -17,16 +17,16 @@ protected:
     constexpr static double kLineHeight = 0.03f;
     constexpr static int kSpaceAscii = 32;
     constexpr static int kNewLineAscii = 10;
-
+public:
+    static TextMeshData *createTextMesh(GUIText *text);
 protected:
-    TextMeshData *createTextMesh(GUIText *text);
 
-    std::vector<Line *> *createStructure(GUIText *text);
+    static std::vector<Line > createStructure(GUIText *text);
 
 private:
-    void completeStructure(std::vector<Line *> *lines, Line *currentLine, Word *currentWord, GUIText *text);
+    static void completeStructure(std::vector<Line> *lines, Line *currentLine, Word *currentWord, GUIText *text);
 
-    TextMeshData *createQuadVertices(GUIText *text, std::vector<Line *> *lines);
+    static TextMeshData *createQuadVertices(GUIText *text, std::vector<Line > *lines);
 };
 
 

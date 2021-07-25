@@ -11,25 +11,22 @@
 
 class Line {
 private:
+
     double maxLength;
+
     double spaceSize;
+
     float fontSize;
-    float offsetX;
-    float offsexY;
 
-public:
-    double getOffsetX() const;
+    std::vector<Word > words;
 
-    void setOffsetX(double offsetX);
-
-    double getOffsexY() const;
-
-    void setOffsetY(double offsexY);
-
-private:
-
-    std::vector<Word*> words = std::vector<Word*>();
     double currentLineLength = 0;
+
+    glm::vec2 offset;
+public:
+    const glm::vec2 &getOffset() const;
+
+    void setOffset(double offsetX, double offsetY);
 
     /**
      * Creates an empty line.
@@ -70,7 +67,7 @@ public:
     /**
      * @return The list of words in the line.
      */
-    std::vector <Word*> getWords();
+    std::vector<Word > getWords();
 
     float getFontSize() const;
 

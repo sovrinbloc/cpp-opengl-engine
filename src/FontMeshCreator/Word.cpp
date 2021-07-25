@@ -4,8 +4,9 @@
 
 #include "Word.h"
 
-Word::Word(double fontSize){
+Word::Word(glm::vec3 color, double fontSize){
     this->fontSize = fontSize;
+    this->color = color;
 }
 
 /**
@@ -14,15 +15,15 @@ Word::Word(double fontSize){
  *
  * @param character - the character to be added.
  */
-void Word::addCharacter(Character *character){
-    characters->push_back(character);
-    width += character->getAdvance() * fontSize;
+void Word::addCharacter(Character character){
+    characters.push_back(character);
+    width += character.getSize().x * fontSize;
 }
 
 /**
  * @return The list of characters in the word.
  */
-std::vector<Character*> *Word::getCharacters(){
+std::vector<Character> Word::getCharacters(){
     return characters;
 }
 
@@ -31,4 +32,8 @@ std::vector<Character*> *Word::getCharacters(){
  */
 double Word::getWordWidth(){
     return width;
+}
+
+const glm::vec3 &Word::getColor() const {
+    return color;
 }

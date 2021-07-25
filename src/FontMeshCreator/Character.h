@@ -5,7 +5,7 @@
 #ifndef ENGINE_CHARACTER_H
 #define ENGINE_CHARACTER_H
 #include "glm/glm.hpp"
-
+#include <iostream>
 class Character {
 private:
     // ID handle of the glyph texture

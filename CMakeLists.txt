@@ -4,6 +4,7 @@ project(engine)
 set(CMAKE_CXX_STANDARD 14)
 
 SET(CMAKE_EXE_LINKER_FLAGS "-v")
+set(CMAKE_CXX_VISIBILITY_PRESET)
 
 add_executable(engine
         src/main.cpp
@@ -80,8 +81,8 @@ add_executable(engine
         src/Util/ColorNames.h
         src/Toolbox/MousePicker.cpp
         src/Toolbox/MousePicker.h
-        src/FontMeshCreator/TextMeshCreator.cpp
-        src/FontMeshCreator/TextMeshCreator.h
+        src/FontMeshCreator/TextMeshData.cpp
+        src/FontMeshCreator/TextMeshData.h
         src/FontRendering/FontShader.cpp
         src/FontRendering/FontShader.h
         src/FontRendering/FontRenderer.cpp
@@ -95,7 +96,7 @@ add_executable(engine
         src/FontMeshCreator/Line.h
         src/FontMeshCreator/FontModel.h
         src/FontRendering/TextMaster.cpp
-        src/FontRendering/TextMaster.h)
+        src/FontRendering/TextMaster.h src/FontMeshCreator/TextMeshCreator.cpp src/FontMeshCreator/TextMeshCreator.h)
 
 include_directories(deps/glfw)
 add_subdirectory(deps/glfw)

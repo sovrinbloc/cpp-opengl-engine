@@ -16,9 +16,8 @@ private:
 public:
     FontRenderer();
     void cleanUp();
-    void render(std::vector<GUIText*> *texts);
     void render(std::map<FontType*, std::vector<GUIText*>> *texts);
-    void renderText(GUIText* text);
+    void renderTextMesh(GUIText *text);
     void endRendering();
     void prepare();
 };

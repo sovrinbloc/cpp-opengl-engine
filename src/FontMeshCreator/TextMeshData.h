@@ -14,20 +14,40 @@
 
 class FontType {
 public:
-    explicit FontType(std::map<char, Character*> *characters);
+    explicit FontType(std::map<char, Character *> *characters);
+
     Character *getCharacter(char c);
+
 private:
     std::string fontName;
-    std::map<char, Character*> *characters;
+
+    std::map<char, Character *> *characters;
 };
 
 class TextMeshData {
+
 public:
-    static FontType loadFont(const std::string& location, int size);
-    TextMeshData(std::vector<Line *> *lines, double lineHeight);
+
+    TextMeshData(glm::vec2 startPos, std::vector<Line> lines, double lineHeight);
+
+    static FontType loadFont(const std::string &location, int size);
+
+    std::vector<Line > getLines() const;
+
+    double getLineHeight() const;
+
+    glm::vec2 getStartPos() const;
+
+    void setStartPos(glm::vec2 position);
+
 private:
-    std::vector<Line*> *lines;
+
+    std::vector<Line > lines;
+
     double lineHeight;
+
+    glm::vec2 startPosition;
+
 };
 
 
