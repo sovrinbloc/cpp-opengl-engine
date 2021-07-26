@@ -34,8 +34,8 @@ public:
      * @param rotation
      * @param scale
      */
-    Player(TexturedModel *model, glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 rotation = glm::vec3(0),
-            float scale = 1.0f) : Entity(model, position, rotation, scale){}
+    Player(TexturedModel *model, BoundingBox *box, glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 rotation = glm::vec3(0),
+            float scale = 1.0f) : Entity(model, box, position, rotation, scale){}
 
     void move(Terrain *terrain);
 

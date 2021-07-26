@@ -2,6 +2,7 @@
 // Created by Joseph Alai on 7/6/21.
 //
 #include "CameraInput.h"
+#include "../Input/InputMaster.h"
 
 bool CameraInput::cursorInvisible = false;
 
@@ -16,6 +17,7 @@ float CameraInput::Zoom;
 float CameraInput::ZoomOffset;
 
 CameraInput::CameraInput(glm::vec3 position) : Camera(position) {
+    InputMaster::init();
     MovementSpeed = (kSpeed);
     MouseSensitivity = (kSensitivity);
     Zoom = kZoom;

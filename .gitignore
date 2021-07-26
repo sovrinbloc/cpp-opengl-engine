@@ -19,3 +19,5 @@ src/Resources/Tutorial/Backpack/*
 src/Resources/Tutorial/*
 CPack*
 engine.cbp*
+CMakeDoxy*
+bin/*

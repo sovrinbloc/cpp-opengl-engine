@@ -7,11 +7,19 @@
 
 #include "glm/glm.hpp"
 #include "../Models/TexturedModel.h"
+#include "../Models/BoundingBox.h"
 
 
 class Entity {
 protected:
     TexturedModel *model;
+    BoundingBox *box;
+public:
+    BoundingBox *getBoundingBox() const {
+        return box;
+    }
+
+protected:
     glm::vec3 position;
     glm::vec3 rotation;
     float scale;
@@ -29,8 +37,8 @@ public:
      * @param rotation
      * @param scale
      */
-    explicit Entity(TexturedModel *model, glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 rotation = glm::vec3(0),
-           float scale = 1.0f) : model(model), position(position), rotation(rotation), scale(scale) {}
+    explicit Entity(TexturedModel *model, BoundingBox *box, glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 rotation = glm::vec3(0),
+           float scale = 1.0f) : model(model), box(box), position(position), rotation(rotation), scale(scale) {}
 
     /**
       * @brief Entity stores the TexturedModel (RawModel & Texture), and stores vectors
@@ -43,8 +51,8 @@ public:
       * @param rotation
       * @param scale
       */
-    explicit Entity(TexturedModel *model, int textureIndex, glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 rotation = glm::vec3(0),
-           float scale = 1.0f) : model(model), textureIndex(textureIndex), position(position), rotation(rotation), scale(scale) {}
+    explicit Entity(TexturedModel *model, BoundingBox *box, int textureIndex, glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 rotation = glm::vec3(0),
+           float scale = 1.0f) : model(model), box(box), textureIndex(textureIndex), position(position), rotation(rotation), scale(scale) {}
 
     TexturedModel *getModel() {
         return this->model;

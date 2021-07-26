@@ -20,7 +20,7 @@ public:
     static ModelData loadAssImp(std::string path);
 
 
-    static ModelData loadObjModel(std::string filename);
+    static ModelData loadObjModel(const std::string& filename);
 
     static void processVertex(float vertex, float uv, float normal, std::vector<Vertex*> *vertices, std::vector<int> *indices);
 

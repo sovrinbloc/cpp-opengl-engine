@@ -9,8 +9,8 @@
 #include "Player.h"
 
 // Default camera values
-const float YAW         = -90.0f;
-const float PITCH       =  0.0f;
+const float YAW = -90.0f;
+const float PITCH = 0.0f;
 
 /**
  * @brief An abstract camera class that processes input and calculates the corresponding
@@ -34,7 +34,8 @@ public:
      *        Euler Angles, Vectors and Matrices for use in OpenGL.
      *
      */
-    explicit Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH);
+    explicit Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f),
+                    float yaw = YAW, float pitch = PITCH);
 
     // updates the sight vector;
     virtual void move();
@@ -43,7 +44,9 @@ public:
     virtual glm::mat4 GetViewMatrix();
 
 protected:
-// calculates the front vector from the Camera's (updated) Euler Angles
-static void updateCameraVectors();
+
+    // calculates the front vector from the Camera's (updated) Euler Angles
+    static void updateCameraVectors();
 };
+
 #endif

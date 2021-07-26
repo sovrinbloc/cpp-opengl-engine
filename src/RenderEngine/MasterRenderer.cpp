@@ -14,15 +14,18 @@ MasterRenderer::MasterRenderer(PlayerCamera *cameraInput, Loader *loader) : shad
                 Maths::createProjectionMatrix(FOVY, static_cast<float>(DisplayManager::Width()),
                                               static_cast<float>(DisplayManager::Height()), NEAR_PLANE, FAR_PLANE)),
                                                             terrainShader(new TerrainShader()),
-                                                            sceneShader(new ModelShader()) {
+                                                            sceneShader(new ModelShader()),
+                                                            bShader(new BoundingBoxShader()){
     RenderStyle::enableCulling();
     entities = new std::map<TexturedModel *, std::vector<Entity *>>;
     scenes = new std::map<Model *, std::vector<Scene *>>;
     terrains = new std::vector<Terrain *>;
     models = new std::vector<Model *>;
+    boxes = new std::map<RawBoundingBox *, std::vector<Entity *>>;
     terrainRenderer = new TerrainRenderer(terrainShader, this->projectionMatrix);
     sceneRenderer = new SceneRenderer(sceneShader);
     skyboxRenderer = new SkyboxRenderer(loader, this->projectionMatrix, &skyColor);
+    bRenderer = new BoundingBoxRenderer(bShader, this->projectionMatrix);
 }
 
 void MasterRenderer::cleanUp() {
@@ -60,6 +63,19 @@ void MasterRenderer::render(const std::vector<Light *>&suns) {
 
     entities->clear();
     shader->stop();
+
+
+
+
+    bShader->start();
+
+    bShader->loadViewPosition(camera);
+    bShader->loadViewMatrix(camera->GetViewMatrix());
+    bShader->loadProjectionMatrix(MasterRenderer::createProjectionMatrix());
+    bRenderer->render(boxes);
+
+    boxes->clear();
+    bShader->stop();
 
 
     sceneShader->start();
@@ -129,11 +145,18 @@ void MasterRenderer::processScenes(Scene *scene) {
     }
 }
 
-void MasterRenderer::processModel(Model *model) {
-    models->push_back(model);
+void MasterRenderer::processBoundingBox(Entity *entity) {
+    auto boxColor = entity->getBoundingBox()->getRawBoundingBox();
+    auto batchIterator = boxes->find(boxColor);
+    if (batchIterator != boxes->end()) {
+        batchIterator->second.push_back(entity);
+    } else {
+        std::vector<Entity *> newBatch;
+        newBatch.push_back(entity);
+        (*boxes)[boxColor] = newBatch;
+    }
 }
 
-void MasterRenderer::updatePerspective(float width, float height) {
-    DisplayManager::Width() = static_cast<GLint>(width);
-    DisplayManager::Height() = static_cast<GLint>(height);
+void MasterRenderer::processModel(Model *model) {
+    models->push_back(model);
 }

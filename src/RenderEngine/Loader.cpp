@@ -23,7 +23,9 @@
  * @param indices
  * @return
  */
-RawModel *Loader::loadToVAO(std::vector<GLfloat> positions, std::vector<GLfloat> textureCoords, std::vector<GLfloat> normals, const std::vector<GLint>& indices) {
+RawModel *
+Loader::loadToVAO(std::vector<GLfloat> positions, std::vector<GLfloat> textureCoords, std::vector<GLfloat> normals,
+                  const std::vector<GLint> &indices) {
     unsigned int vaoId = createVAO();
     this->bindIndicesBuffer(indices);
     this->storeDataInAttributeList(0, 3, std::move(positions));
@@ -52,11 +54,41 @@ RawModel *Loader::loadToVAO(ModelData *data) {
  * @param dimensions
  * @return
  */
-RawModel *Loader::loadToVAO(const std::vector<GLfloat>& positions, int dimensions) {
+RawModel *Loader::loadToVAO(const std::vector<GLfloat> &positions, int dimensions) {
     GLuint vaoId = createVAO();
     this->storeDataInAttributeList(0, dimensions, positions);
     this->unbindVAO();
     return new RawModel(vaoId, positions.size() / dimensions);
+}
+
+RawBoundingBox *Loader::loadToVAO(BoundingBoxData box) {
+    GLuint vaoId = createVAO();
+    glm::vec3 vBoxVertices[] =
+            {
+                    // Front wall of bounding box
+                    box.vLowerLeftFront,
+                    glm::vec3(box.vUpperRightBack.x, box.vLowerLeftFront.y, box.vLowerLeftFront.z),
+                    glm::vec3(box.vLowerLeftFront.x, box.vUpperRightBack.y, box.vLowerLeftFront.z),
+                    glm::vec3(box.vUpperRightBack.x, box.vUpperRightBack.y, box.vLowerLeftFront.z),
+
+                    // Back wall of bounding box
+                    glm::vec3(box.vLowerLeftFront.x, box.vLowerLeftFront.y, box.vUpperRightBack.z),
+                    glm::vec3(box.vUpperRightBack.x, box.vLowerLeftFront.y, box.vUpperRightBack.z),
+                    glm::vec3(box.vLowerLeftFront.x, box.vUpperRightBack.y, box.vUpperRightBack.z),
+                    box.vUpperRightBack
+            };
+
+    this->bindIndicesBuffer(box.iIndices);
+
+    std::vector<float> positions;
+    for (glm::vec3 vBox: vBoxVertices) {
+        positions.push_back(vBox.x);
+        positions.push_back(vBox.y);
+        positions.push_back(vBox.z);
+    }
+    this->storeDataInAttributeList(0, 3, positions);
+    unbindVAO();
+    return new RawBoundingBox(vaoId, box.iIndices.size());
 }
 
 FontModel *Loader::loadFontVAO() {
@@ -108,8 +140,10 @@ GLuint Loader::createVAO() {
 void Loader::storeDataInAttributeList(GLuint attributeNumber, int coordinateSize, std::vector<GLfloat> positions) {
     GLuint vboId = createVBO();
     glBindBuffer(GL_ARRAY_BUFFER, vboId);
-    glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(positions.size() * sizeof(positions[0])), &positions.front(), GL_STATIC_DRAW);
-    glVertexAttribPointer(attributeNumber, coordinateSize, GL_FLOAT, GL_FALSE, coordinateSize * static_cast<GLsizei>(sizeof(float)), (void *) 0);
+    glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(positions.size() * sizeof(positions[0])), &positions.front(),
+                 GL_STATIC_DRAW);
+    glVertexAttribPointer(attributeNumber, coordinateSize, GL_FLOAT, GL_FALSE,
+                          coordinateSize * static_cast<GLsizei>(sizeof(float)), (void *) 0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
@@ -118,7 +152,8 @@ void Loader::bindIndicesBuffer(std::vector<GLint> indices) {
     glGenBuffers(1, &vboId);
     vbos.push_back(vboId);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboId);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLsizeiptr>(indices.size() * sizeof(indices[0])), &indices.front(), GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLsizeiptr>(indices.size() * sizeof(indices[0])),
+                 &indices.front(), GL_STATIC_DRAW);
 }
 
 /**
@@ -128,9 +163,11 @@ void Loader::bindIndicesBuffer(std::vector<GLint> indices) {
  */
 void Loader::initDynamicAttributeList(GLuint vboNumber) {
     glBindBuffer(GL_ARRAY_BUFFER, vboNumber);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * FontModel::kVertexCount * FontModel::kVertexSize, NULL, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * FontModel::kVertexCount * FontModel::kVertexSize, NULL,
+                 GL_DYNAMIC_DRAW);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, FontModel::kVertexSize, GL_FLOAT, GL_FALSE, FontModel::kVertexSize * static_cast<GLsizei>(sizeof(float)), (void *)0);
+    glVertexAttribPointer(0, FontModel::kVertexSize, GL_FLOAT, GL_FALSE,
+                          FontModel::kVertexSize * static_cast<GLsizei>(sizeof(float)), (void *) 0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
@@ -145,18 +182,14 @@ unsigned int Loader::loadCubeMap(std::vector<std::string> faces) {
     glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
 
     int width, height, nrChannels;
-    for (unsigned int i = 0; i < faces.size(); i++)
-    {
+    for (unsigned int i = 0; i < faces.size(); i++) {
         unsigned char *data = stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 0);
-        if (data)
-        {
+        if (data) {
             glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
                          0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data
             );
             stbi_image_free(data);
-        }
-        else
-        {
+        } else {
             std::cout << "Cubemap tex failed to load at path: " << faces[i] << std::endl;
             stbi_image_free(data);
         }

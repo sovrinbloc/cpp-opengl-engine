@@ -23,7 +23,6 @@
 #include "../Util/ColorNames.h"
 #include "../FontRendering/TextMaster.h"
 
-
 void MainGameLoop::main() {
 
     // Initialite Display
@@ -60,21 +59,26 @@ void MainGameLoop::main() {
     TexturedModel *staticGrass, *staticTree, *staticStall, *staticFluffyTree, *staticDragon, *staticFern, *staticLamp;
 
     ModelData lampData = OBJLoader::loadObjModel("lamp");
+    RawBoundingBox *pLampBox = loader->loadToVAO(lampData.getBoundingBox());
     staticLamp = new TexturedModel(loader->loadToVAO(&lampData), new ModelTexture("lamp", PNG));
 
     ModelData fernData = OBJLoader::loadObjModel("fern");
+    RawBoundingBox *pFernBox = loader->loadToVAO(fernData.getBoundingBox());
     staticFern = new TexturedModel(loader->loadToVAO(&fernData), new ModelTexture("fern", PNG));
     staticFern->getModelTexture()->setNumberOfRows(2);
 
     ModelData dragonData = OBJLoader::loadObjModel("dragon");;
+    RawBoundingBox *pDragonBox = loader->loadToVAO(dragonData.getBoundingBox());
     staticDragon = new TexturedModel(loader->loadToVAO(&dragonData), new ModelTexture("grassTexture", PNG));
-    auto dragonEntity = new Entity(staticDragon, glm::vec3(0.0, 120.0, 80), glm::vec3(0.0f, 180.0f, 0.0f));
+    auto dragonEntity = new Entity(staticDragon, new BoundingBox(pDragonBox, glm::vec3(0.0f, 0.0f, 0.0f)), glm::vec3(0.0, 120.0, 80), glm::vec3(0.0f, 180.0f, 0.0f));
 
     ModelData grassData = OBJLoader::loadObjModel("grassModel");;
+    RawBoundingBox *pGrassBox = loader->loadToVAO(grassData.getBoundingBox());
     grassTexture = new ModelTexture("grassTexture", PNG);
     grassTexture->setHasTransparency(true);
     grassTexture->setUseFakeLighting(true);
     staticGrass = new TexturedModel(loader->loadToVAO(&grassData), grassTexture);
+
 
     const Material material = Material{
             .shininess = 2.0f,
@@ -82,12 +86,16 @@ void MainGameLoop::main() {
     };
 
     ModelData stallData = OBJLoader::loadObjModel("Stall");;
+    RawBoundingBox *pStallBox = loader->loadToVAO(stallData.getBoundingBox());
     staticStall = new TexturedModel(loader->loadToVAO(&stallData),
                                     new ModelTexture("stallTexture", PNG, material));
+
     ModelData treeData = OBJLoader::loadObjModel("tree");;
+    RawBoundingBox *pTreeBox = loader->loadToVAO(treeData.getBoundingBox());
     staticTree = new TexturedModel(loader->loadToVAO(&treeData),
                                    new ModelTexture("tree", PNG, material));
     ModelData fluffyTreeData = OBJLoader::loadObjModel("fluffy-tree");
+    RawBoundingBox *pFluffyTreeBox = loader->loadToVAO(fluffyTreeData.getBoundingBox());
     staticFluffyTree = new TexturedModel(loader->loadToVAO(&fluffyTreeData),
                                          new ModelTexture("tree", PNG, material));
 
@@ -156,22 +164,22 @@ void MainGameLoop::main() {
     /**
      * Load each entity into the vector, including position, fontSize, and rotation
      */
-    Entity *lampy = new Entity(staticLamp, glm::vec3(120.0f, terrain->getHeightOfTerrain(120, -50), -50.0f));
+    Entity *lampy = new Entity(staticLamp, new BoundingBox(pLampBox, glm::vec3(0.01f)), glm::vec3(120.0f, terrain->getHeightOfTerrain(120, -50), -50.0f));
     allEntities.push_back(lampy);
-    allEntities.push_back(new Entity(staticStall, glm::vec3(1.0f, 0.0f, -82.4f), glm::vec3(0.0f, 180.0f, 0.0f)));
-    allEntities.push_back(new Entity(staticLamp, glm::vec3(100.0f, terrain->getHeightOfTerrain(100, -50), -50.0f)));
-    allEntities.push_back(new Entity(staticLamp, glm::vec3(110.0f, terrain->getHeightOfTerrain(110, -20), -20.0f)));
+    allEntities.push_back(new Entity(staticStall, new BoundingBox(pLampBox, glm::vec3(0.02f)), glm::vec3(1.0f, 0.0f, -82.4f), glm::vec3(0.0f, 180.0f, 0.0f)));
+    allEntities.push_back(new Entity(staticLamp, new BoundingBox(pLampBox, glm::vec3(0.03f)), glm::vec3(100.0f, terrain->getHeightOfTerrain(100, -50), -50.0f)));
+    allEntities.push_back(new Entity(staticLamp, new BoundingBox(pLampBox, glm::vec3(0.04f)), glm::vec3(110.0f, terrain->getHeightOfTerrain(110, -20), -20.0f)));
 
 
     for (int i = 0; i < 500; ++i) {
-        allEntities.push_back(new Entity(staticGrass, generateRandomPosition(terrain), generateRandomRotation(),
+        allEntities.push_back(new Entity(staticGrass, new BoundingBox(pGrassBox, glm::vec3(0.05f)), generateRandomPosition(terrain), generateRandomRotation(),
                                          generateRandomScale(0.5, 1.50f)));
-        allEntities.push_back(new Entity(staticFluffyTree, generateRandomPosition(terrain), generateRandomRotation(),
+        allEntities.push_back(new Entity(staticFluffyTree, new BoundingBox(pFluffyTreeBox, glm::vec3(0.06f)), generateRandomPosition(terrain), generateRandomRotation(),
                                          generateRandomScale(0.5, 1.50f)));
-        allEntities.push_back(new Entity(staticTree, generateRandomPosition(terrain), generateRandomRotation(),
+        allEntities.push_back(new Entity(staticTree, new BoundingBox(pTreeBox, glm::vec3(0.07f)), generateRandomPosition(terrain), generateRandomRotation(),
                                          generateRandomScale(.25, 1.50)));
         allEntities.push_back(
-                new Entity(staticFern, Utils::roll(1, 4), generateRandomPosition(terrain), generateRandomRotation(),
+                new Entity(staticFern, new BoundingBox(pFernBox, glm::vec3(0.08f)), Utils::roll(1, 4), generateRandomPosition(terrain), generateRandomRotation(),
                            generateRandomScale(.25, 1.50)));
         if (i % 30 == 0) {
             allScenes.push_back(new Scene(pBackpack, generateRandomPosition(terrain, 3.0f), generateRandomRotation(),
@@ -190,7 +198,7 @@ void MainGameLoop::main() {
     TexturedModel *playerOne = new TexturedModel(playerModel, new ModelTexture(
             "stallTexture", PNG));
 
-    Player *player = new Player(playerOne, glm::vec3(100.0f, 3.0f, -50.0f), glm::vec3(0.0f, 180.0f, 0.0f), 1.0f);
+    Player *player = new Player(playerOne, new BoundingBox(pStallBox, glm::vec3(1.0f)), glm::vec3(100.0f, 3.0f, -50.0f), glm::vec3(0.0f, 180.0f, 0.0f), 1.0f);
     allEntities.push_back(player);
     PlayerCamera *playerCamera = new PlayerCamera(player);
 
@@ -240,6 +248,7 @@ void MainGameLoop::main() {
 
         for (Entity *ent : allEntities) {
             renderer->processEntity(ent);
+            renderer->processBoundingBox(ent);
         }
 
         for (Scene *scene : allScenes) {

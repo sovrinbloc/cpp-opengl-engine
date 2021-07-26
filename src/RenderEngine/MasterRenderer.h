@@ -16,6 +16,8 @@
 #include "SceneLoader.h"
 #include "../Entities/PlayerCamera.h"
 #include "../Skybox/SkyboxRenderer.h"
+#include "../Shaders/BoundingBoxShader.h"
+#include "BoundingBoxRenderer.h"
 
 static const float FOVY = 45.0f;
 static const float NEAR_PLANE = 0.1f;
@@ -23,22 +25,26 @@ static const float FAR_PLANE = 1000;
 
 class MasterRenderer {
 private:
-    StaticShader *shader;
-    EntityRenderer *renderer;
-    glm::mat4 projectionMatrix;
     PlayerCamera *camera;
 
-    TerrainRenderer *terrainRenderer;
+    StaticShader *shader;
+    ModelShader *sceneShader;
     TerrainShader *terrainShader;
+    BoundingBoxShader *bShader;
+
+    EntityRenderer *renderer;
+    SkyboxRenderer *skyboxRenderer;
+    TerrainRenderer *terrainRenderer;
+    SceneRenderer *sceneRenderer;
+    BoundingBoxRenderer *bRenderer;
+
+    std::map<RawBoundingBox *, std::vector<Entity *>> *boxes;
     std::map<TexturedModel *, std::vector<Entity *>> *entities;
     std::map<Model *, std::vector<Scene *>> *scenes;
     std::vector<Terrain *> *terrains;
-
-    SceneRenderer *sceneRenderer;
-    ModelShader *sceneShader;
     std::vector<Model *> *models;
 
-    SkyboxRenderer *skyboxRenderer;
+    glm::mat4 projectionMatrix;
 public:
     explicit MasterRenderer(PlayerCamera *cameraInput, Loader *loader);
 
@@ -51,7 +57,7 @@ public:
 
     static glm::vec3 skyColor;
 
-    void render(const std::vector<Light *>&sun);
+    void render(const std::vector<Light *> &sun);
 
     void processTerrain(Terrain *terrain);
 
@@ -65,7 +71,7 @@ public:
 
     void processModel(Model *model);
 
-    void updatePerspective(float width, float height);
+    void processBoundingBox(Entity *entity);
 
 };
 

@@ -20,12 +20,7 @@ public:
             glm::ivec2 size,       // size of glyph
             glm::ivec2 bearing,    // Offset from baseline to left/top of glyph
             unsigned int advance    // Offset to advance to next glyph
-            ) {
-        this->textureId = textureId;
-        this->size = size;
-        this->bearing = bearing;
-        this->advance = advance;
-    }
+            ) : textureId(textureId), size(size), bearing(bearing), advance(advance) {}
 
     unsigned int getTextureId() const {
         return textureId;

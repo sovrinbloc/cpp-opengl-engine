@@ -7,7 +7,9 @@
 
 #include <vector>
 #include "../Models/RawModel.h"
+#include "../Models/RawBoundingBox.h"
 #include "../Textures/TextureLoader.h"
+#include "ModelData.h"
 #include "ModelData.h"
 #define GL_SILENCE_DEPRECATION
 #include <GLFW/glfw3.h>
@@ -26,6 +28,9 @@ public:
 
     // for GUI rendering: we only need a 2d square with things rendered on it.
     RawModel *loadToVAO(const std::vector<float>& positions, int dimensions);
+
+    // for Bounding Boxes for clicking
+    RawBoundingBox *loadToVAO(BoundingBoxData box);
 
     FontModel *loadFontVAO();
 

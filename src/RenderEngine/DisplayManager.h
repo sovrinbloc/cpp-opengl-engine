@@ -42,6 +42,7 @@ public:
     static bool resetMouse;
 
 private:
+
     static void updatePerspective(int width, int height);
 
     static GLint SRC_WIDTH;
