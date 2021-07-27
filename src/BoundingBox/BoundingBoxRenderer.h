@@ -10,7 +10,7 @@
 #include <map>
 #include <iostream>
 #include <vector>
-#include "../Shaders/BoundingBoxShader.h"
+#include "BoundingBoxShader.h"
 
 class BoundingBoxRenderer {
 private:

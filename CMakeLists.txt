@@ -99,12 +99,22 @@ add_executable(engine
         src/FontRendering/TextMaster.h
         src/FontMeshCreator/TextMeshCreator.cpp
         src/FontMeshCreator/TextMeshCreator.h
-        src/Models/RawBoundingBox.h
+        src/BoundingBox/RawBoundingBox.h
         src/Models/RawData.h
-        src/Models/BoundingBox.h
-        src/RenderEngine/BoundingBoxRenderer.cpp
-        src/RenderEngine/BoundingBoxRenderer.h
-        src/Shaders/BoundingBoxShader.cpp src/Shaders/BoundingBoxShader.h src/BoundingBox/BoundingBoxMaster.cpp src/BoundingBox/BoundingBoxMaster.h src/Input/InputMaster.h src/Input/InputMaster.cpp)
+        src/BoundingBox/BoundingBox.h
+        src/BoundingBox/BoundingBoxRenderer.cpp
+        src/BoundingBox/BoundingBoxRenderer.h
+        src/BoundingBox/BoundingBoxShader.cpp
+        src/BoundingBox/BoundingBoxShader.h
+        src/BoundingBox/BoundingBoxMaster.cpp
+        src/BoundingBox/BoundingBoxMaster.h
+        src/Input/InputMaster.h
+        src/Input/InputMaster.cpp
+        src/Toolbox/TerrainPicker.cpp
+        src/Toolbox/TerrainPicker.h
+        src/Toolbox/Picker.cpp
+        src/Toolbox/Picker.h
+        src/RenderEngine/FrameBuffers.cpp src/RenderEngine/FrameBuffers.h)
 
 include_directories(deps/glfw)
 add_subdirectory(deps/glfw)

@@ -22,6 +22,13 @@
 #include "../FontRendering/FontRenderer.h"
 #include "../Util/ColorNames.h"
 #include "../FontRendering/TextMaster.h"
+#include "../Toolbox/TerrainPicker.h"
+#include "../RenderEngine/FrameBuffers.h"
+
+GLuint LoadShaders(const char *vertex_file_path, const char *fragment_file_path);
+
+void saveScreenshotToFile(const std::string &filename, int windowWidth, int windowHeight);
+
 
 void MainGameLoop::main() {
 
@@ -70,7 +77,8 @@ void MainGameLoop::main() {
     ModelData dragonData = OBJLoader::loadObjModel("dragon");;
     RawBoundingBox *pDragonBox = loader->loadToVAO(dragonData.getBoundingBox());
     staticDragon = new TexturedModel(loader->loadToVAO(&dragonData), new ModelTexture("grassTexture", PNG));
-    auto dragonEntity = new Entity(staticDragon, new BoundingBox(pDragonBox, glm::vec3(0.0f, 0.0f, 0.0f)), glm::vec3(0.0, 120.0, 80), glm::vec3(0.0f, 180.0f, 0.0f));
+    auto dragonEntity = new Entity(staticDragon, new BoundingBox(pDragonBox, glm::vec3(0.0f, 0.0f, 0.0f)),
+                                   glm::vec3(0.0, 120.0, 80), glm::vec3(0.0f, 180.0f, 0.0f));
 
     ModelData grassData = OBJLoader::loadObjModel("grassModel");;
     RawBoundingBox *pGrassBox = loader->loadToVAO(grassData.getBoundingBox());
@@ -164,22 +172,33 @@ void MainGameLoop::main() {
     /**
      * Load each entity into the vector, including position, fontSize, and rotation
      */
-    Entity *lampy = new Entity(staticLamp, new BoundingBox(pLampBox, glm::vec3(0.01f)), glm::vec3(120.0f, terrain->getHeightOfTerrain(120, -50), -50.0f));
+    Entity *lampy = new Entity(staticLamp, new BoundingBox(pLampBox, glm::vec3(0.01f)),
+                               glm::vec3(120.0f, terrain->getHeightOfTerrain(120, -50), -50.0f));
     allEntities.push_back(lampy);
-    allEntities.push_back(new Entity(staticStall, new BoundingBox(pLampBox, glm::vec3(0.02f)), glm::vec3(1.0f, 0.0f, -82.4f), glm::vec3(0.0f, 180.0f, 0.0f)));
-    allEntities.push_back(new Entity(staticLamp, new BoundingBox(pLampBox, glm::vec3(0.03f)), glm::vec3(100.0f, terrain->getHeightOfTerrain(100, -50), -50.0f)));
-    allEntities.push_back(new Entity(staticLamp, new BoundingBox(pLampBox, glm::vec3(0.04f)), glm::vec3(110.0f, terrain->getHeightOfTerrain(110, -20), -20.0f)));
+    allEntities.push_back(
+            new Entity(staticStall, new BoundingBox(pLampBox, glm::vec3(0.02f)), glm::vec3(1.0f, 0.0f, -82.4f),
+                       glm::vec3(0.0f, 180.0f, 0.0f)));
+    allEntities.push_back(new Entity(staticLamp, new BoundingBox(pLampBox, glm::vec3(0.03f)),
+                                     glm::vec3(100.0f, terrain->getHeightOfTerrain(100, -50), -50.0f)));
+    allEntities.push_back(new Entity(staticLamp, new BoundingBox(pLampBox, glm::vec3(0.04f)),
+                                     glm::vec3(110.0f, terrain->getHeightOfTerrain(110, -20), -20.0f)));
 
 
     for (int i = 0; i < 500; ++i) {
-        allEntities.push_back(new Entity(staticGrass, new BoundingBox(pGrassBox, glm::vec3(0.05f)), generateRandomPosition(terrain), generateRandomRotation(),
-                                         generateRandomScale(0.5, 1.50f)));
-        allEntities.push_back(new Entity(staticFluffyTree, new BoundingBox(pFluffyTreeBox, glm::vec3(0.06f)), generateRandomPosition(terrain), generateRandomRotation(),
-                                         generateRandomScale(0.5, 1.50f)));
-        allEntities.push_back(new Entity(staticTree, new BoundingBox(pTreeBox, glm::vec3(0.07f)), generateRandomPosition(terrain), generateRandomRotation(),
-                                         generateRandomScale(.25, 1.50)));
         allEntities.push_back(
-                new Entity(staticFern, new BoundingBox(pFernBox, glm::vec3(0.08f)), Utils::roll(1, 4), generateRandomPosition(terrain), generateRandomRotation(),
+                new Entity(staticGrass, new BoundingBox(pGrassBox, glm::vec3(0.05f)), generateRandomPosition(terrain),
+                           generateRandomRotation(),
+                           generateRandomScale(0.5, 1.50f)));
+        allEntities.push_back(new Entity(staticFluffyTree, new BoundingBox(pFluffyTreeBox, glm::vec3(0.06f)),
+                                         generateRandomPosition(terrain), generateRandomRotation(),
+                                         generateRandomScale(0.5, 1.50f)));
+        allEntities.push_back(
+                new Entity(staticTree, new BoundingBox(pTreeBox, glm::vec3(0.07f)), generateRandomPosition(terrain),
+                           generateRandomRotation(),
+                           generateRandomScale(.25, 1.50)));
+        allEntities.push_back(
+                new Entity(staticFern, new BoundingBox(pFernBox, glm::vec3(0.08f)), Utils::roll(1, 4),
+                           generateRandomPosition(terrain), generateRandomRotation(),
                            generateRandomScale(.25, 1.50)));
         if (i % 30 == 0) {
             allScenes.push_back(new Scene(pBackpack, generateRandomPosition(terrain, 3.0f), generateRandomRotation(),
@@ -198,7 +217,8 @@ void MainGameLoop::main() {
     TexturedModel *playerOne = new TexturedModel(playerModel, new ModelTexture(
             "stallTexture", PNG));
 
-    Player *player = new Player(playerOne, new BoundingBox(pStallBox, glm::vec3(1.0f)), glm::vec3(100.0f, 3.0f, -50.0f), glm::vec3(0.0f, 180.0f, 0.0f), 1.0f);
+    Player *player = new Player(playerOne, new BoundingBox(pStallBox, glm::vec3(1.0f)), glm::vec3(100.0f, 3.0f, -50.0f),
+                                glm::vec3(0.0f, 180.0f, 0.0f), 1.0f);
     allEntities.push_back(player);
     PlayerCamera *playerCamera = new PlayerCamera(player);
 
@@ -221,34 +241,49 @@ void MainGameLoop::main() {
     MasterRenderer *renderer = new MasterRenderer(playerCamera, loader);
     GuiRenderer *guiRenderer = new GuiRenderer(loader);
 
+    // Framebuffer
+    FrameBuffers *fbos = new FrameBuffers();
+    GuiTexture *gui = new GuiTexture(fbos->getReflectionTexture(), glm::vec2(-0.5f -0.5f), glm::vec2(0.5f, 0.5f));
+//    guis.push_back(gui);
 
     /**
      * Mouse Picker
      */
-    MousePicker *picker = new MousePicker(playerCamera, renderer->getProjectionMatrix(), terrain);
+    TerrainPicker *picker = new TerrainPicker(playerCamera, renderer->getProjectionMatrix(), terrain);
 
 
+
+    bool done = false;
     /**
      * Main Game Loop
      */
     while (DisplayManager::stayOpen()) {
         playerCamera->move(terrain);
+
         picker->update();
 
         glm::vec3 terrainPoint = picker->getCurrentTerrainPoint();
 
-        if (terrainPoint != glm::vec3()) {
-            lampy->setPosition(terrainPoint);
-            lights[1]->setPosition(glm::vec3(terrainPoint.x, terrainPoint.y + 15.0f, terrainPoint.z));
-        }
+//        if (terrainPoint != glm::vec3()) {
+//            lampy->setPosition(terrainPoint);
+//            lights[1]->setPosition(glm::vec3(terrainPoint.x, terrainPoint.y + 15.0f, terrainPoint.z));
+//        }
 
         for (Terrain *ter : allTerrains) {
             renderer->processTerrain(ter);
         }
 
+        //framebuffer only
+        fbos->bindReflectionFrameBuffer();
         for (Entity *ent : allEntities) {
             renderer->processEntity(ent);
-            renderer->processBoundingBox(ent);
+        }
+        fbos->unbindCurrentFrameBuffer();
+
+
+
+        for (Entity *ent : allEntities) {
+            renderer->processEntity(ent);
         }
 
         for (Scene *scene : allScenes) {
@@ -257,15 +292,41 @@ void MainGameLoop::main() {
 
 
         renderer->render(lights);
-        guiRenderer->render(guis);
 
+        guiRenderer->render(guis);
         TextMaster::render();
         DisplayManager::updateDisplay();
-    }
 
+//        const glm::vec3 &colors = InputMaster::getClicked(renderer->getProjectionMatrix(), playerCamera->GetViewMatrix());
+//        for (Entity *ent : allEntities) {
+//            renderer->processBoundingBox(ent);
+//        }
+
+        if (InputMaster::hasPendingClick()) {
+            if (InputMaster::mouseClicked(LeftClick)) {
+                saveScreenshotToFile("output" + std::to_string(glfwGetTime() / 10) + std::string(".tga"),
+                                     DisplayManager::Width(), DisplayManager::Height());
+            }
+        }
+        done = true;
+
+
+        unsigned char pixel[3];
+        glFlush();
+        glFinish();
+        glReadPixels(static_cast<int>(InputMaster::mouseX),
+                     static_cast<int>(static_cast<float>(DisplayManager::Height()) - InputMaster::mouseY), 1, 1, GL_RGB,
+                     GL_UNSIGNED_BYTE, pixel);
+        glm::vec3 colors = glm::vec3(pixel[0], pixel[1], pixel[2]);
+        if (colors.x != -1.0f) {
+            InputMaster::resetClick();
+        }
+
+    }
     /**
      * Clean up renderers and loaders
      */
+    fbos->cleanUp();
     TextMaster::cleanUp(); // added todo: implement
     fontRenderer->cleanUp();
     guiRenderer->cleanUp();
@@ -309,4 +370,22 @@ float MainGameLoop::generateRandomScale(float min = 0.75, float max = 1.50) {
         r = max;
     }
     return r;
+}
+
+void saveScreenshotToFile(const std::string &filename, int windowWidth, int windowHeight) {
+    const int numberOfPixels = windowWidth * windowHeight * 3;
+    unsigned char pixels[numberOfPixels];
+
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
+    glReadBuffer(GL_FRONT);
+    glReadPixels(0, 0, windowWidth, windowHeight, GL_RGB, GL_UNSIGNED_BYTE, pixels);
+
+    FILE *outputFile = fopen(filename.c_str(), "w");
+    short header[] = {0, 2, 0, 0, 0, 0, (short) windowWidth, (short) windowHeight, 24};
+
+    fwrite(&header, sizeof(header), 1, outputFile);
+    fwrite(pixels, numberOfPixels, 1, outputFile);
+    fclose(outputFile);
+
+    printf("Finish writing to file.\n");
 }

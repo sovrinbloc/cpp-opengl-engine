@@ -10,6 +10,7 @@
 #include <GLFW/glfw3.h>
 #include "Camera.h"
 #include "../RenderEngine/DisplayManager.h"
+#include "../Input/InputMaster.h"
 // Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
 enum Camera_Movement {
     FORWARD,
@@ -31,10 +32,6 @@ public:
     constexpr static const float kZoom = 45.0f;
     constexpr static const float kMinZoom = 20.0f;
     constexpr static const float kMaxZoom = 45.0f;
-
-    static double MouseX, MouseY;
-    static double LastMouseX, LastMouseY;
-    static float MouseDX, MouseDY;
 
     static bool ResetMouse;
 

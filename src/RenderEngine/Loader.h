@@ -7,7 +7,7 @@
 
 #include <vector>
 #include "../Models/RawModel.h"
-#include "../Models/RawBoundingBox.h"
+#include "../BoundingBox/RawBoundingBox.h"
 #include "../Textures/TextureLoader.h"
 #include "ModelData.h"
 #include "ModelData.h"

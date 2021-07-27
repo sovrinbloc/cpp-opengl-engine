@@ -5,13 +5,13 @@
 #ifndef ENGINE_BOUNDINGBOXSHADER_H
 #define ENGINE_BOUNDINGBOXSHADER_H
 
-#include "ShaderProgram.h"
+#include "../Shaders/ShaderProgram.h"
 #include "../Entities/Camera.h"
 
 class BoundingBoxShader : public ShaderProgram {
 private:
-    constexpr static const char *VertexPath = "/src/Shaders/BoundingBox/VertexShader.glsl";
-    constexpr static const char *FragmentPath = "/src/Shaders/BoundingBox/FragmentShader.glsl";
+    constexpr static const char *VertexPath = "/src/BoundingBox/BoundingBox/VertexShader.glsl";
+    constexpr static const char *FragmentPath = "/src/BoundingBox/BoundingBox/FragmentShader.glsl";
 
     const std::string position = "position";
 

@@ -16,8 +16,8 @@
 #include "SceneLoader.h"
 #include "../Entities/PlayerCamera.h"
 #include "../Skybox/SkyboxRenderer.h"
-#include "../Shaders/BoundingBoxShader.h"
-#include "BoundingBoxRenderer.h"
+#include "../BoundingBox/BoundingBoxShader.h"
+#include "../BoundingBox/BoundingBoxRenderer.h"
 
 static const float FOVY = 45.0f;
 static const float NEAR_PLANE = 0.1f;

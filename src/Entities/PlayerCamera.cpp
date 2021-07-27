@@ -45,7 +45,7 @@ glm::mat4 PlayerCamera::GetViewMatrix() {
 
 void PlayerCamera::calculateAngleAroundPlayer() {
     if (glfwGetMouseButton(DisplayManager::window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS || cursorInvisible) {
-        float angleChange = MouseDX * 0.1f;
+        float angleChange = InputMaster::mouseDx * 0.1f;
         angleAroundPlayer -= angleChange;
     }
 }

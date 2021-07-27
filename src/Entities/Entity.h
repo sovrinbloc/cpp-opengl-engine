@@ -7,7 +7,7 @@
 
 #include "glm/glm.hpp"
 #include "../Models/TexturedModel.h"
-#include "../Models/BoundingBox.h"
+#include "../BoundingBox/BoundingBox.h"
 
 
 class Entity {

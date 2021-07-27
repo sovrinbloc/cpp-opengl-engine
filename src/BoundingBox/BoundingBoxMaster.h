@@ -5,6 +5,8 @@
 #ifndef ENGINE_BOUNDINGBOXMASTER_H
 #define ENGINE_BOUNDINGBOXMASTER_H
 #include "glm/glm.hpp"
+#include "../Input/InputMaster.h"
+#include "../RenderEngine/DisplayManager.h"
 
 class BoundingBoxMaster {
 private:
@@ -34,6 +36,17 @@ public:
         int b = (index>>16)&0xFF;
 
         return glm::vec4(float(r)/255.0f, float(g)/255.0f, float(b)/255.0f, 1.0f);
+    }
+
+    glm::vec3 getClicked() {
+        if (InputMaster::hasPendingClick()) {
+            if (InputMaster::mouseClicked(LeftClick)) {
+                unsigned char pixel[3];
+                glReadPixels(static_cast<GLint>(InputMaster::mouseX), static_cast<GLint>(DisplayManager::Height() - InputMaster::mouseY) - 1, 1, 1, GL_RED, GL_UNSIGNED_BYTE, &pixel);
+                return glm::vec3(pixel[0], pixel[1], pixel[2]);
+            }
+        }
+        return glm::vec3();
     }
 
     int GetPickedColorIndexUnderMouse() {

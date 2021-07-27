@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "../Input/InputMaster.h"
 
 //
 // Created by Joseph Alai on 7/10/21.
@@ -18,51 +19,51 @@ void Player::move(Terrain *terrain) {
     float dx = distance * sin(glm::radians(getRotation().y));
     float dz = distance * cos(glm::radians(getRotation().y));
     increasePosition(glm::vec3(dx, 0.0f, dz));
-    this->upwardsSpeed += kGravity * DisplayManager::getFrameTimeSeconds();
+    upwardsSpeed += kGravity * DisplayManager::getFrameTimeSeconds();
     increasePosition(glm::vec3(0, upwardsSpeed * DisplayManager::getFrameTimeSeconds(), 0.0f));
 
     float terrainHeight = terrain->getHeightOfTerrain(getPosition().x, getPosition().z);
     if (getPosition().y <= terrainHeight) {
-        this->upwardsSpeed = 0.0f;
-        setPosition( + glm::vec3(getPosition().x, terrainHeight, getPosition().z));
-        this->isInAir = false;
+        upwardsSpeed = 0.0f;
+        setPosition(+glm::vec3(getPosition().x, terrainHeight, getPosition().z));
+        isInAir = false;
     }
 }
 
 void Player::jump() {
     if (!isInAir) {
-        this->upwardsSpeed = kJumpPower;
-        this->isInAir = true;
+        upwardsSpeed = kJumpPower;
+        isInAir = true;
     }
 }
 
 void Player::checkInputs() {
 
-    if (glfwGetKey(DisplayManager::window, GLFW_KEY_UP) == GLFW_PRESS) {
-        this->currentSpeed = kRunSpeed * SPEED_HACK;
-    } else if (glfwGetKey(DisplayManager::window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-        this->currentSpeed = -kRunSpeed * SPEED_HACK;
+    if (InputMaster::isKeyDown(Up)) {
+        currentSpeed = kRunSpeed * SPEED_HACK;
+    } else if (InputMaster::isKeyDown(Down)) {
+        currentSpeed = -kRunSpeed * SPEED_HACK;
     } else {
-        this->currentSpeed = 0.0f;
+        currentSpeed = 0.0f;
     }
 
-    if (glfwGetKey(DisplayManager::window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-        this->currentTurnSpeed = -kTurnSpeed * SPEED_HACK / 2;
-    } else if (glfwGetKey(DisplayManager::window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-        this->currentTurnSpeed = kTurnSpeed * SPEED_HACK / 2;
+    if (InputMaster::isKeyDown(Right)) {
+        currentTurnSpeed = -kTurnSpeed * SPEED_HACK / 2;
+    } else if (InputMaster::isKeyDown(Left)) {
+        currentTurnSpeed = kTurnSpeed * SPEED_HACK / 2;
     } else {
-        this->currentTurnSpeed = 0.0f;
+        currentTurnSpeed = 0.0f;
     }
 
-    if (glfwGetKey(DisplayManager::window, GLFW_KEY_SPACE) == GLFW_PRESS) {
-        this->jump();
+    if (InputMaster::isKeyDown(Space)) {
+        jump();
     }
 
 
-    if (glfwGetKey(DisplayManager::window, GLFW_KEY_TAB) == GLFW_PRESS) {
+    if (InputMaster::isKeyDown(Tab)) {
         SPEED_HACK = 4.5f;
     }
-    if (glfwGetKey(DisplayManager::window, GLFW_KEY_BACKSLASH) == GLFW_PRESS) {
+    if (InputMaster::isKeyDown(Backslash)) {
         SPEED_HACK = 1.0f;
     }
 }

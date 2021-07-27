@@ -4,7 +4,7 @@
 
 #include "BoundingBoxRenderer.h"
 #include "../Toolbox/Maths.h"
-#include "RenderStyle.h"
+#include "../RenderEngine/RenderStyle.h"
 
 BoundingBoxRenderer::BoundingBoxRenderer(BoundingBoxShader *shader, glm::mat4 projectionMatrix) :
         shader(shader) {

@@ -6,10 +6,6 @@
 
 bool CameraInput::cursorInvisible = false;
 
-double CameraInput::MouseX, CameraInput::MouseY;
-double CameraInput::LastMouseX, CameraInput::LastMouseY;
-float CameraInput::MouseDX, CameraInput::MouseDY;
-
 // camera options
 float CameraInput::MovementSpeed;
 float CameraInput::MouseSensitivity;
@@ -22,7 +18,7 @@ CameraInput::CameraInput(glm::vec3 position) : Camera(position) {
     MouseSensitivity = (kSensitivity);
     Zoom = kZoom;
     glfwSetInputMode(DisplayManager::window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-    glfwGetCursorPos(DisplayManager::window, &CameraInput::LastMouseX, &CameraInput::LastMouseY);
+    glfwGetCursorPos(DisplayManager::window, &InputMaster::lastMouseX, &InputMaster::lastMouseY);
     glfwSetCursorPosCallback(DisplayManager::window, mouse_callback);
     glfwSetScrollCallback(DisplayManager::window, scroll_callback);
 }
@@ -43,50 +39,50 @@ void CameraInput::move() {
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
 void CameraInput::processInput(GLFWwindow *window) {
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+    if (InputMaster::isKeyDown(Escape)) {
         this->toggleCursorStyle();
     }
-    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
+    if (InputMaster::isKeyDown(Q)) {
         glfwSetWindowShouldClose(window, true);
     }
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+    if (InputMaster::isKeyDown(W)) {
         ProcessKeyboard(FORWARD, DisplayManager::delta);
     }
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+    if (InputMaster::isKeyDown(S)) {
         ProcessKeyboard(BACKWARD, DisplayManager::delta);
     }
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+    if (InputMaster::isKeyDown(A)) {
         ProcessKeyboard(LEFT, DisplayManager::delta);
     }
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+    if (InputMaster::isKeyDown(D)) {
         ProcessKeyboard(RIGHT, DisplayManager::delta);
     }
-    if (glfwGetKey(window, GLFW_KEY_TAB) == GLFW_PRESS) {
+    if (InputMaster::isKeyDown(Tab)) {
         MovementSpeed = kSpeed * 4.5;
     }
-    if (glfwGetKey(window, GLFW_KEY_BACKSLASH) == GLFW_PRESS) {
+    if (InputMaster::isKeyDown(Backslash)) {
         MovementSpeed = kSpeed;
     }
 }
 
 void CameraInput::mouse_callback(GLFWwindow *window, double xPos, double yPos) {
-    CameraInput::MouseX = xPos;
-    CameraInput::MouseY = yPos;
-    if (cursorInvisible || glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS) {
+    InputMaster::mouseX = xPos;
+    InputMaster::mouseY = yPos;
+    if (cursorInvisible || InputMaster::isMouseDown(LeftClick)) {
         if (DisplayManager::resetMouse) {
-            CameraInput::LastMouseX = static_cast<GLfloat>(CameraInput::MouseX);
-            CameraInput::LastMouseY = static_cast<GLfloat>(CameraInput::MouseY);
+            InputMaster::lastMouseX = static_cast<GLfloat>(InputMaster::mouseX);
+            InputMaster::lastMouseY = static_cast<GLfloat>(InputMaster::mouseY);
             DisplayManager::resetMouse = false;
         }
 
-        CameraInput::MouseDX = static_cast<GLfloat>(xPos) - static_cast<GLfloat>(CameraInput::LastMouseX);
+        InputMaster::mouseDx = static_cast<GLfloat>(xPos) - static_cast<GLfloat>(InputMaster::lastMouseX);
 
         // reversed since y-coordinates go from bottom to top
-        CameraInput::MouseDY = static_cast<GLfloat>(CameraInput::LastMouseY) - static_cast<GLfloat>(yPos);
+        InputMaster::mouseDy = static_cast<GLfloat>(InputMaster::lastMouseY) - static_cast<GLfloat>(yPos);
 
-        CameraInput::LastMouseX = static_cast<GLfloat>(xPos);
-        CameraInput::LastMouseY = static_cast<GLfloat>(yPos);
-        ProcessMouseMovement(MouseDX, MouseDY);
+        InputMaster::lastMouseX = static_cast<GLfloat>(xPos);
+        InputMaster::lastMouseY = static_cast<GLfloat>(yPos);
+        ProcessMouseMovement(InputMaster::mouseDx, InputMaster::mouseDy);
         return;
     }
     DisplayManager::resetMouse = true;
@@ -136,7 +132,7 @@ void CameraInput::ProcessMouseMovement(float xOffset, float yOffset, GLboolean c
  */
 void CameraInput::ProcessMouseScroll(float yOffset) {
     // zoom in with occlusion with SHIFT
-    if (glfwGetKey(DisplayManager::window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+    if (InputMaster::isKeyDown(LeftShift)) {
         Zoom += static_cast<float>(yOffset);
     }
     ZoomOffset = yOffset;
@@ -158,6 +154,4 @@ void CameraInput::updateCameraVectors() {
     Right = glm::normalize(glm::cross(Front,
                                       WorldUp));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
     Up = glm::normalize(glm::cross(Right, Front));
-
-    printf("right: %f, %f, %f\n", Right.x, Right.y, Right.z);
 }

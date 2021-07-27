@@ -8,12 +8,15 @@
 #define GLFW_INCLUDE_GLCOREARB
 
 #include <GLFW/glfw3.h>
+#include "glm/glm.hpp"
 #include <iostream>
 #include <vector>
+#include <map>
 
 enum ClickButtons {
     LeftClick = GLFW_MOUSE_BUTTON_LEFT,
-    RightClick = GLFW_MOUSE_BUTTON_RIGHT
+    RightClick = GLFW_MOUSE_BUTTON_RIGHT,
+    Nothing = -1
 };
 
 enum KeyboardKeys {
@@ -159,6 +162,11 @@ private:
     static std::vector<KeyboardKeys> pressedKeys;
 
 public:
+    static double mouseX, mouseY;
+
+    static double lastMouseX, lastMouseY;
+
+    static float mouseDx, mouseDy;
 
     static void init();
 
@@ -179,6 +187,14 @@ public:
     static void clearKey(KeyboardKeys key);
 
     static bool findKey(KeyboardKeys key);
+
+    static bool isKeyDown(KeyboardKeys key);
+
+    static bool isMouseDown(ClickButtons click);
+
+    static glm::vec3 getClicked(glm::mat4 projectionMatrix, glm::mat4 viewMatrix);
+
+    static void resetClick();
 
 private:
 
