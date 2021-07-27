@@ -116,6 +116,13 @@ add_executable(engine
         src/Toolbox/Picker.h
         src/RenderEngine/FrameBuffers.cpp src/RenderEngine/FrameBuffers.h)
 
+if(EXISTS deps/glrequired)
+    message(STATUS "Requiring OpenGL")
+    find_package(OpenGL REQUIRED)
+    target_link_libraries(engine glfw)
+    target_link_libraries(engine OpenGL::GL)
+endif()
+
 include_directories(deps/glfw)
 add_subdirectory(deps/glfw)
 include_directories(deps/glfw/GLFW/include)

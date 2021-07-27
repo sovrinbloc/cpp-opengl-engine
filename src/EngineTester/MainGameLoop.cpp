@@ -242,8 +242,8 @@ void MainGameLoop::main() {
     GuiRenderer *guiRenderer = new GuiRenderer(loader);
 
     // Framebuffer
-    FrameBuffers *fbos = new FrameBuffers();
-    GuiTexture *gui = new GuiTexture(fbos->getReflectionTexture(), glm::vec2(-0.5f -0.5f), glm::vec2(0.5f, 0.5f));
+//    FrameBuffers *fbos = new FrameBuffers();
+//    GuiTexture *gui = new GuiTexture(fbos->getReflectionTexture(), glm::vec2(-0.5f -0.5f), glm::vec2(0.5f, 0.5f));
 //    guis.push_back(gui);
 
     /**
