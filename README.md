@@ -20,3 +20,13 @@ add_subdirectory(deps/ft2)
 include_directories(deps/ft2/include)
 target_link_libraries(engine freetype)
 ```
+
+## For The Laptop
+```
+if(EXISTS deps/glrequired)
+ message(STATUS "Requiring OpenGL")
+ find_package(OpenGL REQUIRED)
+ target_link_libraries(engine glfw)
+ target_link_libraries(engine OpenGL::GL)
+endif()
+```

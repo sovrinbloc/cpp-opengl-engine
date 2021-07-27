@@ -161,6 +161,8 @@ private:
 
     static std::vector<KeyboardKeys> pressedKeys;
 
+    static std::vector<ClickButtons> clickedButtons;
+
 public:
     static double mouseX, mouseY;
 
@@ -192,7 +194,7 @@ public:
 
     static bool isMouseDown(ClickButtons click);
 
-    static glm::vec3 getClicked(glm::mat4 projectionMatrix, glm::mat4 viewMatrix);
+    static glm::vec3 getClicked();
 
     static void resetClick();
 

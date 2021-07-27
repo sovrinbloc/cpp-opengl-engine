@@ -35,9 +35,17 @@ public:
     }
 
     void cleanUp() {//call when closing the game
+        cleanUpReflection();
+        cleanUpRefraction();
+    }
+
+    void cleanUpReflection() const {
         glDeleteFramebuffers(1, &reflectionFrameBuffer);
         glDeleteTextures(1, &reflectionTexture);
         glDeleteRenderbuffers(1, &reflectionDepthBuffer);
+    }
+
+    void cleanUpRefraction() const {
         glDeleteFramebuffers(1, &refractionFrameBuffer);
         glDeleteTextures(1, &refractionTexture);
         glDeleteTextures(1, &refractionDepthTexture);
@@ -53,7 +61,11 @@ public:
 
     void unbindCurrentFrameBuffer() const {//call to switch to default frame buffer
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        glViewport(0, 0, DisplayManager::Width(), DisplayManager::Height());
+        int width, height;
+        glfwGetFramebufferSize(DisplayManager::window, &width, &height);
+//        glfwGetFramebufferSize(DisplayManager::window, &width, &height);
+//        glViewport(0, 0, DisplayManager::Width(), DisplayManager::Height());
+        glViewport(0, 0, width, height);
     }
 
     int getReflectionTexture() const {//get the resulting texture
@@ -109,7 +121,7 @@ private:
         glGenTextures(1, &texture);
         glBindTexture(GL_TEXTURE_2D, texture);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height,
-                     0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+                     0, GL_RGB, GL_UNSIGNED_BYTE, (void *) 0);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
@@ -123,7 +135,7 @@ private:
         glGenTextures(1, &texture);
         glBindTexture(GL_TEXTURE_2D, texture);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, width, height,
-                     0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+                     0, GL_DEPTH_COMPONENT, GL_FLOAT, (void *) 0);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,

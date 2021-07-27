@@ -1,6 +1,13 @@
 //
 // Created by Joseph Alai on 6/30/21.
 //
+#if __APPLE__
+#define RETINA_NUMBER 2
+#define RETINA_SCALE(DIM)(DIM/2.0f)
+#else
+#define RETINA_NUMBER 1
+#define RETINA_SCALE(DIM){DIM};
+#endif
 
 #ifndef CRAFTPROJ_DISPLAYMANAGER_H
 #define CRAFTPROJ_DISPLAYMANAGER_H
@@ -39,7 +46,13 @@ public:
 
     static GLint &Height();
 
+    static GLint &FboWidth();
+
+    static GLint &FboHeight();
+
     static bool resetMouse;
+
+    static void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 
 private:
 
@@ -49,7 +62,10 @@ private:
 
     static GLint SRC_HEIGHT;
 
-    static void framebuffer_size_callback(GLFWwindow *window, int width, int height);
+    static GLint FBO_WIDTH;
+
+    static GLint FBO_HEIGHT;
+
 };
 
 #endif //CRAFTPROJ_DISPLAYMANAGER_H

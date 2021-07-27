@@ -15,6 +15,8 @@ KeyboardKeys InputMaster::lastButton;
 
 std::vector<KeyboardKeys> InputMaster::pressedKeys;
 
+std::vector<ClickButtons> InputMaster::clickedButtons;
+
 double InputMaster::mouseX, InputMaster::mouseY;
 
 double InputMaster::lastMouseX, InputMaster::lastMouseY;
@@ -68,12 +70,23 @@ void InputMaster::clearKeys() {
 }
 
 void InputMaster::setKey(KeyboardKeys key) {
+    auto findKey = std::find(pressedKeys.begin(), pressedKeys.end(), key);
+    if (findKey != pressedKeys.end()) {
+        pressedKeys.erase(findKey);
+        return;
+    }
     pendingButton = true;
     lastButton = key;
 }
 
 void InputMaster::setClick(ClickButtons button) {
+    auto findButton = std::find(clickedButtons.begin(), clickedButtons.end(), button);
+    if (findButton != clickedButtons.end()) {
+        clickedButtons.erase(findButton);
+        return;
+    }
     pendingClick = true;
+    clickedButtons.push_back(button);
     lastClick = button;
 }
 
@@ -111,28 +124,19 @@ bool InputMaster::isMouseDown(ClickButtons click) {
     return glfwGetMouseButton(DisplayManager::window, click) == GLFW_PRESS;
 }
 
-glm::vec3 InputMaster::getClicked(glm::mat4 projectionMatrix, glm::mat4 viewMatrix) {
+glm::vec3 InputMaster::getClicked() {
     if (InputMaster::hasPendingClick()) {
         if (InputMaster::mouseClicked(LeftClick)) {
             unsigned char pixel[3];
             glFlush();
             glFinish();
-            GLint viewport[4];
-            glGetIntegerv(GL_VIEWPORT, viewport);
             glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-            glm::vec3 out = Picker::calculateMouseRay(projectionMatrix, viewMatrix);
-
-            glReadPixels(static_cast<int>(mouseX), static_cast<int>(static_cast<float>(DisplayManager::Height()) - mouseY), 1, 1, GL_RGB, GL_UNSIGNED_BYTE, pixel);
-            glm::vec3 colors = glm::vec3(pixel[0], pixel[1], pixel[2]);
-            printf("1 color.x, color.y, color.z: (%f, %f, %f)\n", colors.x, colors.y, colors.z); // OK
-
-//            printf("color.x, color.y, color.z: (%f, %f, %f)\n", colors.x, colors.y, colors.z);
-
-//            glReadPixels(mouseX, (viewport[3] - mouseY), 1, 1, GL_RGB, GL_UNSIGNED_BYTE, pixel);
-//            glReadPixels(static_cast<GLint>(InputMaster::mouseX), static_cast<GLint>(DisplayManager::Height() - InputMaster::mouseY) - 1, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, &pixel);
-
-            return colors;
+            int width, height;
+            glfwGetFramebufferSize(DisplayManager::window, &width, &height);
+            glReadPixels(static_cast<int>(width / DisplayManager::Width() * static_cast<int>(InputMaster::mouseX)),
+                         static_cast<int>(static_cast<int>(height) - (height / DisplayManager::Height() * static_cast<int>(InputMaster::mouseY))), 1, 1, GL_RGB,
+                         GL_UNSIGNED_BYTE, pixel);
+            return glm::vec3(pixel[0], pixel[1], pixel[2]);
         }
     }
     return glm::vec3(-1.0f);

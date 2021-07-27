@@ -243,7 +243,7 @@ void MainGameLoop::main() {
 
     // Framebuffer
 //    FrameBuffers *fbos = new FrameBuffers();
-//    GuiTexture *gui = new GuiTexture(fbos->getReflectionTexture(), glm::vec2(-0.5f -0.5f), glm::vec2(0.5f, 0.5f));
+//    GuiTexture *gui = new GuiTexture(fbos->getReflectionTexture(), glm::vec2(-0.5f -0.5f), glm::vec2(0.5f));
 //    guis.push_back(gui);
 
     /**
@@ -273,14 +273,6 @@ void MainGameLoop::main() {
             renderer->processTerrain(ter);
         }
 
-        //framebuffer only
-        fbos->bindReflectionFrameBuffer();
-        for (Entity *ent : allEntities) {
-            renderer->processEntity(ent);
-        }
-        fbos->unbindCurrentFrameBuffer();
-
-
 
         for (Entity *ent : allEntities) {
             renderer->processEntity(ent);
@@ -290,11 +282,16 @@ void MainGameLoop::main() {
             renderer->processScenes(scene);
         }
 
-
         renderer->render(lights);
 
-        guiRenderer->render(guis);
+        //framebuffer only
+//        fbos->bindReflectionFrameBuffer();
+//        for (Entity *ent : allEntities) {
+//            renderer->processEntity(ent);
+//        }
+//        fbos->unbindCurrentFrameBuffer();
         TextMaster::render();
+        guiRenderer->render(guis);
         DisplayManager::updateDisplay();
 
 //        const glm::vec3 &colors = InputMaster::getClicked(renderer->getProjectionMatrix(), playerCamera->GetViewMatrix());
@@ -305,28 +302,28 @@ void MainGameLoop::main() {
         if (InputMaster::hasPendingClick()) {
             if (InputMaster::mouseClicked(LeftClick)) {
                 saveScreenshotToFile("output" + std::to_string(glfwGetTime() / 10) + std::string(".tga"),
-                                     DisplayManager::Width(), DisplayManager::Height());
+                                     DisplayManager::FboWidth(), DisplayManager::FboHeight());
+
             }
         }
-        done = true;
 
 
-        unsigned char pixel[3];
         glFlush();
         glFinish();
-        glReadPixels(static_cast<int>(InputMaster::mouseX),
-                     static_cast<int>(static_cast<float>(DisplayManager::Height()) - InputMaster::mouseY), 1, 1, GL_RGB,
-                     GL_UNSIGNED_BYTE, pixel);
-        glm::vec3 colors = glm::vec3(pixel[0], pixel[1], pixel[2]);
-        if (colors.x != -1.0f) {
-            InputMaster::resetClick();
+
+        if (InputMaster::hasPendingClick()) {
+            if (InputMaster::mouseClicked(LeftClick)) {
+                auto colors = InputMaster::getClicked();
+                printf("Colors: %f, %f, %f\n", colors.x, colors.y, colors.z);
+                InputMaster::resetClick();
+            }
         }
 
     }
     /**
      * Clean up renderers and loaders
      */
-    fbos->cleanUp();
+//    fbos->cleanUp();
     TextMaster::cleanUp(); // added todo: implement
     fontRenderer->cleanUp();
     guiRenderer->cleanUp();
@@ -387,5 +384,5 @@ void saveScreenshotToFile(const std::string &filename, int windowWidth, int wind
     fwrite(pixels, numberOfPixels, 1, outputFile);
     fclose(outputFile);
 
-    printf("Finish writing to file.\n");
+    printf("Finish writing to file: %s.\n", filename.c_str());
 }

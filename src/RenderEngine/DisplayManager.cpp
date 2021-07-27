@@ -2,10 +2,13 @@
 // Created by Joseph Alai on 7/6/21.
 //
 
+
 #include <cstdio>
 #include "DisplayManager.h"
 GLint DisplayManager::SRC_WIDTH = 800;
 GLint DisplayManager::SRC_HEIGHT = 600;
+GLint DisplayManager::FBO_WIDTH = SRC_WIDTH * RETINA_NUMBER;
+GLint DisplayManager::FBO_HEIGHT = SRC_HEIGHT * RETINA_NUMBER;
 GLFWwindow *DisplayManager::window;
 
 float DisplayManager::delta;
@@ -23,7 +26,6 @@ int DisplayManager::createDisplay() {
 #endif
 
     glfwWindowHint(GLFW_SAMPLES, 4);
-
     window = glfwCreateWindow(Width(), Height(), "GAME ENGINE: Manifest (Alpha & Omega)", nullptr, nullptr);
     if (window == nullptr) {
         printf("Failed to create GLFW window\n");
@@ -33,7 +35,7 @@ int DisplayManager::createDisplay() {
     glEnable(GL_MULTISAMPLE);
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
+    glfwGetFramebufferSize(DisplayManager::window, &FBO_WIDTH, &FBO_HEIGHT);
 #ifndef __APPLE__
     if (glewInit() != GLEW_OK) {
             return -1;
@@ -75,6 +77,7 @@ void DisplayManager::closeDisplay() {
 void DisplayManager::framebuffer_size_callback(GLFWwindow *window, int width, int height) {
     // make sure the viewport matches the new window dimensions; note that width and
     // height will be significantly larger than specified on retina displays.
+    glfwGetFramebufferSize(DisplayManager::window, &width, &height);
     glViewport(0, 0, width, height);
     updatePerspective(width, height);
     resetMouse = false;
@@ -89,6 +92,17 @@ GLint &DisplayManager::Height() {
 }
 
 void DisplayManager::updatePerspective(int width, int height) {
-    DisplayManager::Width() = static_cast<GLint>(width);
-    DisplayManager::Height() = static_cast<GLint>(height);
+    DisplayManager::Width() = static_cast<GLint>(RETINA_SCALE(width));
+    DisplayManager::Height() = static_cast<GLint>(RETINA_SCALE(height));
+    DisplayManager::FboWidth() = width;
+    DisplayManager::FboHeight() = height;
+
+}
+
+GLint &DisplayManager::FboWidth() {
+    return FBO_WIDTH;
+}
+
+GLint &DisplayManager::FboHeight() {
+    return FBO_HEIGHT;
 }

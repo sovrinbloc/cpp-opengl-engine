@@ -21,3 +21,4 @@ CPack*
 engine.cbp*
 CMakeDoxy*
 bin/*
+output*
