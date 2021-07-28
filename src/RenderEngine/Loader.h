@@ -14,6 +14,7 @@
 #define GL_SILENCE_DEPRECATION
 #include <GLFW/glfw3.h>
 #include "../FontMeshCreator/FontModel.h"
+#include "BbData.h"
 
 class Loader {
 public:
@@ -24,13 +25,15 @@ public:
      * @param data
      * @return
      */
-    RawModel *loadToVAO(ModelData *data);
+    RawModel *loadToVAO(MeshData &data);
 
     // for GUI rendering: we only need a 2d square with things rendered on it.
     RawModel *loadToVAO(const std::vector<float>& positions, int dimensions);
 
     // for Bounding Boxes for clicking
     RawBoundingBox *loadToVAO(BoundingBoxData box);
+
+    RawBoundingBox *loadToVAO(BbData box);
 
     FontModel *loadFontVAO();
 

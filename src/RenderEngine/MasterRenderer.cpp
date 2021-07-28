@@ -14,7 +14,7 @@ MasterRenderer::MasterRenderer(PlayerCamera *cameraInput, Loader *loader) : shad
                 Maths::createProjectionMatrix(FOVY, static_cast<float>(DisplayManager::Width()),
                                               static_cast<float>(DisplayManager::Height()), NEAR_PLANE, FAR_PLANE)),
                                                             terrainShader(new TerrainShader()),
-                                                            sceneShader(new ModelShader()),
+                                                            sceneShader(new AssimpStaticShader()),
                                                             bShader(new BoundingBoxShader()){
     RenderStyle::enableCulling();
     entities = new std::map<TexturedModel *, std::vector<Entity *>>;
@@ -32,6 +32,7 @@ void MasterRenderer::cleanUp() {
     shader->cleanUp();
     terrainShader->cleanUp();
     sceneShader->cleanUp();
+    bShader->cleanUp();
 }
 
 glm::vec3 MasterRenderer::skyColor = const_cast<glm::vec3 &>(ColorNames::Skyblue);
@@ -182,12 +183,13 @@ void MasterRenderer::renderScene(std::vector<Entity *> entities, std::vector<Ass
 
 void MasterRenderer::renderBoundingBoxes(std::vector<Entity*> boxes) {
     for (Entity *ent : boxes) {
-        processEntity(ent);
+        processBoundingBox(ent);
     }
     render();
 }
 
 void MasterRenderer::render() {
+    this->prepareBoxSky();
     bShader->start();
 
     bShader->loadViewPosition(camera);
@@ -197,4 +199,15 @@ void MasterRenderer::render() {
 
     boxes->clear();
     bShader->stop();
+}
+
+/**
+ * @brief prepares and clears buffer and screen for each iteration of loop
+ */
+void MasterRenderer::prepareBoxSky() {
+    // render
+    // ------
+    glClearColor(1.0f, 1.0f, 1.0f, 1);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 }

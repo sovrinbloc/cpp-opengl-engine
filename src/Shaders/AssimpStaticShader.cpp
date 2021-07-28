@@ -2,38 +2,38 @@
 // Created by Joseph Alai on 7/8/21.
 //
 
-#include "ModelShader.h"
+#include "AssimpStaticShader.h"
 #include "../Util/Utils.h"
 
 
-ModelShader::ModelShader() : ShaderProgram(VertexPath, FragmentPath, nullptr) {
+AssimpStaticShader::AssimpStaticShader() : ShaderProgram(VertexPath, FragmentPath, nullptr) {
     this->initialize();
     this->loadTransformationMatrix();
 }
 
-void ModelShader::bindAttributes() {
+void AssimpStaticShader::bindAttributes() {
     this->bindAttribute(0, position);
     this->bindAttribute(1, texture);
     this->bindAttribute(2, normal);
 }
 
-void ModelShader::loadTransformationMatrix(glm::mat4 matrix) {
+void AssimpStaticShader::loadTransformationMatrix(glm::mat4 matrix) {
     this->setMat4(location_transformationMatrix, matrix);
 }
 
-void ModelShader::loadProjectionMatrix(glm::mat4 matrix) {
+void AssimpStaticShader::loadProjectionMatrix(glm::mat4 matrix) {
     this->setMat4(location_projectionMatrix, matrix);
 }
 
-void ModelShader::loadViewMatrix(glm::mat4 matrix) {
+void AssimpStaticShader::loadViewMatrix(glm::mat4 matrix) {
     this->setMat4(location_viewMatrix, matrix);
 }
 
-void ModelShader::loadViewPosition(Camera *camera) {
+void AssimpStaticShader::loadViewPosition(Camera *camera) {
     this->setVec3(location_viewPosition, camera->Position);
 }
 
-void ModelShader::loadLight(std::vector<Light *>lights) {
+void AssimpStaticShader::loadLight(std::vector<Light *>lights) {
 
     // for textures and lighting
     for(int i = 0; i < MAX_LIGHTS; i++) {
@@ -59,16 +59,16 @@ void ModelShader::loadLight(std::vector<Light *>lights) {
     }
 }
 
-void ModelShader::loadMaterial(Material material) {
+void AssimpStaticShader::loadMaterial(Material material) {
     this->setFloat(location_materialShininess, material.shininess);
     this->setFloat(location_materialReflectivity, material.reflectivity);
 }
 
-void ModelShader::loadSkyColorVariable(glm::vec3 skyColor) {
+void AssimpStaticShader::loadSkyColorVariable(glm::vec3 skyColor) {
     this->setVec3(location_skyColor, skyColor);
 }
 
-void ModelShader::getAllUniformLocations() {
+void AssimpStaticShader::getAllUniformLocations() {
     location_transformationMatrix = getUniformLocation(transformationMatrix);
     location_projectionMatrix = getUniformLocation(projectionMatrix);
     location_viewMatrix = getUniformLocation(viewMatrix);

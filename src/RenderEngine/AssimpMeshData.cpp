@@ -15,7 +15,7 @@ AssimpMeshData::AssimpMeshData(vector<VertexData> vertices, vector<unsigned int>
 }
 
 // render the mesh
-void AssimpMeshData::render(ModelShader *shader) {
+void AssimpMeshData::render(AssimpStaticShader *shader) {
     // bind appropriate textures
     unsigned int diffuseNr = 1;
     unsigned int specularNr = 1;

@@ -2,8 +2,8 @@
 // Created by Joseph Alai on 7/8/21.
 //
 
-#ifndef ENGINE_MODELSHADER_H
-#define ENGINE_MODELSHADER_H
+#ifndef ENGINE_ASSIMPSTATICSHADER_H
+#define ENGINE_ASSIMPSTATICSHADER_H
 
 
 #include "../Entities/CameraInput.h"
@@ -12,7 +12,7 @@
 #include "../Entities/Light.h"
 
 
-class ModelShader : public ShaderProgram {
+class AssimpStaticShader : public ShaderProgram {
 private:
     static const int MAX_LIGHTS = 4;
 
@@ -67,7 +67,7 @@ private:
 public:
     GLuint attribute;
 
-    ModelShader();
+    AssimpStaticShader();
 
     void bindAttributes() override ;
 
@@ -92,4 +92,4 @@ protected:
 
 };
 
-#endif //ENGINE_MODELSHADER_H
+#endif //ENGINE_ASSIMPSTATICSHADER_H

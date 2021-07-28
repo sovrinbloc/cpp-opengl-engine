@@ -66,17 +66,18 @@ void MainGameLoop::main() {
     TexturedModel *staticGrass, *staticTree, *staticStall, *staticFluffyTree, *staticDragon, *staticFern, *staticLamp;
 
     ModelData lampData = OBJLoader::loadObjModel("lamp");
-    RawBoundingBox *pLampBox = loader->loadToVAO(lampData.getBoundingBox());
-    staticLamp = new TexturedModel(loader->loadToVAO(&lampData), new ModelTexture("lamp", PNG));
+    BbData box = OBJLoader::loadBoundingBox(&lampData);
+    RawBoundingBox *pLampBox = loader->loadToVAO(box);
+    staticLamp = new TexturedModel(loader->loadToVAO(lampData), new ModelTexture("lamp", PNG));
 
     ModelData fernData = OBJLoader::loadObjModel("fern");
     RawBoundingBox *pFernBox = loader->loadToVAO(fernData.getBoundingBox());
-    staticFern = new TexturedModel(loader->loadToVAO(&fernData), new ModelTexture("fern", PNG));
+    staticFern = new TexturedModel(loader->loadToVAO(fernData), new ModelTexture("fern", PNG));
     staticFern->getModelTexture()->setNumberOfRows(2);
 
     ModelData dragonData = OBJLoader::loadObjModel("dragon");;
     RawBoundingBox *pDragonBox = loader->loadToVAO(dragonData.getBoundingBox());
-    staticDragon = new TexturedModel(loader->loadToVAO(&dragonData), new ModelTexture("grassTexture", PNG));
+    staticDragon = new TexturedModel(loader->loadToVAO(dragonData), new ModelTexture("grassTexture", PNG));
     auto dragonEntity = new Entity(staticDragon, new BoundingBox(pDragonBox, glm::vec3(0.0f, 0.0f, 0.0f)),
                                    glm::vec3(0.0, 120.0, 80), glm::vec3(0.0f, 180.0f, 0.0f));
 
@@ -85,7 +86,7 @@ void MainGameLoop::main() {
     grassTexture = new ModelTexture("grassTexture", PNG);
     grassTexture->setHasTransparency(true);
     grassTexture->setUseFakeLighting(true);
-    staticGrass = new TexturedModel(loader->loadToVAO(&grassData), grassTexture);
+    staticGrass = new TexturedModel(loader->loadToVAO(grassData), grassTexture);
 
 
     const Material material = Material{
@@ -95,16 +96,16 @@ void MainGameLoop::main() {
 
     ModelData stallData = OBJLoader::loadObjModel("Stall");;
     RawBoundingBox *pStallBox = loader->loadToVAO(stallData.getBoundingBox());
-    staticStall = new TexturedModel(loader->loadToVAO(&stallData),
+    staticStall = new TexturedModel(loader->loadToVAO(stallData),
                                     new ModelTexture("stallTexture", PNG, material));
 
     ModelData treeData = OBJLoader::loadObjModel("tree");;
     RawBoundingBox *pTreeBox = loader->loadToVAO(treeData.getBoundingBox());
-    staticTree = new TexturedModel(loader->loadToVAO(&treeData),
+    staticTree = new TexturedModel(loader->loadToVAO(treeData),
                                    new ModelTexture("tree", PNG, material));
     ModelData fluffyTreeData = OBJLoader::loadObjModel("fluffy-tree");
     RawBoundingBox *pFluffyTreeBox = loader->loadToVAO(fluffyTreeData.getBoundingBox());
-    staticFluffyTree = new TexturedModel(loader->loadToVAO(&fluffyTreeData),
+    staticFluffyTree = new TexturedModel(loader->loadToVAO(fluffyTreeData),
                                          new ModelTexture("tree", PNG, material));
 
     AssimpMesh *pBackpack = new AssimpMesh("Backpack/backpack");
@@ -213,7 +214,7 @@ void MainGameLoop::main() {
     /**
      * Player Creation
      */
-    RawModel *playerModel = loader->loadToVAO(&stallData);
+    RawModel *playerModel = loader->loadToVAO(stallData);
     TexturedModel *playerOne = new TexturedModel(playerModel, new ModelTexture(
             "stallTexture", PNG));
 
@@ -269,8 +270,10 @@ void MainGameLoop::main() {
         //framebuffer only
         fbos->bindReflectionFrameBuffer();
         renderer->renderScene(allEntities, allScenes, allTerrains, lights);
+        renderer->renderBoundingBoxes(allEntities);
         fbos->unbindCurrentFrameBuffer();
 
+        renderer->renderBoundingBoxes(allEntities);
         renderer->renderScene(allEntities, allScenes, allTerrains, lights);
 
         TextMaster::render();

@@ -96,7 +96,7 @@ ModelData OBJLoader::loadAssImp(
  * @param filename
  * @return
  */
-ModelData OBJLoader::loadObjModel(const std::string& filename) {
+ModelData OBJLoader::loadObjModel(const std::string &filename) {
     std::vector<Vertex *> vertices;
     std::vector<glm::vec3> normals;
     std::vector<glm::vec2> textures;
@@ -108,7 +108,6 @@ ModelData OBJLoader::loadObjModel(const std::string& filename) {
     if (file == nullptr) {
         printf("Impossible to open the file: %s !\n", copy.c_str());
     }
-
 
     while (true) {
         char lineHeader[128];
@@ -151,9 +150,12 @@ ModelData OBJLoader::loadObjModel(const std::string& filename) {
             if (matches != 9) {
                 printf("File can't be read by our simple parser : ( Try exporting with other options\n");
             }
-            processVertex(static_cast<float>(vertexIndex[0]), static_cast<float>(uvIndex[0]), static_cast<float>(normalIndex[0]), &vertices, &indices);
-            processVertex(static_cast<float>(vertexIndex[1]), static_cast<float>(uvIndex[1]), static_cast<float>(normalIndex[1]), &vertices, &indices);
-            processVertex(static_cast<float>(vertexIndex[2]), static_cast<float>(uvIndex[2]), static_cast<float>(normalIndex[2]), &vertices, &indices);
+            processVertex(static_cast<float>(vertexIndex[0]), static_cast<float>(uvIndex[0]),
+                          static_cast<float>(normalIndex[0]), &vertices, &indices);
+            processVertex(static_cast<float>(vertexIndex[1]), static_cast<float>(uvIndex[1]),
+                          static_cast<float>(normalIndex[1]), &vertices, &indices);
+            processVertex(static_cast<float>(vertexIndex[2]), static_cast<float>(uvIndex[2]),
+                          static_cast<float>(normalIndex[2]), &vertices, &indices);
         }
     }
     std::fclose(file);
@@ -168,7 +170,7 @@ ModelData OBJLoader::loadObjModel(const std::string& filename) {
     normalsArray.reserve(vertices.size() * 3);
 
     // converts data to an array and returns the furthest point
-    convertDataToArrays(&vertices, &textures, &normals, &verticesArray, &texturesArray, &normalsArray);
+    convertDataToArrays(vertices, textures, normals, &verticesArray, &texturesArray, &normalsArray);
 
     ModelData data(verticesArray, texturesArray, normalsArray, indices, box);
     return data;
@@ -198,19 +200,19 @@ int *OBJLoader::convertIndicesListToArray(vector<int> indices) {
     return indicesArray;
 }
 
-float OBJLoader::convertDataToArrays(vector<Vertex *> *vertices, vector<glm::vec2> *textures,
-                                     vector<glm::vec3> *normals, vector<float> *verticesArray,
+float OBJLoader::convertDataToArrays(vector<Vertex *> vertices, vector<glm::vec2> textures,
+                                     vector<glm::vec3> normals, vector<float> *verticesArray,
                                      vector<float> *texturesArray,
                                      vector<float> *normalsArray) {
     float furthestPoint = 0;
-    for (int i = 0; i < vertices->size(); i++) {
-        auto currentVertex = (*vertices)[i];
+    for (int i = 0; i < vertices.size(); i++) {
+        auto currentVertex = (vertices)[i];
         if (currentVertex->getLength() > furthestPoint) {
             furthestPoint = currentVertex->getLength();
         }
         glm::vec3 position = currentVertex->getPosition();
-        glm::vec2 textureCoord = (*textures)[currentVertex->getTextureIndex()];
-        glm::vec3 normalVector = (*normals)[currentVertex->getNormalIndex()];
+        glm::vec2 textureCoord = (textures)[currentVertex->getTextureIndex()];
+        glm::vec3 normalVector = (normals)[currentVertex->getNormalIndex()];
         (*verticesArray)[i * 3] = position.x;
         (*verticesArray)[i * 3 + 1] = position.y;
         (*verticesArray)[i * 3 + 2] = position.z;
@@ -251,4 +253,51 @@ void OBJLoader::dealWithAlreadyProcessedVertex(Vertex *previousVertex, int newTe
         }
 
     }
+}
+
+BbData OBJLoader::loadBoundingBox(const string &filename) {
+    auto obj = loadObjModel(filename);
+    return BbData(obj.getVertices(), obj.getIndices(), true);
+}
+
+BbData OBJLoader::loadBoundingBox(ModelData *data) {
+    BoundingBoxData box;
+    const vector<float> &vertex = data->getVertices();
+
+    for (int i = 0; i < vertex.size(); i += 3) {
+        // Bounding Box
+        // Update lower-left-front corner of BB
+        box.vLowerLeftFront.x = min(box.vLowerLeftFront.x, vertex[i]);
+        box.vLowerLeftFront.y = min(box.vLowerLeftFront.y, vertex[i + 1]);
+        box.vLowerLeftFront.z = max(box.vLowerLeftFront.z, vertex[i + 2]);
+        // Update upper-right-back corner of BB
+        box.vUpperRightBack.x = max(box.vUpperRightBack.x, vertex[i]);
+        box.vUpperRightBack.y = max(box.vUpperRightBack.y, vertex[i + 1]);
+        box.vUpperRightBack.z = min(box.vUpperRightBack.z, vertex[i + 2]);
+    }
+
+    std::vector<float> vBoxVertices = {
+            // Front wall of bounding box
+            box.vLowerLeftFront.x, box.vLowerLeftFront.y, box.vLowerLeftFront.z,
+            box.vUpperRightBack.x, box.vLowerLeftFront.y, box.vLowerLeftFront.z,
+            box.vLowerLeftFront.x, box.vUpperRightBack.y, box.vLowerLeftFront.z,
+            box.vUpperRightBack.x, box.vUpperRightBack.y, box.vLowerLeftFront.z,
+
+            // Back wall of bounding box
+            box.vLowerLeftFront.x, box.vLowerLeftFront.y, box.vUpperRightBack.z,
+            box.vUpperRightBack.x, box.vLowerLeftFront.y, box.vUpperRightBack.z,
+            box.vLowerLeftFront.x, box.vUpperRightBack.y, box.vUpperRightBack.z,
+            box.vUpperRightBack.x, box.vUpperRightBack.y, box.vUpperRightBack.z
+    };
+
+    std::vector<int> indices = {
+            0, 1, 2, 3, 8, // Front wall
+            4, 5, 6, 7, 8, // Back wall
+            4, 0, 6, 2, 8, // Left wall
+            1, 5, 3, 7, 8, // Right wall
+            2, 3, 6, 7, 8, // Top wall
+            0, 1, 4, 5     // Bottom wall
+    };
+
+    return BbData(vBoxVertices, indices);
 }

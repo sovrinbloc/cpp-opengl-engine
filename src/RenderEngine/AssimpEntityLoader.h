@@ -11,7 +11,7 @@
 #include <assimp/postprocess.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include "../Shaders/ModelShader.h"
+#include "../Shaders/AssimpStaticShader.h"
 #include "../Libraries/images/stb_image.h"
 
 #include <iostream>
@@ -63,7 +63,7 @@ public:
           }, bool gamma = false);
 
     // draws the model, and thus all its meshes
-    void render(ModelShader *shader);
+    void render(AssimpStaticShader *shader);
 
     const Material &getMaterial() const;
 
@@ -83,7 +83,7 @@ private:
     vector<TextureData> loadMaterialTextures(aiMaterial *mat, aiTextureType type, string typeName);
 
 
-    static unsigned int TextureFromFile(const char *path, const string &directory, bool gamma = false);
+    static unsigned int textureFromFile(const char *path, const string &directory, bool gamma = false);
 };
 
 

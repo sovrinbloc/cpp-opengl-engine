@@ -53,8 +53,8 @@ add_executable(engine
         src/RenderEngine/TerrainRenderer.cpp
         src/RenderEngine/AssimpEntityLoader.h
         src/RenderEngine/AssimpMeshData.h
-        src/Shaders/ModelShader.cpp
-        src/Shaders/ModelShader.h
+        src/Shaders/AssimpStaticShader.cpp
+        src/Shaders/AssimpStaticShader.h
         src/Entities/AssimpEntity.h
         src/RenderEngine/AssimpEntityRenderer.h
         src/Textures/TerrainTexture.h
@@ -116,6 +116,10 @@ add_executable(engine
         src/Toolbox/Picker.h
         src/RenderEngine/FrameBuffers.cpp
         src/RenderEngine/FrameBuffers.h
+        src/RenderEngine/AssimpEntityRenderer.cpp
+        src/RenderEngine/MeshData.h
+        src/RenderEngine/BbData.h
+        src/Util/CommonHeader.h
         )
 
 if (EXISTS deps/glrequired)

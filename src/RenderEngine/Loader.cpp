@@ -43,8 +43,8 @@ Loader::loadToVAO(std::vector<GLfloat> positions, std::vector<GLfloat> textureCo
  * @param data
  * @return
  */
-RawModel *Loader::loadToVAO(ModelData *data) {
-    return loadToVAO(data->getVertices(), data->getTextureCoords(), data->getNormals(), data->getIndices());
+RawModel *Loader::loadToVAO(MeshData &data) {
+    return loadToVAO(data.getVertices(), data.getTextureCoords(), data.getNormals(), data.getIndices());
 }
 
 /**
@@ -78,7 +78,7 @@ RawBoundingBox *Loader::loadToVAO(BoundingBoxData box) {
                     box.vUpperRightBack
             };
 
-    this->bindIndicesBuffer(box.iIndices);
+    this->bindIndicesBuffer(box.indices);
 
     std::vector<float> positions;
     for (glm::vec3 vBox: vBoxVertices) {
@@ -88,7 +88,17 @@ RawBoundingBox *Loader::loadToVAO(BoundingBoxData box) {
     }
     this->storeDataInAttributeList(0, 3, positions);
     unbindVAO();
-    return new RawBoundingBox(vaoId, box.iIndices.size());
+    return new RawBoundingBox(vaoId, box.indices.size());
+}
+
+RawBoundingBox *Loader::loadToVAO(BbData box) {
+    GLuint vaoId = createVAO();
+
+    this->bindIndicesBuffer(box.getIndices());
+    this->storeDataInAttributeList(0, 3, std::move(box.getVertices()));
+
+    unbindVAO();
+    return new RawBoundingBox(vaoId, box.getIndices().size(), box.isMesh());
 }
 
 FontModel *Loader::loadFontVAO() {

@@ -6,11 +6,13 @@
 #define ENGINE_MODELDATA_H
 
 #include "glm/glm.hpp"
-
+#include "MeshData.h"
+#include <iostream>
+#include <vector>
 struct BoundingBoxData {
     glm::vec3 vLowerLeftFront = glm::vec3(999999.0f, 999999.0f, -999999.0f);
     glm::vec3 vUpperRightBack = glm::vec3(-999999.0f, -999999.0f, 999999.0f);
-    std::vector<int> iIndices =
+    std::vector<int> indices =
             {
                     0, 1, 2, 3, 8, // Front wall
                     4, 5, 6, 7, 8, // Back wall
@@ -19,39 +21,21 @@ struct BoundingBoxData {
                     2, 3, 6, 7, 8, // Top wall
                     0, 1, 4, 5     // Bottom wall
             };
+    std::vector<float> vertices;
 };
 
-class ModelData {
+class ModelData : public MeshData {
 
 private:
-    std::vector<float> vertices;
-    std::vector<float> textureCoords;
-    std::vector<float> normals;
-    std::vector<int> indices;
 
     BoundingBoxData boundingBox;
 
 public:
     ModelData(std::vector<float> vertices, std::vector<float> textureCoords, std::vector<float> normals,
-              std::vector<int> indices,
-              BoundingBoxData boundingBox) : vertices(vertices), textureCoords(textureCoords), normals(normals),
-                                             indices(indices), boundingBox(boundingBox) {}
-
-    std::vector<float> getVertices() {
-        return vertices;
+              std::vector<int> indices, BoundingBoxData boundingBox) :
+              boundingBox(boundingBox), MeshData(vertices,textureCoords,normals, indices) {
     }
 
-    std::vector<float> getTextureCoords() {
-        return textureCoords;
-    }
-
-    std::vector<float> getNormals() {
-        return normals;
-    }
-
-    std::vector<int> getIndices() {
-        return indices;
-    }
 
     BoundingBoxData getBoundingBox() {
         return boundingBox;

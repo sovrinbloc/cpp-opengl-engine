@@ -6,7 +6,7 @@
 #define ENGINE_ASSIMPMESHDATA_H
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include "../Shaders/ModelShader.h"
+#include "../Shaders/AssimpStaticShader.h"
 #include <string>
 #include <vector>
 using namespace std;
@@ -44,7 +44,7 @@ public:
     AssimpMeshData(vector<VertexData> vertices, vector<unsigned int> indices, vector<TextureData> textures);
 
     // render the mesh
-    void render(ModelShader *shader);
+    void render(AssimpStaticShader *shader);
 
 private:
     // render data

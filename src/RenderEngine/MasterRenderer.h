@@ -12,7 +12,7 @@
 #include "EntityRenderer.h"
 #include "TerrainRenderer.h"
 #include "AssimpEntityRenderer.h"
-#include "../Shaders/ModelShader.h"
+#include "../Shaders/AssimpStaticShader.h"
 #include "AssimpEntityLoader.h"
 #include "../Entities/PlayerCamera.h"
 #include "../Skybox/SkyboxRenderer.h"
@@ -28,7 +28,7 @@ private:
     PlayerCamera *camera;
 
     StaticShader *shader;
-    ModelShader *sceneShader;
+    AssimpStaticShader *sceneShader;
     TerrainShader *terrainShader;
     BoundingBoxShader *bShader;
 
@@ -77,6 +77,8 @@ public:
                      std::vector<Terrain *> terrains, std::vector<Light *> lights);
 
     void renderBoundingBoxes(std::vector<Entity*> boxes);
+
+    void prepareBoxSky();
 
     void render();
 

@@ -12,7 +12,7 @@ AssimpMesh::AssimpMesh(string const &path,
 }
 
 // draws the model, and thus all its meshes
-void AssimpMesh::render(ModelShader *shader) {
+void AssimpMesh::render(AssimpStaticShader *shader) {
     for (unsigned int i = 0; i < meshes.size(); i++)
         meshes[i].render(shader);
 }
@@ -154,7 +154,7 @@ vector<TextureData> AssimpMesh::loadMaterialTextures(aiMaterial *mat, aiTextureT
         }
         if (!skip) {   // if texture hasn't been loaded already, load it
             TextureData texture;
-            texture.id = TextureFromFile(str.C_Str(), this->directory);
+            texture.id = textureFromFile(str.C_Str(), this->directory);
             texture.type = typeName;
             texture.path = str.C_Str();
             textures.push_back(texture);
@@ -166,7 +166,7 @@ vector<TextureData> AssimpMesh::loadMaterialTextures(aiMaterial *mat, aiTextureT
 }
 
 
-unsigned int AssimpMesh::TextureFromFile(const char *path, const string &directory, bool gamma) {
+unsigned int AssimpMesh::textureFromFile(const char *path, const string &directory, bool gamma) {
     string filename = string(path);
     filename = directory + '/' + filename;
 

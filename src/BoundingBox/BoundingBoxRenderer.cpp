@@ -28,7 +28,11 @@ void BoundingBoxRenderer::render(std::map<RawBoundingBox *, std::vector<Entity *
             prepareInstance(entity);
 
             // draw elements
-            glDrawElements(GL_TRIANGLE_STRIP, pRawBox->getVertexCount(), GL_UNSIGNED_INT, 0);
+            auto glDrawType = GL_TRIANGLE_STRIP;
+            if(pRawBox->isMesh()) {
+                glDrawType = GL_TRIANGLES;
+            }
+            glDrawElements(glDrawType, pRawBox->getVertexCount(), GL_UNSIGNED_INT, 0);
         }
         unbindBox();
         it++;
