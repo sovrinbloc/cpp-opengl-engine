@@ -65,22 +65,6 @@ void MasterRenderer::render(const std::vector<Light *>&suns) {
     entities->clear();
     shader->stop();
 
-
-
-
-    /*
-    bShader->start();
-
-    bShader->loadViewPosition(camera);
-    bShader->loadViewMatrix(camera->GetViewMatrix());
-    bShader->loadProjectionMatrix(MasterRenderer::createProjectionMatrix());
-    bRenderer->render(boxes);
-
-    boxes->clear();
-    bShader->stop();
-     */
-
-
     sceneShader->start();
 
     sceneShader->loadSkyColorVariable(skyColor);

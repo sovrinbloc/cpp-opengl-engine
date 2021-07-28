@@ -82,6 +82,6 @@ void EntityRenderer::prepareInstance(Entity *entity) {
     glm::mat4 transformationMatrix = Maths::createTransformationMatrix(entity->getPosition(), entity->getRotation(),
                                                                        entity->getScale());
     shader->loadTransformationMatrix(transformationMatrix);
-    shader->loadMaterial(entity->getModel()->getModelTexture()->getMaterial());
+    shader->loadMaterial(entity->getMaterial());
     shader->loadOffset(entity->getTextureXOffset(), entity->getTextureYOffset());
 }

@@ -14,17 +14,11 @@ class Entity {
 protected:
     TexturedModel *model;
     BoundingBox *box;
-public:
-    BoundingBox *getBoundingBox() const {
-        return box;
-    }
-
-protected:
     glm::vec3 position;
     glm::vec3 rotation;
     float scale;
     int textureIndex = 0;
-
+    Material *material;
 public:
 
     /**
@@ -54,6 +48,10 @@ public:
     explicit Entity(TexturedModel *model, BoundingBox *box, int textureIndex, glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 rotation = glm::vec3(0),
            float scale = 1.0f) : model(model), box(box), textureIndex(textureIndex), position(position), rotation(rotation), scale(scale) {}
 
+    BoundingBox *getBoundingBox() const {
+        return box;
+    }
+
     TexturedModel *getModel() {
         return this->model;
     }
@@ -76,10 +74,10 @@ public:
         return static_cast<float>(row) / static_cast<float>(model->getModelTexture()->getNumberOfRows());
     }
 
-
     glm::vec3 &getPosition() {
         return position;
     }
+
 
     void setPosition(glm::vec3 translate) {
         this->position = translate;
@@ -118,6 +116,25 @@ public:
         this->position = translate;
         this->rotation = rotate;
         this->scale = scalar;
+    }
+
+    Material getMaterial() const {
+        if (material == nullptr) {
+            return this->model->getModelTexture()->getMaterial();
+        }
+        return *material;
+    }
+
+    void setMaterial(Material *material) {
+        Entity::material = material;
+    }
+
+    bool hasMaterial() {
+        return material != nullptr;
+    }
+
+    void clearMaterial() {
+        material = nullptr;
     }
 };
 
