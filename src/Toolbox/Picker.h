@@ -10,7 +10,7 @@
 class Picker {
 public:
     static glm::vec3 calculateMouseRay(glm::mat4 projectionMatrix, glm::mat4 viewMatrix);
-
+    static glm::vec3 getColor();
 private:
     static glm::vec3 toWorldCoords(glm::vec4 eyeCoords, glm::mat4 viewMatrix);
     static glm::vec4 toEyeCoords(glm::vec4 clipCoords, glm::mat4 projectionMatrix);

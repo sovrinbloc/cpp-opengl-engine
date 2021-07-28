@@ -292,7 +292,7 @@ void MainGameLoop::main() {
 
         if (InputMaster::hasPendingClick()) {
             if (InputMaster::mouseClicked(LeftClick)) {
-                auto colors = InputMaster::getClicked();
+                auto colors = TerrainPicker::getColor();
                 printf("Colors: %f, %f, %f\n", colors.x, colors.y, colors.z);
                 InputMaster::resetClick();
             }

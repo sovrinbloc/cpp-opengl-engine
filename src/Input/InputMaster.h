@@ -194,8 +194,6 @@ public:
 
     static bool isMouseDown(ClickButtons click);
 
-    static glm::vec3 getClicked();
-
     static void resetClick();
 
 private:

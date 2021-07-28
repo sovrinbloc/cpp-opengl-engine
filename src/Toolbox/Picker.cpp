@@ -29,3 +29,16 @@ glm::vec2 Picker::getNormalizedDeviceCoords() {
     float y = (2.0f * static_cast<float>(InputMaster::mouseY)) / static_cast<float>(DisplayManager::Height()) - 1;
     return glm::vec2(x, -y);
 }
+
+glm::vec3 Picker::getColor() {
+    unsigned char pixel[3];
+    glFlush();
+    glFinish();
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    int width, height;
+    glfwGetFramebufferSize(DisplayManager::window, &width, &height);
+    glReadPixels(static_cast<int>(width / DisplayManager::Width() * static_cast<int>(InputMaster::mouseX)),
+                 static_cast<int>(static_cast<int>(height) - (height / DisplayManager::Height() * static_cast<int>(InputMaster::mouseY))), 1, 1, GL_RGB,
+                 GL_UNSIGNED_BYTE, pixel);
+    return glm::vec3(pixel[0], pixel[1], pixel[2]);
+}
