@@ -11,9 +11,9 @@
 #include "../Entities/CameraInput.h"
 #include "EntityRenderer.h"
 #include "TerrainRenderer.h"
-#include "SceneRenderer.h"
+#include "AssimpEntityRenderer.h"
 #include "../Shaders/ModelShader.h"
-#include "SceneLoader.h"
+#include "AssimpEntityLoader.h"
 #include "../Entities/PlayerCamera.h"
 #include "../Skybox/SkyboxRenderer.h"
 #include "../BoundingBox/BoundingBoxShader.h"
@@ -35,14 +35,14 @@ private:
     EntityRenderer *renderer;
     SkyboxRenderer *skyboxRenderer;
     TerrainRenderer *terrainRenderer;
-    SceneRenderer *sceneRenderer;
+    AssimpEntityRenderer *sceneRenderer;
     BoundingBoxRenderer *bRenderer;
 
     std::map<RawBoundingBox *, std::vector<Entity *>> *boxes;
     std::map<TexturedModel *, std::vector<Entity *>> *entities;
-    std::map<Model *, std::vector<Scene *>> *scenes;
+    std::map<AssimpMesh *, std::vector<AssimpEntity *>> *scenes;
     std::vector<Terrain *> *terrains;
-    std::vector<Model *> *models;
+    std::vector<AssimpMesh *> *models;
 
     glm::mat4 projectionMatrix;
 public:
@@ -67,11 +67,20 @@ public:
 
     void processEntity(Entity *entity);
 
-    void processScenes(Scene *scene);
+    void processAssimpEntity(AssimpEntity *scene);
 
-    void processModel(Model *model);
+    void processModel(AssimpMesh *model);
 
     void processBoundingBox(Entity *entity);
+
+    void renderScene(std::vector<Entity *> entities, std::vector<AssimpEntity *> aEntities,
+                     std::vector<Terrain *> terrains, std::vector<Light *> lights);
+
+    void renderBoundingBoxes(std::vector<Entity*> boxes);
+
+    void render();
+
+
 
 };
 

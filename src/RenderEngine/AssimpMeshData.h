@@ -2,8 +2,8 @@
 // Created by Joseph Alai on 7/7/21.
 //
 
-#ifndef ENGINE_MESHDATA_H
-#define ENGINE_MESHDATA_H
+#ifndef ENGINE_ASSIMPMESHDATA_H
+#define ENGINE_ASSIMPMESHDATA_H
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "../Shaders/ModelShader.h"
@@ -32,7 +32,7 @@ struct TextureData {
 
 
 
-class MeshData {
+class AssimpMeshData {
 public:
     // mesh Data
     vector<VertexData>       vertices;
@@ -41,7 +41,7 @@ public:
     unsigned int VAO;
 
     // constructor
-    MeshData(vector<VertexData> vertices, vector<unsigned int> indices, vector<TextureData> textures);
+    AssimpMeshData(vector<VertexData> vertices, vector<unsigned int> indices, vector<TextureData> textures);
 
     // render the mesh
     void render(ModelShader *shader);
@@ -54,4 +54,4 @@ private:
     void setupMesh();
 };
 
-#endif //ENGINE_MESHDATA_H
+#endif //ENGINE_ASSIMPMESHDATA_H

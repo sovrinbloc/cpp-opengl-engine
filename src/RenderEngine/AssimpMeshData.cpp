@@ -2,10 +2,10 @@
 // Created by Joseph Alai on 7/18/21.
 //
 
-#include "MeshData.h"
+#include "AssimpMeshData.h"
 
 // constructor
-MeshData::MeshData(vector<VertexData> vertices, vector<unsigned int> indices, vector<TextureData> textures) {
+AssimpMeshData::AssimpMeshData(vector<VertexData> vertices, vector<unsigned int> indices, vector<TextureData> textures) {
     this->vertices = vertices;
     this->indices = indices;
     this->textures = textures;
@@ -15,7 +15,7 @@ MeshData::MeshData(vector<VertexData> vertices, vector<unsigned int> indices, ve
 }
 
 // render the mesh
-void MeshData::render(ModelShader *shader) {
+void AssimpMeshData::render(ModelShader *shader) {
     // bind appropriate textures
     unsigned int diffuseNr = 1;
     unsigned int specularNr = 1;
@@ -51,7 +51,7 @@ void MeshData::render(ModelShader *shader) {
 }
 
 // initializes all the buffer objects/arrays
-void MeshData::setupMesh() {
+void AssimpMeshData::setupMesh() {
     // create buffers/arrays
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);

@@ -2,28 +2,28 @@
 // Created by Joseph Alai on 7/18/21.
 //
 
-#include "SceneLoader.h"
+#include "AssimpEntityLoader.h"
 
-Model::Model(string const &path,
-Material
+AssimpMesh::AssimpMesh(string const &path,
+                       Material
         materials, bool gamma) : gammaCorrection(gamma) {
         material = materials;
         loadModel(FileSystem::Model(path));
 }
 
 // draws the model, and thus all its meshes
-void Model::render(ModelShader *shader) {
+void AssimpMesh::render(ModelShader *shader) {
     for (unsigned int i = 0; i < meshes.size(); i++)
         meshes[i].render(shader);
 }
 
-const Material &Model::getMaterial() const {
+const Material &AssimpMesh::getMaterial() const {
     return material;
 }
 
 
 // loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
-void Model::loadModel(string const &path) {
+void AssimpMesh::loadModel(string const &path) {
     // read file via ASSIMP
     Assimp::Importer importer;
     const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals |
@@ -42,7 +42,7 @@ void Model::loadModel(string const &path) {
 }
 
 // processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).
-void Model::processNode(aiNode *node, const aiScene *scene) {
+void AssimpMesh::processNode(aiNode *node, const aiScene *scene) {
     // process each mesh located at the current node
     for (unsigned int i = 0; i < node->mNumMeshes; i++) {
         // the node object only contains indices to index the actual objects in the scene.
@@ -57,7 +57,7 @@ void Model::processNode(aiNode *node, const aiScene *scene) {
 
 }
 
-MeshData Model::processMesh(aiMesh *mesh, const aiScene *scene) {
+AssimpMeshData AssimpMesh::processMesh(aiMesh *mesh, const aiScene *scene) {
     // data to fill
     vector<VertexData> vertices;
     vector<unsigned int> indices;
@@ -133,12 +133,12 @@ MeshData Model::processMesh(aiMesh *mesh, const aiScene *scene) {
     textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 
     // return a mesh object created from the extracted mesh data
-    return MeshData(vertices, indices, textures);
+    return AssimpMeshData(vertices, indices, textures);
 }
 
 // checks all material textures of a given type and loads the textures if they're not loaded yet.
 // the required info is returned as a Texture struct.
-vector<TextureData> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type, string typeName) {
+vector<TextureData> AssimpMesh::loadMaterialTextures(aiMaterial *mat, aiTextureType type, string typeName) {
     vector<TextureData> textures;
     for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
         aiString str;
@@ -166,7 +166,7 @@ vector<TextureData> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType t
 }
 
 
-unsigned int Model::TextureFromFile(const char *path, const string &directory, bool gamma) {
+unsigned int AssimpMesh::TextureFromFile(const char *path, const string &directory, bool gamma) {
     string filename = string(path);
     filename = directory + '/' + filename;
 

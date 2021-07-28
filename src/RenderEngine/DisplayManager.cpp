@@ -7,8 +7,8 @@
 #include "DisplayManager.h"
 GLint DisplayManager::SRC_WIDTH = 800;
 GLint DisplayManager::SRC_HEIGHT = 600;
-GLint DisplayManager::FBO_WIDTH = SRC_WIDTH * RETINA_NUMBER;
-GLint DisplayManager::FBO_HEIGHT = SRC_HEIGHT * RETINA_NUMBER;
+GLint DisplayManager::FBO_WIDTH = RETINA_SCALE(SRC_WIDTH);
+GLint DisplayManager::FBO_HEIGHT = RETINA_SCALE(SRC_HEIGHT);
 GLFWwindow *DisplayManager::window;
 
 float DisplayManager::delta;
@@ -92,8 +92,8 @@ GLint &DisplayManager::Height() {
 }
 
 void DisplayManager::updatePerspective(int width, int height) {
-    DisplayManager::Width() = static_cast<GLint>(RETINA_SCALE(width));
-    DisplayManager::Height() = static_cast<GLint>(RETINA_SCALE(height));
+    DisplayManager::Width() = static_cast<GLint>(RETINA_DIVIDE(width));
+    DisplayManager::Height() = static_cast<GLint>(RETINA_DIVIDE(height));
     DisplayManager::FboWidth() = width;
     DisplayManager::FboHeight() = height;
 

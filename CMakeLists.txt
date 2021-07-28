@@ -51,12 +51,12 @@ add_executable(engine
         src/RenderEngine/MasterRenderer.cpp
         src/RenderEngine/ObjLoader.cpp
         src/RenderEngine/TerrainRenderer.cpp
-        src/RenderEngine/SceneLoader.h
-        src/RenderEngine/MeshData.h
+        src/RenderEngine/AssimpEntityLoader.h
+        src/RenderEngine/AssimpMeshData.h
         src/Shaders/ModelShader.cpp
         src/Shaders/ModelShader.h
-        src/Entities/Scene.h
-        src/RenderEngine/SceneRenderer.h
+        src/Entities/AssimpEntity.h
+        src/RenderEngine/AssimpEntityRenderer.h
         src/Textures/TerrainTexture.h
         src/Textures/TerrainTexturePack.h
         src/Entities/Player.h
@@ -65,8 +65,8 @@ add_executable(engine
         src/Terrain/HeightMap.h
         src/Terrain/HeightMap.cpp
         src/Entities/PlayerCamera.cpp
-        src/RenderEngine/MeshData.cpp
-        src/RenderEngine/SceneLoader.cpp
+        src/RenderEngine/AssimpMeshData.cpp
+        src/RenderEngine/AssimpEntityLoader.cpp
         src/Guis/GuiTexture.h
         src/Guis/GuiTexture.cpp
         src/Guis/GuiRenderer.cpp
@@ -114,14 +114,16 @@ add_executable(engine
         src/Toolbox/TerrainPicker.h
         src/Toolbox/Picker.cpp
         src/Toolbox/Picker.h
-        src/RenderEngine/FrameBuffers.cpp src/RenderEngine/FrameBuffers.h)
+        src/RenderEngine/FrameBuffers.cpp
+        src/RenderEngine/FrameBuffers.h
+        )
 
-if(EXISTS deps/glrequired)
+if (EXISTS deps/glrequired)
     message(STATUS "Requiring OpenGL")
     find_package(OpenGL REQUIRED)
     target_link_libraries(engine glfw)
     target_link_libraries(engine OpenGL::GL)
-endif()
+endif ()
 
 include_directories(deps/glfw)
 add_subdirectory(deps/glfw)

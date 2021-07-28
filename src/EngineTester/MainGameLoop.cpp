@@ -107,7 +107,7 @@ void MainGameLoop::main() {
     staticFluffyTree = new TexturedModel(loader->loadToVAO(&fluffyTreeData),
                                          new ModelTexture("tree", PNG, material));
 
-    Model *pBackpack = new Model("Backpack/backpack");
+    AssimpMesh *pBackpack = new AssimpMesh("Backpack/backpack");
 
 
 
@@ -117,7 +117,7 @@ void MainGameLoop::main() {
     std::vector<Terrain *> allTerrains;
     std::vector<Light *> lights;
     std::vector<Entity *> allEntities;
-    std::vector<Scene *> allScenes;
+    std::vector<AssimpEntity *> allScenes;
 
 
 
@@ -201,7 +201,7 @@ void MainGameLoop::main() {
                            generateRandomPosition(terrain), generateRandomRotation(),
                            generateRandomScale(.25, 1.50)));
         if (i % 30 == 0) {
-            allScenes.push_back(new Scene(pBackpack, generateRandomPosition(terrain, 3.0f), generateRandomRotation(),
+            allScenes.push_back(new AssimpEntity(pBackpack, generateRandomPosition(terrain, 3.0f), generateRandomRotation(),
                                           generateRandomScale(3.25, 10.50)));
         }
     }
@@ -242,9 +242,9 @@ void MainGameLoop::main() {
     GuiRenderer *guiRenderer = new GuiRenderer(loader);
 
     // Framebuffer
-//    FrameBuffers *fbos = new FrameBuffers();
-//    GuiTexture *gui = new GuiTexture(fbos->getReflectionTexture(), glm::vec2(-0.5f -0.5f), glm::vec2(0.5f));
-//    guis.push_back(gui);
+    FrameBuffers *fbos = new FrameBuffers();
+    GuiTexture *gui = new GuiTexture(fbos->getReflectionTexture(), glm::vec2(-0.25f -0.25f), glm::vec2(0.3f));
+    guis.push_back(gui);
 
     /**
      * Mouse Picker
@@ -252,8 +252,6 @@ void MainGameLoop::main() {
     TerrainPicker *picker = new TerrainPicker(playerCamera, renderer->getProjectionMatrix(), terrain);
 
 
-
-    bool done = false;
     /**
      * Main Game Loop
      */
@@ -268,48 +266,29 @@ void MainGameLoop::main() {
 //            lampy->setPosition(terrainPoint);
 //            lights[1]->setPosition(glm::vec3(terrainPoint.x, terrainPoint.y + 15.0f, terrainPoint.z));
 //        }
-
-        for (Terrain *ter : allTerrains) {
-            renderer->processTerrain(ter);
-        }
-
-
-        for (Entity *ent : allEntities) {
-            renderer->processEntity(ent);
-        }
-
-        for (Scene *scene : allScenes) {
-            renderer->processScenes(scene);
-        }
-
-        renderer->render(lights);
-
         //framebuffer only
-//        fbos->bindReflectionFrameBuffer();
-//        for (Entity *ent : allEntities) {
-//            renderer->processEntity(ent);
-//        }
-//        fbos->unbindCurrentFrameBuffer();
+        fbos->bindReflectionFrameBuffer();
+        renderer->renderScene(allEntities, allScenes, allTerrains, lights);
+        fbos->unbindCurrentFrameBuffer();
+
+        renderer->renderScene(allEntities, allScenes, allTerrains, lights);
+
         TextMaster::render();
         guiRenderer->render(guis);
         DisplayManager::updateDisplay();
 
-//        const glm::vec3 &colors = InputMaster::getClicked(renderer->getProjectionMatrix(), playerCamera->GetViewMatrix());
 //        for (Entity *ent : allEntities) {
 //            renderer->processBoundingBox(ent);
 //        }
 
         if (InputMaster::hasPendingClick()) {
             if (InputMaster::mouseClicked(LeftClick)) {
-                saveScreenshotToFile("output" + std::to_string(glfwGetTime() / 10) + std::string(".tga"),
-                                     DisplayManager::FboWidth(), DisplayManager::FboHeight());
+//                saveScreenshotToFile("output" + std::to_string(glfwGetTime() / 10) + std::string(".tga"),
+//                                     DisplayManager::FboWidth(), DisplayManager::FboHeight());
 
             }
         }
 
-
-        glFlush();
-        glFinish();
 
         if (InputMaster::hasPendingClick()) {
             if (InputMaster::mouseClicked(LeftClick)) {
@@ -323,7 +302,7 @@ void MainGameLoop::main() {
     /**
      * Clean up renderers and loaders
      */
-//    fbos->cleanUp();
+    fbos->cleanUp();
     TextMaster::cleanUp(); // added todo: implement
     fontRenderer->cleanUp();
     guiRenderer->cleanUp();

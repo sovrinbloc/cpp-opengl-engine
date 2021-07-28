@@ -2,29 +2,29 @@
 // Created by Joseph Alai on 7/8/21.
 //
 
-#ifndef ENGINE_SCENE_H
-#define ENGINE_SCENE_H
+#ifndef ENGINE_ASSIMPENTITY_H
+#define ENGINE_ASSIMPENTITY_H
 
-#include "../RenderEngine/SceneLoader.h"
+#include "../RenderEngine/AssimpEntityLoader.h"
 
-class Scene {
+class AssimpEntity {
 private:
-    Model *model;
+    AssimpMesh *model;
     glm::vec3 position;
     glm::vec3 rotation;
     float scale;
 
 public:
 
-    Scene(Model *model, glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 rotation = glm::vec3(0),
-          float scale = 1.0f) : model(model), position(position), rotation(rotation),
+    AssimpEntity(AssimpMesh *model, glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 rotation = glm::vec3(0),
+                 float scale = 1.0f) : model(model), position(position), rotation(rotation),
                                 scale(scale) {}
 
-    Model *getModel() {
+    AssimpMesh *getModel() {
         return this->model;
     }
 
-    void setModel(Model *texturedModel) {
+    void setModel(AssimpMesh *texturedModel) {
         this->model = texturedModel;
     }
 
@@ -72,4 +72,4 @@ public:
     }
 };
 
-#endif //ENGINE_SCENE_H
+#endif //ENGINE_ASSIMPENTITY_H

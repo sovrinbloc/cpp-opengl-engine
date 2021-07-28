@@ -2,21 +2,21 @@
 // Created by Joseph Alai on 7/8/21.
 //
 
-#ifndef ENGINE_SCENERENDERER_H
-#define ENGINE_SCENERENDERER_H
-#include "../Entities/Scene.h"
+#ifndef ENGINE_ASSIMPENTITYRENDERER_H
+#define ENGINE_ASSIMPENTITYRENDERER_H
+#include "../Entities/AssimpEntity.h"
 #include "../Toolbox/Maths.h"
-#include "SceneLoader.h"
+#include "AssimpEntityLoader.h"
 #include <iostream>
 #include <cstdio>
 #include <map>
 
-class SceneRenderer {
+class AssimpEntityRenderer {
 private:
     ModelShader *shader;
 
 public:
-    SceneRenderer(ModelShader *shader) {
+    AssimpEntityRenderer(ModelShader *shader) {
         this->shader = shader;
     }
 
@@ -25,14 +25,14 @@ public:
      *        it, and draws them -- so as not to copy objects.
      * @param scenes
      */
-    void render(std::map<Model *, std::vector<Scene *>> *scenes) {
-        std::map<Model *, std::vector<Scene *>>::iterator it = scenes->begin();
-        Model *model;
+    void render(std::map<AssimpMesh *, std::vector<AssimpEntity *>> *scenes) {
+        std::map<AssimpMesh *, std::vector<AssimpEntity *>>::iterator it = scenes->begin();
+        AssimpMesh *model;
         while (it != scenes->end()) {
             model = it->first;
-            std::vector<Scene *> batch = scenes->find(model)->second;
+            std::vector<AssimpEntity *> batch = scenes->find(model)->second;
             batch = scenes->find(model)->second;
-            for (Scene *scene : batch) {
+            for (AssimpEntity *scene : batch) {
                 prepareInstance(scene);
                 // draw elements
                 model->render(shader);
@@ -46,7 +46,7 @@ public:
      * @brief sets the initial transformation (view) matrix.
      * @param scene
      */
-    void prepareInstance(Scene *scene) {
+    void prepareInstance(AssimpEntity *scene) {
         // creates the matrices to be passed into the shader
         glm::mat4 transformationMatrix = Maths::createTransformationMatrix(scene->getPosition(), scene->getRotation(),
                                                                            scene->getScale());
@@ -55,4 +55,4 @@ public:
     }
 
 };
-#endif //ENGINE_SCENERENDERER_H
+#endif //ENGINE_ASSIMPENTITYRENDERER_H

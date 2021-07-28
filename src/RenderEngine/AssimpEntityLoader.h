@@ -2,8 +2,8 @@
 // Created by Joseph Alai on 7/7/21.
 //
 
-#ifndef ENGINE_SCENELOADER_H
-#define ENGINE_SCENELOADER_H
+#ifndef ENGINE_ASSIMPENTITYLOADER_H
+#define ENGINE_ASSIMPENTITYLOADER_H
 
 #include <string>
 #include <assimp/Importer.hpp>
@@ -21,22 +21,22 @@
 
 #include <GLFW/glfw3.h>
 
-#include "MeshData.h"
+#include "AssimpMeshData.h"
 
 using namespace std;
 
 /**
- * std::vector<Scene *> allScenes;
- * Model assimpModel = Model(FileSystem::Path("/src/Resources/Models/Backpack/backpack.obj"));
- * allScenes.push_back(new Scene(&assimpModel, glm::vec3(x, y, z), rot, Utils::randomFloat() * 2));
+ * std::vector<AssimpEntity *> allScenes;
+ * AssimpMesh assimpModel = AssimpMesh(FileSystem::Path("/src/Resources/Models/Backpack/backpack.obj"));
+ * allScenes.push_back(new AssimpEntity(&assimpModel, glm::vec3(x, y, z), rot, Utils::randomFloat() * 2));
  * then in MainGameLoop renderer...
- * for (Scene *pack : allScenes) {
- *          renderer->processScenes(pack);
+ * for (AssimpEntity *pack : allScenes) {
+ *          renderer->processAssimpEntity(pack);
  *  }
  *  0r...
  *  renderer->processModel(&assimpModel); if it's a single model
  */
-class Model {
+class AssimpMesh {
 
 private:
     Material material;
@@ -44,19 +44,19 @@ public:
 
     // model data
     vector<TextureData> textures_loaded;    // stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
-    vector<MeshData> meshes;
+    vector<AssimpMeshData> meshes;
     string directory;
     bool gammaCorrection;
 
     /**
      * @brief: constructor, expects a filepath to a 3D model.
      *
-     * @example: Model assimpModel = Model(FileSystem::Path("/src/Resources/Models/Backpack/backpack.obj"));
+     * @example: AssimpMesh assimpModel = AssimpMesh(FileSystem::Path("/src/Resources/Models/Backpack/backpack.obj"));
      * @param path
      * @param gamma
      */
-    Model(string const &path,
-          Material
+    AssimpMesh(string const &path,
+               Material
           materials = Material{
                   .shininess = 1.0f,
                   .reflectivity = 0.5f
@@ -76,7 +76,7 @@ private:
     // processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).
     void processNode(aiNode *node, const aiScene *scene);
 
-    MeshData processMesh(aiMesh *mesh, const aiScene *scene);
+    AssimpMeshData processMesh(aiMesh *mesh, const aiScene *scene);
 
     // checks all material textures of a given type and loads the textures if they're not loaded yet.
     // the required info is returned as a Texture struct.
@@ -87,4 +87,4 @@ private:
 };
 
 
-#endif //ENGINE_SCENELOADER_H
+#endif //ENGINE_ASSIMPENTITYLOADER_H

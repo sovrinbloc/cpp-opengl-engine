@@ -5,7 +5,7 @@
 #include "MasterRenderer.h"
 #include "DisplayManager.h"
 #include "RenderStyle.h"
-#include "SceneLoader.h"
+#include "AssimpEntityLoader.h"
 #include "../Util/ColorNames.h"
 
 MasterRenderer::MasterRenderer(PlayerCamera *cameraInput, Loader *loader) : shader(new StaticShader()),
@@ -18,12 +18,12 @@ MasterRenderer::MasterRenderer(PlayerCamera *cameraInput, Loader *loader) : shad
                                                             bShader(new BoundingBoxShader()){
     RenderStyle::enableCulling();
     entities = new std::map<TexturedModel *, std::vector<Entity *>>;
-    scenes = new std::map<Model *, std::vector<Scene *>>;
+    scenes = new std::map<AssimpMesh *, std::vector<AssimpEntity *>>;
     terrains = new std::vector<Terrain *>;
-    models = new std::vector<Model *>;
+    models = new std::vector<AssimpMesh *>;
     boxes = new std::map<RawBoundingBox *, std::vector<Entity *>>;
     terrainRenderer = new TerrainRenderer(terrainShader, this->projectionMatrix);
-    sceneRenderer = new SceneRenderer(sceneShader);
+    sceneRenderer = new AssimpEntityRenderer(sceneShader);
     skyboxRenderer = new SkyboxRenderer(loader, this->projectionMatrix, &skyColor);
     bRenderer = new BoundingBoxRenderer(bShader, this->projectionMatrix);
 }
@@ -67,6 +67,7 @@ void MasterRenderer::render(const std::vector<Light *>&suns) {
 
 
 
+    /*
     bShader->start();
 
     bShader->loadViewPosition(camera);
@@ -76,6 +77,7 @@ void MasterRenderer::render(const std::vector<Light *>&suns) {
 
     boxes->clear();
     bShader->stop();
+     */
 
 
     sceneShader->start();
@@ -100,7 +102,7 @@ void MasterRenderer::render(const std::vector<Light *>&suns) {
     terrainShader->loadProjectionMatrix(MasterRenderer::createProjectionMatrix());
     terrainRenderer->render(terrains);
 
-//    skyboxRenderer->render(camera);
+    skyboxRenderer->render(camera);
     terrains->clear();
     terrainShader->stop();
 
@@ -133,13 +135,13 @@ void MasterRenderer::processEntity(Entity *entity) {
     }
 }
 
-void MasterRenderer::processScenes(Scene *scene) {
-    Model *model = scene->getModel();
+void MasterRenderer::processAssimpEntity(AssimpEntity *scene) {
+    AssimpMesh *model = scene->getModel();
     auto batchIterator = scenes->find(model);
     if (batchIterator != scenes->end()) {
         batchIterator->second.push_back(scene);
     } else {
-        std::vector<Scene *> newBatch;
+        std::vector<AssimpEntity *> newBatch;
         newBatch.push_back(scene);
         (*scenes)[model] = newBatch;
     }
@@ -157,6 +159,42 @@ void MasterRenderer::processBoundingBox(Entity *entity) {
     }
 }
 
-void MasterRenderer::processModel(Model *model) {
+void MasterRenderer::processModel(AssimpMesh *model) {
     models->push_back(model);
+}
+
+void MasterRenderer::renderScene(std::vector<Entity *> entities, std::vector<AssimpEntity *> aEntities,
+                                 std::vector<Terrain *> terrains, std::vector<Light *> lights) {
+    for (Terrain *ter : terrains) {
+        processTerrain(ter);
+    }
+
+    for (Entity *ent : entities) {
+        processEntity(ent);
+    }
+
+    for (AssimpEntity *scene : aEntities) {
+        processAssimpEntity(scene);
+    }
+
+    render(lights);
+}
+
+void MasterRenderer::renderBoundingBoxes(std::vector<Entity*> boxes) {
+    for (Entity *ent : boxes) {
+        processEntity(ent);
+    }
+    render();
+}
+
+void MasterRenderer::render() {
+    bShader->start();
+
+    bShader->loadViewPosition(camera);
+    bShader->loadViewMatrix(camera->GetViewMatrix());
+    bShader->loadProjectionMatrix(MasterRenderer::createProjectionMatrix());
+    bRenderer->render(boxes);
+
+    boxes->clear();
+    bShader->stop();
 }
