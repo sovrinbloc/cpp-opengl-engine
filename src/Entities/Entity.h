@@ -8,9 +8,9 @@
 #include "glm/glm.hpp"
 #include "../Models/TexturedModel.h"
 #include "../BoundingBox/BoundingBox.h"
+#include "../Interfaces/Interactive.h"
 
-
-class Entity {
+class Entity : public Interactive {
 protected:
     TexturedModel *model;
     BoundingBox *box;
@@ -18,7 +18,9 @@ protected:
     glm::vec3 rotation;
     float scale;
     int textureIndex = 0;
-    Material *material;
+
+    Material material = {0.1, 0.9};
+    bool activate = false;
 public:
 
     /**
@@ -48,8 +50,12 @@ public:
     explicit Entity(TexturedModel *model, BoundingBox *box, int textureIndex, glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 rotation = glm::vec3(0),
            float scale = 1.0f) : model(model), box(box), textureIndex(textureIndex), position(position), rotation(rotation), scale(scale) {}
 
-    BoundingBox *getBoundingBox() const {
+    BoundingBox *getBoundingBox() const override {
         return box;
+    }
+
+    void setBoundingBox(BoundingBox *box) override {
+        this->box = box;
     }
 
     TexturedModel *getModel() {
@@ -74,7 +80,7 @@ public:
         return static_cast<float>(row) / static_cast<float>(model->getModelTexture()->getNumberOfRows());
     }
 
-    glm::vec3 &getPosition() {
+    glm::vec3 &getPosition() override {
         return position;
     }
 
@@ -87,7 +93,7 @@ public:
         this->position += translate;
     }
 
-    glm::vec3 getRotation() {
+    glm::vec3 getRotation() override {
         return this->rotation;
     }
 
@@ -107,7 +113,7 @@ public:
         this->scale = scaleSize;
     }
 
-    float getScale() const {
+    float getScale() const override {
         return this->scale;
     }
 
@@ -119,22 +125,26 @@ public:
     }
 
     Material getMaterial() const {
-        if (material == nullptr) {
+        if (activate == false) {
             return this->model->getModelTexture()->getMaterial();
         }
-        return *material;
+        return material;
     }
 
-    void setMaterial(Material *material) {
+    void setMaterial(Material material) {
         Entity::material = material;
     }
 
     bool hasMaterial() {
-        return material != nullptr;
+        return activate;
+    }
+
+    void activateMaterial() {
+        activate = true;
     }
 
     void clearMaterial() {
-        material = nullptr;
+        activate = false;
     }
 };
 

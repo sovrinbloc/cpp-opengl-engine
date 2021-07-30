@@ -87,3 +87,13 @@ void AssimpMeshData::setupMesh() {
 
     glBindVertexArray(0);
 }
+
+std::vector<float> AssimpMeshData::getVertices() {
+    std::vector<float> vertices;
+    for (auto vertex : this->vertices ) {
+        vertices.push_back(vertex.Position.x);
+        vertices.push_back(vertex.Position.y);
+        vertices.push_back(vertex.Position.z);
+    }
+    return vertices;
+}

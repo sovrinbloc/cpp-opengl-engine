@@ -12,6 +12,7 @@ private:
     RawBoundingBox *rawBoundingBox;
     glm::vec3 color;
 public:
+
     /**
      * @brief BoundingBox stores the RawBoundingBox [the VaoId] (from loaded mesh details),
      *        the glm::vec3 color, so that it can be used to track clicks on the bounding

@@ -21,4 +21,4 @@ CPack*
 engine.cbp*
 CMakeDoxy*
 bin/*
-output*
+*.tga

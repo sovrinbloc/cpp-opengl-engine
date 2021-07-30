@@ -6,10 +6,12 @@
 #define ENGINE_ASSIMPENTITY_H
 
 #include "../RenderEngine/AssimpEntityLoader.h"
+#include "../Interfaces/Interactive.h"
 
-class AssimpEntity {
+class AssimpEntity : public Interactive{
 private:
     AssimpMesh *model;
+    BoundingBox *box;
     glm::vec3 position;
     glm::vec3 rotation;
     float scale;
@@ -20,8 +22,20 @@ public:
                  float scale = 1.0f) : model(model), position(position), rotation(rotation),
                                 scale(scale) {}
 
+    AssimpEntity(AssimpMesh *model, BoundingBox *box, glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 rotation = glm::vec3(0),
+                 float scale = 1.0f) : model(model), box(box), position(position), rotation(rotation),
+                                scale(scale) {}
+
     AssimpMesh *getModel() {
         return this->model;
+    }
+
+    BoundingBox *getBoundingBox() const override {
+        return box;
+    }
+
+    void setBoundingBox(BoundingBox *box) override {
+        this->box = box;
     }
 
     void setModel(AssimpMesh *texturedModel) {
@@ -29,7 +43,7 @@ public:
     }
 
 
-    glm::vec3 getPosition () {
+    glm::vec3 &getPosition () override {
         return position;
     }
 
@@ -41,7 +55,7 @@ public:
         this->position += translate;
     }
 
-    glm::vec3 getRotation() {
+    glm::vec3 getRotation() override{
         return this->rotation;
     }
 
@@ -61,7 +75,7 @@ public:
         this->scale = scaleSize;
     }
 
-    float getScale() {
+    float getScale() const override {
         return this->scale;
     }
 

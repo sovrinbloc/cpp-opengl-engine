@@ -16,26 +16,24 @@ class BoundingBoxRenderer {
 private:
 
     BoundingBoxShader *shader;
-
 public:
     explicit BoundingBoxRenderer(BoundingBoxShader *shader, glm::mat4 projectionMatrix);
 
-    void render(std::map<RawBoundingBox *, std::vector<Entity *>> *entities);
+    void render(std::map<RawBoundingBox *, std::vector<Interactive *>> *entities);
 
 private:
     void prepareRawBoundingBox(RawBoundingBox *box);
 
-
     /**
      * @brief unbinds the texture model after it's use.
      */
-    void unbindBox();
+    void unbindBox(RawBoundingBox *box);
 
     /**
      * @brief sets the initial transformation (view) matrix.
      * @param entity
      */
-    void prepareInstance(Entity *entity);
+    void prepareInstance(Interactive *entity);
 };
 
 

@@ -38,11 +38,10 @@ private:
     AssimpEntityRenderer *sceneRenderer;
     BoundingBoxRenderer *bRenderer;
 
-    std::map<RawBoundingBox *, std::vector<Entity *>> *boxes;
+    std::map<RawBoundingBox *, std::vector<Interactive *>> *boxes;
     std::map<TexturedModel *, std::vector<Entity *>> *entities;
     std::map<AssimpMesh *, std::vector<AssimpEntity *>> *scenes;
     std::vector<Terrain *> *terrains;
-    std::vector<AssimpMesh *> *models;
 
     glm::mat4 projectionMatrix;
 public:
@@ -69,16 +68,14 @@ public:
 
     void processAssimpEntity(AssimpEntity *scene);
 
-    void processModel(AssimpMesh *model);
-
-    void processBoundingBox(Entity *entity);
+    void processBoundingBox(Interactive *boxHolder);
 
     void renderScene(std::vector<Entity *> entities, std::vector<AssimpEntity *> aEntities,
                      std::vector<Terrain *> terrains, std::vector<Light *> lights);
 
-    void renderBoundingBoxes(std::vector<Entity*> boxes);
+    void renderBoundingBoxes(std::vector<Interactive*> boxes);
 
-    void prepareBoxSky();
+    void prepareBoundingBoxRender();
 
     void render();
 

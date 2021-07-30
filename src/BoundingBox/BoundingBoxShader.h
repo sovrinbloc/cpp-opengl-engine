@@ -15,7 +15,7 @@ private:
 
     const std::string position = "position";
 
-    const std::string boxColor = "color";
+    const std::string boxColor = "pickingColor";
     const std::string transformationMatrix = "transformationMatrix";
     const std::string projectionMatrix = "projectionMatrix";
     const std::string viewMatrix = "viewMatrix";

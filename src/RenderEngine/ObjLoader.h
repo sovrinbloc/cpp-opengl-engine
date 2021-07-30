@@ -14,6 +14,7 @@
 #include "Vertex.h"
 #include "ModelData.h"
 #include "BbData.h"
+#include "AssimpEntityLoader.h"
 
 
 class OBJLoader {
@@ -25,6 +26,8 @@ public:
     static BbData loadBoundingBox(const std::string& filename);
 
     static BbData loadBoundingBox(ModelData *data);
+
+    static BbData loadBoundingBox(AssimpMesh *data);
 
     static void processVertex(float vertex, float uv, float normal, std::vector<Vertex*> *vertices, std::vector<int> *indices);
 

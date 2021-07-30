@@ -120,6 +120,10 @@ add_executable(engine
         src/RenderEngine/MeshData.h
         src/RenderEngine/BbData.h
         src/Util/CommonHeader.h
+        src/Toolbox/Screenshot.h
+        src/Interfaces/Clickable.h
+        src/Interfaces/Renderable.h
+        src/Interfaces/Interactive.h
         )
 
 if (EXISTS deps/glrequired)

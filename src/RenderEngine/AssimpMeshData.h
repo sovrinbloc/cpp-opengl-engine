@@ -46,6 +46,8 @@ public:
     // render the mesh
     void render(AssimpStaticShader *shader);
 
+    std::vector<float> getVertices();
+
 private:
     // render data
     unsigned int VBO, EBO;

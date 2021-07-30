@@ -301,3 +301,45 @@ BbData OBJLoader::loadBoundingBox(ModelData *data) {
 
     return BbData(vBoxVertices, indices);
 }
+
+BbData OBJLoader::loadBoundingBox(AssimpMesh *meshData) {
+    BoundingBoxData box;
+    for (auto data : meshData->meshes) {
+        const vector<float> &vertex = data.getVertices();
+
+        for (int i = 0; i < vertex.size(); i += 3) {
+            // Bounding Box
+            // Update lower-left-front corner of BB
+            box.vLowerLeftFront.x = min(box.vLowerLeftFront.x, vertex[i]);
+            box.vLowerLeftFront.y = min(box.vLowerLeftFront.y, vertex[i + 1]);
+            box.vLowerLeftFront.z = max(box.vLowerLeftFront.z, vertex[i + 2]);
+            // Update upper-right-back corner of BB
+            box.vUpperRightBack.x = max(box.vUpperRightBack.x, vertex[i]);
+            box.vUpperRightBack.y = max(box.vUpperRightBack.y, vertex[i + 1]);
+            box.vUpperRightBack.z = min(box.vUpperRightBack.z, vertex[i + 2]);
+        }
+    }
+    std::vector<float> vBoxVertices = {
+            // Front wall of bounding box
+            box.vLowerLeftFront.x, box.vLowerLeftFront.y, box.vLowerLeftFront.z,
+            box.vUpperRightBack.x, box.vLowerLeftFront.y, box.vLowerLeftFront.z,
+            box.vLowerLeftFront.x, box.vUpperRightBack.y, box.vLowerLeftFront.z,
+            box.vUpperRightBack.x, box.vUpperRightBack.y, box.vLowerLeftFront.z,
+
+            // Back wall of bounding box
+            box.vLowerLeftFront.x, box.vLowerLeftFront.y, box.vUpperRightBack.z,
+            box.vUpperRightBack.x, box.vLowerLeftFront.y, box.vUpperRightBack.z,
+            box.vLowerLeftFront.x, box.vUpperRightBack.y, box.vUpperRightBack.z,
+            box.vUpperRightBack.x, box.vUpperRightBack.y, box.vUpperRightBack.z
+    };
+
+    std::vector<int> indices = {
+            0, 1, 2, 3, 8, // Front wall
+            4, 5, 6, 7, 8, // Back wall
+            4, 0, 6, 2, 8, // Left wall
+            1, 5, 3, 7, 8, // Right wall
+            2, 3, 6, 7, 8, // Top wall
+            0, 1, 4, 5     // Bottom wall
+    };
+    return BbData(vBoxVertices, indices);
+}

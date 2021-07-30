@@ -11,7 +11,7 @@
  */
 class TerrainTexture {
 private:
-    int textureId;
+    unsigned int textureId;
 public:
     /**
      * @brief stores the textureId of the image (from textureLoader)
@@ -19,9 +19,9 @@ public:
      *        incrementing.
      * @param textureID
      */
-    explicit TerrainTexture(int textureID) : textureId(textureID) {}
+    explicit TerrainTexture(unsigned int textureID) : textureId(textureID) {}
 
-    int getTextureId() const {
+    unsigned int getTextureId() const {
         return this->textureId;
     }
 };

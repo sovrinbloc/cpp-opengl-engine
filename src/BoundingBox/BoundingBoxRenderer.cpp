@@ -15,16 +15,16 @@ BoundingBoxRenderer::BoundingBoxRenderer(BoundingBoxShader *shader, glm::mat4 pr
 
 }
 
-void BoundingBoxRenderer::render(std::map<RawBoundingBox *, std::vector<Entity *>> *entities) {
+void BoundingBoxRenderer::render(std::map<RawBoundingBox *, std::vector<Interactive *>> *entities) {
     auto it = entities->begin();
     RawBoundingBox *pRawBox;
     while (it != entities->end()) {
         pRawBox = it->first;
         prepareRawBoundingBox(pRawBox);
 
-        std::vector<Entity *> batch = entities->find(pRawBox)->second;
+        std::vector<Interactive *> batch = entities->find(pRawBox)->second;
         batch = entities->find(pRawBox)->second;
-        for (Entity *entity : batch) {
+        for (Interactive *entity : batch) {
             prepareInstance(entity);
 
             // draw elements
@@ -34,29 +34,36 @@ void BoundingBoxRenderer::render(std::map<RawBoundingBox *, std::vector<Entity *
             }
             glDrawElements(glDrawType, pRawBox->getVertexCount(), GL_UNSIGNED_INT, 0);
         }
-        unbindBox();
+        unbindBox(pRawBox);
         it++;
     }
 }
 
 void BoundingBoxRenderer::prepareRawBoundingBox(RawBoundingBox *box) {
+
+    glDisable(GL_CULL_FACE);
     glBindVertexArray(box->getVaoId());
     glEnableVertexAttribArray(0); // position
 
-    glEnable(GL_PRIMITIVE_RESTART_INDEX);
-    glPrimitiveRestartIndex(8);
+    if (!box->isMesh()) {
+        glEnable(GL_PRIMITIVE_RESTART_INDEX);
+        glPrimitiveRestartIndex(8);
+    }
 }
 
-void BoundingBoxRenderer::unbindBox() {
-    glDisable(GL_PRIMITIVE_RESTART_INDEX);
+void BoundingBoxRenderer::unbindBox(RawBoundingBox *box) {
     RenderStyle::enableCulling();
+    if (!box->isMesh()) {
+        glDisable(GL_PRIMITIVE_RESTART_INDEX);
+    }
+    glEnable(GL_CULL_FACE);
 
     // clean up
     glDisableVertexAttribArray(0); // position
     glBindVertexArray(0);
 }
 
-void BoundingBoxRenderer::prepareInstance(Entity *entity) {
+void BoundingBoxRenderer::prepareInstance(Interactive *entity) {
     shader->loadBoxColor(entity->getBoundingBox()->getBoxColor());
     glm::mat4 transformationMatrix = Maths::createTransformationMatrix(entity->getPosition(), entity->getRotation(),
                                                                        entity->getScale());
