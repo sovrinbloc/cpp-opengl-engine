@@ -35,7 +35,7 @@ void PlayerCamera::calculateCameraPosition(float horizDistance, float verticDist
 }
 
 // returns the view matrix calculated using Euler Angles and the LookAt Matrix
-glm::mat4 PlayerCamera::GetViewMatrix() {
+glm::mat4 PlayerCamera::getViewMatrix() {
     glm::vec3 front;
     front.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
     front.y = sin(glm::radians(Pitch));

@@ -113,7 +113,7 @@ GLuint ShaderProgram::getAttribute(std::string variableName) {
     return glGetAttribLocation(programID, variableName.c_str());
 }
 
-// activate the shader
+// textureActivated the shader
 // ------------------------------------------------------------------------
 void ShaderProgram::start() {
     glUseProgram(programID);

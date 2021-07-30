@@ -8,7 +8,7 @@
 #include "../RenderEngine/AssimpEntityLoader.h"
 #include "../Interfaces/Interactive.h"
 
-class AssimpEntity : public Interactive{
+class AssimpEntity : public Interactive {
 private:
     AssimpMesh *model;
     BoundingBox *box;
@@ -18,72 +18,38 @@ private:
 
 public:
 
-    AssimpEntity(AssimpMesh *model, glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 rotation = glm::vec3(0),
-                 float scale = 1.0f) : model(model), position(position), rotation(rotation),
-                                scale(scale) {}
+    explicit AssimpEntity(AssimpMesh *model, glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 rotation = glm::vec3(0),
+                 float scale = 1.0f);
 
     AssimpEntity(AssimpMesh *model, BoundingBox *box, glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 rotation = glm::vec3(0),
-                 float scale = 1.0f) : model(model), box(box), position(position), rotation(rotation),
-                                scale(scale) {}
+                 float scale = 1.0f);
 
-    AssimpMesh *getModel() {
-        return this->model;
-    }
+    AssimpMesh *getModel();
 
-    BoundingBox *getBoundingBox() const override {
-        return box;
-    }
+    BoundingBox *getBoundingBox() const override;
 
-    void setBoundingBox(BoundingBox *box) override {
-        this->box = box;
-    }
+    void setBoundingBox(BoundingBox *box) override;
 
-    void setModel(AssimpMesh *texturedModel) {
-        this->model = texturedModel;
-    }
+    glm::vec3 &getPosition () override;
 
+    void setPosition(glm::vec3 translate) override;
 
-    glm::vec3 &getPosition () override {
-        return position;
-    }
+    void increasePosition(glm::vec3 translate) override;
 
-    void setPosition(glm::vec3 translate) {
-        this->position = translate;
-    }
+    glm::vec3 getRotation() override;
 
-    void increasePosition(glm::vec3 translate) {
-        this->position += translate;
-    }
+    void rotate(glm::vec3 rotate) override;
 
-    glm::vec3 getRotation() override{
-        return this->rotation;
-    }
+    void setRotation(glm::vec3 rotate) override;
 
-    void rotate(glm::vec3 rotate) {
-        this->rotation += rotate;
-    }
+    void increaseScale(float scaleSize) override;
 
-    void setRotation(glm::vec3 rotate) {
-        this->rotation = rotate;
-    }
+    void setScale(float scaleSize) override;
 
-    void increaseScale(float scaleSize) {
-        scale += scaleSize;
-    }
+    float getScale() const override;
 
-    void setScale(float scaleSize) {
-        this->scale = scaleSize;
-    }
+    void setTransformation(glm::vec3 translate, glm::vec3 rotate, float scalar) override;
 
-    float getScale() const override {
-        return this->scale;
-    }
-
-    void setTransformation(glm::vec3 translate = glm::vec3(1.0f), glm::vec3 rotate = glm::vec3(0.0f), float scalar = 1.0f) {
-        this->position = translate;
-        this->rotation = rotate;
-        this->scale = scalar;
-    }
 };
 
 #endif //ENGINE_ASSIMPENTITY_H

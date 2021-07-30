@@ -1,5 +1,6 @@
 #ifndef CAMERA_H
 #define CAMERA_H
+#define GL_SILENCE_DEPRECATION
 
 #include "GLFW/glfw3.h"
 #include <glm/glm.hpp>
@@ -41,7 +42,7 @@ public:
     virtual void move();
 
     // returns the view matrix calculated using Euler Angles and the LookAt Matrix
-    virtual glm::mat4 GetViewMatrix();
+    virtual glm::mat4 getViewMatrix();
 
 protected:
 

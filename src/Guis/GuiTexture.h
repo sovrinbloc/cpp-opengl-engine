@@ -15,7 +15,7 @@ private:
 public:
     unsigned int getTexture() const;
 
-    const glm::vec2 &getPosition() const;
+    glm::vec2 &getPosition();
 
     const glm::vec2 &getScale() const;
 

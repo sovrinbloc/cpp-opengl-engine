@@ -18,11 +18,11 @@
 #include "../FontMeshCreator/TextMeshData.h"
 #include "../FontMeshCreator/GUIText.h"
 #include "../FontRendering/FontRenderer.h"
-#include "../Util/ColorNames.h"
+#include "../Util/Colors.h"
 #include "../FontRendering/TextMaster.h"
 #include "../Toolbox/TerrainPicker.h"
 #include "../RenderEngine/FrameBuffers.h"
-#include "../BoundingBox/BoundingBoxMaster.h"
+#include "../Interaction/InteractiveModel.h"
 
 void MainGameLoop::main() {
 
@@ -46,12 +46,12 @@ void MainGameLoop::main() {
     FontModel *fonty = loader->loadFontVAO();
     texts->push_back(new GUIText(
             "This is sample text because I know what I am doing whether you like it or not so I am joe.This is sample text because I know what I am doing whether you like it or not so I am joe.",
-            0.50f, fonty, &noodle, glm::vec2(25.0f, 225.0f), ColorNames::Whitesmoke,
+            0.50f, fonty, &noodle, glm::vec2(25.0f, 225.0f), Colors::Whitesmoke,
             0.50f * static_cast<float>(DisplayManager::Width()),
             false));
-    texts->push_back(new GUIText("Joseph Alai MCMXII", 0.5f, fonty, &arial, glm::vec2(540.0f, 570.0f), ColorNames::Cyan,
+    texts->push_back(new GUIText("Joseph Alai MCMXII", 0.5f, fonty, &arial, glm::vec2(540.0f, 570.0f), Colors::Cyan,
                                  0.75f * static_cast<float>(DisplayManager::Width()), false));
-    auto clickColorText = new GUIText("Color: ", 0.5f, fonty, &arial, glm::vec2(10.0f, 20.0f), ColorNames::Green,
+    auto clickColorText = new GUIText("Color: ", 0.5f, fonty, &arial, glm::vec2(10.0f, 20.0f), Colors::Green,
                                       0.75f * static_cast<float>(DisplayManager::Width()), false);
     texts->push_back(clickColorText);
 
@@ -79,7 +79,7 @@ void MainGameLoop::main() {
     // loading bb version 2
     RawBoundingBox *pDragonBox = loader->loadToVAO(dragonData.getBoundingBox());
     auto staticDragon = new TexturedModel(loader->loadToVAO(dragonData), new ModelTexture("grassTexture", PNG));
-    auto dragonEntity = new Entity(staticDragon, new BoundingBox(pDragonBox, BoundingBoxMaster::getColor()),
+    auto dragonEntity = new Entity(staticDragon, new BoundingBox(pDragonBox, BoundingBoxIndex::addUniqueColor()),
                                    glm::vec3(0.0, 120.0, 80), glm::vec3(0.0f, 180.0f, 0.0f));
 
     ModelData grassData = OBJLoader::loadObjModel("grassModel");;
@@ -162,39 +162,40 @@ void MainGameLoop::main() {
     /**
      * Load each entity into the vector, including position, fontSize, and rotation
      */
-    auto lampy = new Entity(staticLamp, new BoundingBox(pLampBox, BoundingBoxMaster::getColor()),
+    auto lampy = new Entity(staticLamp, new BoundingBox(pLampBox, BoundingBoxIndex::addUniqueColor()),
                             glm::vec3(120.0f, terrain->getHeightOfTerrain(120, -50), -50.0f));
     allEntities.push_back(lampy);
     allEntities.push_back(
-            new Entity(staticStall, new BoundingBox(pLampBox, BoundingBoxMaster::getColor()), glm::vec3(1.0f, 0.0f, -82.4f),
+            new Entity(staticStall, new BoundingBox(pLampBox, BoundingBoxIndex::addUniqueColor()), glm::vec3(1.0f, 0.0f, -82.4f),
                        glm::vec3(0.0f, 180.0f, 0.0f)));
-    allEntities.push_back(new Entity(staticLamp, new BoundingBox(pLampBox, BoundingBoxMaster::getColor()),
+    allEntities.push_back(new Entity(staticLamp, new BoundingBox(pLampBox, BoundingBoxIndex::addUniqueColor()),
                                      glm::vec3(100.0f, terrain->getHeightOfTerrain(100, -50), -50.0f)));
-    allEntities.push_back(new Entity(staticLamp, new BoundingBox(pLampBox, BoundingBoxMaster::getColor()),
+    allEntities.push_back(new Entity(staticLamp, new BoundingBox(pLampBox, BoundingBoxIndex::addUniqueColor()),
                                      glm::vec3(110.0f, terrain->getHeightOfTerrain(110, -20), -20.0f)));
 
 
     for (int i = 0; i < 500; ++i) {
         allEntities.push_back(
-                new Entity(staticGrass, new BoundingBox(pGrassBox, BoundingBoxMaster::getColor()), generateRandomPosition(terrain),
+                new Entity(staticGrass, new BoundingBox(pGrassBox, BoundingBoxIndex::addUniqueColor()), generateRandomPosition(terrain),
                            generateRandomRotation(),
                            generateRandomScale(0.5, 1.50f)));
-        allEntities.push_back(new Entity(staticFluffyTree, new BoundingBox(pFluffyTreeBox, BoundingBoxMaster::getColor()),
+        allEntities.push_back(new Entity(staticFluffyTree, new BoundingBox(pFluffyTreeBox,
+                                                                           BoundingBoxIndex::addUniqueColor()),
                                          generateRandomPosition(terrain), generateRandomRotation(),
                                          generateRandomScale(0.5, 1.50f)));
         allEntities.push_back(
-                new Entity(staticTree, new BoundingBox(pTreeBox, BoundingBoxMaster::getColor()), generateRandomPosition(terrain),
+                new Entity(staticTree, new BoundingBox(pTreeBox, BoundingBoxIndex::addUniqueColor()), generateRandomPosition(terrain),
                            generateRandomRotation(),
                            generateRandomScale(.25, 1.50)));
         allEntities.push_back(
-                new Entity(staticFern, new BoundingBox(pFernBox, BoundingBoxMaster::getColor()), Utils::roll(1, 4),
+                new Entity(staticFern, new BoundingBox(pFernBox, BoundingBoxIndex::addUniqueColor()), Utils::roll(1, 4),
                            generateRandomPosition(terrain), generateRandomRotation(),
                            generateRandomScale(.25, 1.50)));
         if (i % 30 == 0) {
             auto pBackpackBox = OBJLoader::loadBoundingBox(pBackpack);
             auto pBackpackBoxs = loader->loadToVAO(pBackpackBox);
             allScenes.push_back(
-                    new AssimpEntity(pBackpack, new BoundingBox(pBackpackBoxs, BoundingBoxMaster::getColor()), generateRandomPosition(terrain, 3.0f), generateRandomRotation(),
+                    new AssimpEntity(pBackpack, new BoundingBox(pBackpackBoxs, BoundingBoxIndex::addUniqueColor()), generateRandomPosition(terrain, 3.0f), generateRandomRotation(),
                                      generateRandomScale(3.25, 10.50)));
         }
     }
@@ -207,8 +208,9 @@ void MainGameLoop::main() {
     auto playerOne = new TexturedModel(playerModel, new ModelTexture(
             "stallTexture", PNG));
 
-    auto player = new Player(playerOne, new BoundingBox(pStallBox, BoundingBoxMaster::getColor()), glm::vec3(100.0f, 3.0f, -50.0f),
+    auto player = new Player(playerOne, new BoundingBox(pStallBox, BoundingBoxIndex::addUniqueColor()), glm::vec3(100.0f, 3.0f, -50.0f),
                              glm::vec3(0.0f, 180.0f, 0.0f), 1.0f);
+    InteractiveModel::setInteractiveBox(player);
     allEntities.push_back(player);
     auto playerCamera = new PlayerCamera(player);
 
@@ -232,8 +234,8 @@ void MainGameLoop::main() {
     /**
      * Framebuffers
      */
-    auto fbos = new FrameBuffers();
-    auto gui = new GuiTexture(fbos->getReflectionTexture(), glm::vec2(-0.25f - 0.25f), glm::vec2(0.3f));
+    auto reflectFbo = new FrameBuffers();
+    auto gui = new GuiTexture(reflectFbo->getReflectionTexture(), glm::vec2(-0.25f - 0.25f), glm::vec2(0.3f));
     guis.push_back(gui);
 
     /**
@@ -265,40 +267,53 @@ void MainGameLoop::main() {
 //            lights[1]->setPosition(glm::vec3(terrainPoint.x, terrainPoint.y + 15.0f, terrainPoint.z));
 //        }
 
+        if (InputMaster::hasPendingClick()) {
+            if (InputMaster::mouseClicked(LeftClick)) {
+                renderer->renderBoundingBoxes(allBoxes);
+                glm::vec3 clickColor = Picker::getColor();
+                int element = BoundingBoxIndex::getIndexByColor(clickColor);
+                *clickColorText = GUIText(Colors::toString(clickColor) + ", Element: " + std::to_string(element),
+                                          0.5f, fonty, &arial, glm::vec2(10.0f, 20.0f), clickColor / 255.0f,
+                                          0.75f * static_cast<float>(DisplayManager::Width()), false);
+                Interactive *pClickedModel = InteractiveModel::getInteractiveBox(BoundingBoxIndex::getIndexByColor(clickColor));
+                if (pClickedModel != nullptr) {
+                    if (auto a = dynamic_cast<Player *>(pClickedModel)) {
+                        if (!a->hasMaterial()) {
+                            a->setMaterial({500.0f, 500.0f});
+                            a->activateMaterial();
+                        } else {
+                            a->disableMaterial();
+                        }
+                    }
+                    printf("position: x, y, z: (%f, %f, %f)\n", pClickedModel->getPosition().x, pClickedModel->getPosition().y, pClickedModel->getPosition().z);
+                }
+                InputMaster::resetClick();
+            }
+        }
+
         // framebuffer only
-        fbos->bindReflectionFrameBuffer();
+        reflectFbo->bindReflectionFrameBuffer();
         {
             renderer->renderBoundingBoxes(allBoxes);
         }
-        fbos->unbindCurrentFrameBuffer();
+        reflectFbo->unbindCurrentFrameBuffer();
 
         // non framebuffer
         {
             renderer->renderScene(allEntities, allScenes, allTerrains, lights);
         }
 
+
         TextMaster::render();
         guiRenderer->render(guis);
         DisplayManager::updateDisplay();
 
-        if (InputMaster::hasPendingClick()) {
-            if (InputMaster::mouseClicked(LeftClick)) {
-                auto clickColor = TerrainPicker::getColor();
-                *clickColorText = GUIText(std::string("Color: ") +
-                                          std::to_string(clickColor.x) + ", " +
-                                          std::to_string(clickColor.y) + ", " +
-                                          std::to_string(clickColor.z),
-                                          0.5f, fonty, &arial, glm::vec2(10.0f, 20.0f), clickColor / 255.0f,
-                                          0.75f * static_cast<float>(DisplayManager::Width()), false);
-                InputMaster::resetClick();
-            }
-        }
 
     }
     /**
      * Clean up renderers and loaders
      */
-    fbos->cleanUp();
+    reflectFbo->cleanUp();
     TextMaster::cleanUp();
     fontRenderer->cleanUp();
     guiRenderer->cleanUp();

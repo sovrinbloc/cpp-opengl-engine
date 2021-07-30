@@ -73,13 +73,11 @@ public:
     void renderScene(std::vector<Entity *> entities, std::vector<AssimpEntity *> aEntities,
                      std::vector<Terrain *> terrains, std::vector<Light *> lights);
 
-    void renderBoundingBoxes(std::vector<Interactive*> boxes);
+    void renderBoundingBoxes(std::vector<Interactive *> boxes);
 
     void prepareBoundingBoxRender();
 
     void render();
-
-
 
 };
 

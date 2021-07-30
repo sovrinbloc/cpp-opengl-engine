@@ -30,5 +30,9 @@ public:
     glm::vec3 getBoxColor() {
         return BoundingBox::color;
     }
+
+    void setColor(const glm::vec3 &color) {
+        BoundingBox::color = color;
+    }
 };
 #endif //ENGINE_BOUNDINGBOX_H

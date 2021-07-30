@@ -15,7 +15,7 @@ glm::vec3 TerrainPicker::getCurrentTerrainPoint() {
 }
 
 void TerrainPicker::update() {
-    viewMatrix = camera->GetViewMatrix();
+    viewMatrix = camera->getViewMatrix();
     currentRay = calculateMouseRay(projectionMatrix, viewMatrix);
     if (intersectionInRange(0, kRayRange, currentRay)) {
         currentTerrainPoint = binarySearch(0, 0, kRayRange, currentRay);

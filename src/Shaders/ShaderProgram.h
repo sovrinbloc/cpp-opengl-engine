@@ -58,7 +58,7 @@ public:
 
     GLuint getAttribute(std::string variableName);
 
-    // activate the shader
+    // textureActivated the shader
     // ------------------------------------------------------------------------
     void start();
 

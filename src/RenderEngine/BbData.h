@@ -5,6 +5,8 @@
 #ifndef ENGINE_BBDATA_H
 #define ENGINE_BBDATA_H
 
+#include <utility>
+
 #include "MeshData.h"
 
 class BbData : public MeshData {
@@ -24,7 +26,7 @@ public:
                    1, 5, 3, 7, 8, // Right wall
                    2, 3, 6, 7, 8, // Top wall
                    0, 1, 4, 5     // Bottom wall
-           }, bool mesh = false) : mesh(mesh), MeshData(vertices, textureCoords, normals, indices) {}
+           }, bool mesh = false) : mesh(mesh), MeshData(std::move(vertices), textureCoords, normals, indices) {}
 };
 
 #endif //ENGINE_BBDATA_H

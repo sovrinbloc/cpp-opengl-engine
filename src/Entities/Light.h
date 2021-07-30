@@ -19,8 +19,15 @@ struct Lighting {
 class Light {
 private:
     glm::vec3 position;
+
     glm::vec3 color;
+
     Lighting lighting;
+
+public:
+
+    constexpr static float kDirectional = -1.0f;
+
 public:
     /**
      * @brief Light stores the details of each light. Position, color, and if it's a spot or
@@ -36,39 +43,22 @@ public:
                            .constant = 1.0f,
                            .linear = 0.09f,
                            .quadratic = 0.032f
-                   }) : position(position), color(color), lighting(lighting) {
-    }
+                   });
 
-    Lighting getLighting() {
-        return lighting;
-    }
+    Lighting getLighting();
 
-    void setLighting(const Lighting &lighting) {
-        this->lighting = lighting;
-    }
+    void setLighting(const Lighting &lighting);
 
-    glm::vec3 &getPosition() {
-        return this->position;
-    }
+    glm::vec3 &getPosition();
 
-    void setPosition(glm::vec3 position) {
-        this->position = position;
-    }
+    void setPosition(glm::vec3 position);
 
-    void addToPosition(glm::vec3 position) {
-        this->position += position;
-    }
+    void addToPosition(glm::vec3 position);
 
-    glm::vec3 & getColor() {
-        return color;
-    }
+    glm::vec3 &getColor();
 
-    void setColor(glm::vec3 color) {
-        this->color = color;
-    }
+    void setColor(glm::vec3 color);
 
-public:
-    constexpr static float kDirectional = -1.0f;
 };
 
 #endif //ENGINE_LIGHT_H

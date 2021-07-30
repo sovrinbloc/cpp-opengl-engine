@@ -4,7 +4,7 @@
 
 #include "Picker.h"
 #include "../Entities/CameraInput.h"
-
+#include "GLFW/glfw3.h"
 
 glm::vec3 Picker::calculateMouseRay(glm::mat4 projectionMatrix, glm::mat4 viewMatrix) {
     glm::vec2 normalizedCoords = getNormalizedDeviceCoords();

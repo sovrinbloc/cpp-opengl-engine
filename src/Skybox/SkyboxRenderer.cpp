@@ -3,7 +3,7 @@
 //
 
 #include "SkyboxRenderer.h"
-#include "../Util/ColorNames.h"
+#include "../Util/Colors.h"
 
 
 namespace {
@@ -89,7 +89,7 @@ SkyboxRenderer::SkyboxRenderer(Loader *loader, glm::mat4 projectionMatrix, glm::
 void SkyboxRenderer::render(Camera *camera) {
     glDepthMask(GL_FALSE);
     shader->start();
-    glm::mat4 view = glm::mat4(glm::mat3(camera->GetViewMatrix()));
+    glm::mat4 view = glm::mat4(glm::mat3(camera->getViewMatrix()));
     shader->loadViewMatrix(view);
     shader->loadFogColor(*skyColor);
     glBindVertexArray(cube->getVaoId());
@@ -111,22 +111,22 @@ void SkyboxRenderer::bindTextures() {
     if(time >= 0 && time < 5000){
         texture1 = nightTextureId;
         texture2 = nightTextureId;
-        *skyColor = ColorNames::Skyblue;
+        *skyColor = Colors::Skyblue;
         blendFactor = (time - 0)/(5000 - 0);
     }else if(time >= 5000 && time < 8000){
         texture1 = nightTextureId;
         texture2 = dayTextureId;
         blendFactor = (time - 5000)/(8000 - 5000);
-        *skyColor = ColorNames::Lightgrey;
+        *skyColor = Colors::Lightgrey;
     }else if(time >= 8000 && time < 21000){
         texture1 = dayTextureId;
         texture2 = dayTextureId;
-        *skyColor = ColorNames::Whitesmoke;
+        *skyColor = Colors::Whitesmoke;
         blendFactor = (time - 8000)/(21000 - 8000);
     }else{
         texture1 = dayTextureId;
         texture2 = nightTextureId;
-        *skyColor = ColorNames::Black;
+        *skyColor = Colors::Black;
         blendFactor = (time - 21000)/(24000 - 21000);
     }
 

@@ -6,7 +6,7 @@
 #include "DisplayManager.h"
 #include "RenderStyle.h"
 #include "AssimpEntityLoader.h"
-#include "../Util/ColorNames.h"
+#include "../Util/Colors.h"
 #include "../Util/Utils.h"
 
 MasterRenderer::MasterRenderer(PlayerCamera *cameraInput, Loader *loader) : shader(new StaticShader()),
@@ -35,7 +35,7 @@ void MasterRenderer::cleanUp() {
     bShader->cleanUp();
 }
 
-glm::vec3 MasterRenderer::skyColor = const_cast<glm::vec3 &>(ColorNames::Skyblue);
+glm::vec3 MasterRenderer::skyColor = const_cast<glm::vec3 &>(Colors::Skyblue);
 
 /**
  * @brief prepares and clears buffer and screen for each iteration of loop
@@ -58,7 +58,7 @@ void MasterRenderer::render(const std::vector<Light *>&suns) {
     shader->loadSkyColorVariable(skyColor);
     shader->loadLight(suns);
     shader->loadViewPosition(camera);
-    shader->loadViewMatrix(camera->GetViewMatrix());
+    shader->loadViewMatrix(camera->getViewMatrix());
     shader->loadProjectionMatrix(MasterRenderer::createProjectionMatrix());
     renderer->render(entities);
 
@@ -69,7 +69,7 @@ void MasterRenderer::render(const std::vector<Light *>&suns) {
     sceneShader->loadSkyColorVariable(skyColor);
     sceneShader->loadLight(suns);
     sceneShader->loadViewPosition(camera);
-    sceneShader->loadViewMatrix(camera->GetViewMatrix());
+    sceneShader->loadViewMatrix(camera->getViewMatrix());
     sceneShader->loadProjectionMatrix(MasterRenderer::createProjectionMatrix());
     sceneRenderer->render(scenes);
 
@@ -82,7 +82,7 @@ void MasterRenderer::render(const std::vector<Light *>&suns) {
     terrainShader->loadSkyColorVariable(skyColor);
     terrainShader->loadLight(suns);
     terrainShader->loadViewPosition(camera);
-    terrainShader->loadViewMatrix(camera->GetViewMatrix());
+    terrainShader->loadViewMatrix(camera->getViewMatrix());
     terrainShader->loadProjectionMatrix(MasterRenderer::createProjectionMatrix());
     terrainRenderer->render(terrains);
 
@@ -174,7 +174,7 @@ void MasterRenderer::render() {
     bShader->start();
 
     bShader->loadViewPosition(camera);
-    bShader->loadViewMatrix(camera->GetViewMatrix());
+    bShader->loadViewMatrix(camera->getViewMatrix());
     bShader->loadProjectionMatrix(MasterRenderer::createProjectionMatrix());
     bRenderer->render(boxes);
 

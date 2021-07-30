@@ -36,7 +36,7 @@ public:
     void calculateCameraPosition(float horizDistance, float verticDistance) const;
 
     // returns the view matrix calculated using Euler Angles and the LookAt Matrix
-    glm::mat4 GetViewMatrix() override;
+    glm::mat4 getViewMatrix() override;
 
     void calculateAngleAroundPlayer();
 

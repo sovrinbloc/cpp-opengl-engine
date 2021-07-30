@@ -5,7 +5,7 @@
 #include "MousePicker.h"
 
 MousePicker::MousePicker(Camera *cam, glm::mat4 projection) : camera(cam) {
-    viewMatrix = camera->GetViewMatrix();
+    viewMatrix = camera->getViewMatrix();
     projectionMatrix = projection;
 }
 
@@ -14,7 +14,7 @@ glm::vec3 MousePicker::getCurrentRay() {
 }
 
 void MousePicker::update() {
-    viewMatrix = camera->GetViewMatrix();
+    viewMatrix = camera->getViewMatrix();
     currentRay = calculateMouseRay(projectionMatrix, viewMatrix);
 }
 

@@ -38,7 +38,7 @@ void Camera::move() {
  * @brief returns the view matrix calculated using Euler Angles and the LookAt Matrix
  * @return
  */
-glm::mat4 Camera::GetViewMatrix() {
+glm::mat4 Camera::getViewMatrix() {
     return glm::lookAt(Position, Position + Front, Up);
 }
 

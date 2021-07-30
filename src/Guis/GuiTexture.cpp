@@ -16,7 +16,7 @@ unsigned int GuiTexture::getTexture() const {
     return textureId;
 }
 
-const glm::vec2 &GuiTexture::getPosition() const {
+glm::vec2 &GuiTexture::getPosition() {
     return position;
 }
 

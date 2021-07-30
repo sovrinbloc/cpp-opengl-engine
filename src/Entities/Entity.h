@@ -9,18 +9,25 @@
 #include "../Models/TexturedModel.h"
 #include "../BoundingBox/BoundingBox.h"
 #include "../Interfaces/Interactive.h"
+#include "../BoundingBox/BoundingBoxIndex.h"
 
 class Entity : public Interactive {
 protected:
     TexturedModel *model;
+
     BoundingBox *box;
+
     glm::vec3 position;
+
     glm::vec3 rotation;
+
     float scale;
+
     int textureIndex = 0;
 
     Material material = {0.1, 0.9};
-    bool activate = false;
+
+    bool textureActivated = false;
 public:
 
     /**
@@ -33,8 +40,9 @@ public:
      * @param rotation
      * @param scale
      */
-    explicit Entity(TexturedModel *model, BoundingBox *box, glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 rotation = glm::vec3(0),
-           float scale = 1.0f) : model(model), box(box), position(position), rotation(rotation), scale(scale) {}
+    explicit Entity(TexturedModel *model, BoundingBox *box, glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f),
+                    glm::vec3 rotation = glm::vec3(0),
+                    float scale = 1.0f);
 
     /**
       * @brief Entity stores the TexturedModel (RawModel & Texture), and stores vectors
@@ -47,105 +55,58 @@ public:
       * @param rotation
       * @param scale
       */
-    explicit Entity(TexturedModel *model, BoundingBox *box, int textureIndex, glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 rotation = glm::vec3(0),
-           float scale = 1.0f) : model(model), box(box), textureIndex(textureIndex), position(position), rotation(rotation), scale(scale) {}
+    explicit Entity(TexturedModel *model, BoundingBox *box, int textureIndex,
+                    glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 rotation = glm::vec3(0),
+                    float scale = 1.0f);
 
-    BoundingBox *getBoundingBox() const override {
-        return box;
-    }
+    BoundingBox *getBoundingBox() const override;
 
-    void setBoundingBox(BoundingBox *box) override {
-        this->box = box;
-    }
+    void setBoundingBox(BoundingBox *box) override;
 
-    TexturedModel *getModel() {
-        return this->model;
-    }
+    TexturedModel *getModel();
 
     /**
      * @brief gets the yOffset for the texture
      * @return
      */
-    float getTextureYOffset() {
-        int column = textureIndex % model->getModelTexture()->getNumberOfRows();
-        return static_cast<float>(column) / static_cast<float>(model->getModelTexture()->getNumberOfRows());
-    }
+    float getTextureYOffset();
 
     /**
      * @brief gets the xOffset for the texture
      * @return
      */
-    float getTextureXOffset() {
-        int row = textureIndex % model->getModelTexture()->getNumberOfRows();
-        return static_cast<float>(row) / static_cast<float>(model->getModelTexture()->getNumberOfRows());
-    }
+    float getTextureXOffset();
 
-    glm::vec3 &getPosition() override {
-        return position;
-    }
+    glm::vec3 &getPosition() override;
 
+    void setPosition(glm::vec3 translate) override;
 
-    void setPosition(glm::vec3 translate) {
-        this->position = translate;
-    }
+    void increasePosition(glm::vec3 translate) override;
 
-    void increasePosition(glm::vec3 translate) {
-        this->position += translate;
-    }
+    glm::vec3 getRotation() override;
 
-    glm::vec3 getRotation() override {
-        return this->rotation;
-    }
+    void rotate(glm::vec3 rotate) override;
 
-    void rotate(glm::vec3 rotate) {
-        this->rotation += rotate;
-    }
+    void setRotation(glm::vec3 rotate) override;
 
-    void setRotation(glm::vec3 rotate) {
-        this->rotation = rotate;
-    }
+    void increaseScale(float scaleSize) override;
 
-    void increaseScale(float scaleSize) {
-        scale += scaleSize;
-    }
+    void setScale(float scaleSize) override;
 
-    void setScale(float scaleSize) {
-        this->scale = scaleSize;
-    }
+    float getScale() const override;
 
-    float getScale() const override {
-        return this->scale;
-    }
+    void setTransformation(glm::vec3 translate, glm::vec3 rotate, float scalar) override;
 
-    void
-    setTransformation(glm::vec3 translate = glm::vec3(1.0f), glm::vec3 rotate = glm::vec3(0.0f), float scalar = 1.0f) {
-        this->position = translate;
-        this->rotation = rotate;
-        this->scale = scalar;
-    }
+    Material getMaterial() const;
 
-    Material getMaterial() const {
-        if (activate == false) {
-            return this->model->getModelTexture()->getMaterial();
-        }
-        return material;
-    }
+    void setMaterial(Material material);
 
-    void setMaterial(Material material) {
-        Entity::material = material;
-    }
+    bool hasMaterial() const;
 
-    bool hasMaterial() {
-        return activate;
-    }
+    void activateMaterial();
 
-    void activateMaterial() {
-        activate = true;
-    }
+    void disableMaterial();
 
-    void clearMaterial() {
-        activate = false;
-    }
 };
 
 #endif //ENGINE_ENTITY_H

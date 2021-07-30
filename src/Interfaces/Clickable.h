@@ -7,8 +7,8 @@
 #include "../BoundingBox/BoundingBox.h"
 class Clickable {
 public:
-    virtual BoundingBox *getBoundingBox() const{}
+    virtual BoundingBox *getBoundingBox() const = 0;
 
-    virtual void setBoundingBox(BoundingBox *box){}
+    virtual void setBoundingBox(BoundingBox *box) = 0;
 };
 #endif //ENGINE_CLICKABLE_H

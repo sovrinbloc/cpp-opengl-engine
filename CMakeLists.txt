@@ -78,7 +78,7 @@ add_executable(engine
         src/Skybox/SkyboxShader.h
         src/Skybox/SkyboxRenderer.cpp
         src/Skybox/SkyboxRenderer.h
-        src/Util/ColorNames.h
+        src/Util/Colors.h
         src/Toolbox/MousePicker.cpp
         src/Toolbox/MousePicker.h
         src/FontMeshCreator/TextMeshData.cpp
@@ -106,8 +106,8 @@ add_executable(engine
         src/BoundingBox/BoundingBoxRenderer.h
         src/BoundingBox/BoundingBoxShader.cpp
         src/BoundingBox/BoundingBoxShader.h
-        src/BoundingBox/BoundingBoxMaster.cpp
-        src/BoundingBox/BoundingBoxMaster.h
+        src/BoundingBox/BoundingBoxIndex.cpp
+        src/BoundingBox/BoundingBoxIndex.h
         src/Input/InputMaster.h
         src/Input/InputMaster.cpp
         src/Toolbox/TerrainPicker.cpp
@@ -122,9 +122,14 @@ add_executable(engine
         src/Util/CommonHeader.h
         src/Toolbox/Screenshot.h
         src/Interfaces/Clickable.h
-        src/Interfaces/Renderable.h
+        src/Interfaces/Moveable.h
         src/Interfaces/Interactive.h
-        )
+        src/Util/Colors.cpp
+        src/Interaction/InteractiveModel.cpp
+        src/Interaction/InteractiveModel.h
+        src/Entities/Entity.cpp
+        src/Entities/AssimpEntity.cpp
+        src/Entities/Light.cpp)
 
 if (EXISTS deps/glrequired)
     message(STATUS "Requiring OpenGL")
