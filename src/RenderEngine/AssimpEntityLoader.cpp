@@ -45,7 +45,7 @@ void AssimpMesh::loadModel(string const &path) {
 void AssimpMesh::processNode(aiNode *node, const aiScene *scene) {
     // process each mesh located at the current node
     for (unsigned int i = 0; i < node->mNumMeshes; i++) {
-        // the node object only contains indices to index the actual objects in the scene.
+        // the node object only contains kBboxIndices to index the actual objects in the scene.
         // the scene contains all the data, node is just to keep stuff organized (like relations between nodes).
         aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
         meshes.push_back(processMesh(mesh, scene));
@@ -103,10 +103,10 @@ AssimpMeshData AssimpMesh::processMesh(aiMesh *mesh, const aiScene *scene) {
 
         vertices.push_back(vertex);
     }
-    // now wak through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
+    // now wak through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex kBboxIndices.
     for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
         aiFace face = mesh->mFaces[i];
-        // retrieve all indices of the face and store them in the indices vector
+        // retrieve all kBboxIndices of the face and store them in the kBboxIndices vector
         for (unsigned int j = 0; j < face.mNumIndices; j++)
             indices.push_back(face.mIndices[j]);
     }

@@ -62,31 +62,20 @@ void MainGameLoop::main() {
 
     ModelData lampData = OBJLoader::loadObjModel("lamp");
     // load bb version 1
-    BbData box = OBJLoader::loadBoundingBox("lamp"); // load by adding a new mesh to count as bounding box
+    BoundingBoxData box = OBJLoader::loadBoundingBox("lamp"); // load by adding a new mesh to count as bounding box
     RawBoundingBox *pLampBox = loader->loadToVAO(box);
     auto staticLamp = new TexturedModel(loader->loadToVAO(lampData), new ModelTexture("lamp", PNG));
 
-    ModelData fernData = OBJLoader::loadObjModel("fern");
 
     // loading bb version 2
-    BbData bbFern = OBJLoader::loadBoundingBox(&fernData);
-    RawBoundingBox *pFernBox = loader->loadToVAO(bbFern); // load by previously loaded object
+    ModelData fernData = OBJLoader::loadObjModel("fern");
+    RawBoundingBox *pFernBox = loader->loadToVAO(OBJLoader::loadBoundingBox(fernData)); // load by previously loaded object
     auto staticFern = new TexturedModel(loader->loadToVAO(fernData), new ModelTexture("fern", PNG));
     staticFern->getModelTexture()->setNumberOfRows(2);
 
-    ModelData dragonData = OBJLoader::loadObjModel("dragon");;
-
-    // loading bb version 2
-    RawBoundingBox *pDragonBox = loader->loadToVAO(dragonData.getBoundingBox());
-    auto staticDragon = new TexturedModel(loader->loadToVAO(dragonData), new ModelTexture("grassTexture", PNG));
-    auto dragonEntity = new Entity(staticDragon, new BoundingBox(pDragonBox, BoundingBoxIndex::addUniqueColor()),
-                                   glm::vec3(0.0, 120.0, 80), glm::vec3(0.0f, 180.0f, 0.0f));
-
     ModelData grassData = OBJLoader::loadObjModel("grassModel");;
-    RawBoundingBox *pGrassBox = loader->loadToVAO(grassData.getBoundingBox());
-    grassTexture = new ModelTexture("grassTexture", PNG);
-    grassTexture->setHasTransparency(true);
-    grassTexture->setUseFakeLighting(true);
+    RawBoundingBox *pGrassBox = loader->loadToVAO(OBJLoader::loadBoundingBox(grassData));
+    grassTexture = new ModelTexture("grassTexture", PNG, true, true);
     auto staticGrass = new TexturedModel(loader->loadToVAO(grassData), grassTexture);
 
     const Material material = Material{
@@ -95,17 +84,17 @@ void MainGameLoop::main() {
     };
 
     ModelData stallData = OBJLoader::loadObjModel("Stall");;
-    RawBoundingBox *pStallBox = loader->loadToVAO(stallData.getBoundingBox());
+    RawBoundingBox *pStallBox = loader->loadToVAO(OBJLoader::loadBoundingBox(stallData));
     auto staticStall = new TexturedModel(loader->loadToVAO(stallData),
                                          new ModelTexture("stallTexture", PNG, material));
 
     ModelData treeData = OBJLoader::loadObjModel("tree");;
-    RawBoundingBox *pTreeBox = loader->loadToVAO(treeData.getBoundingBox());
+    RawBoundingBox *pTreeBox = loader->loadToVAO(OBJLoader::loadBoundingBox(treeData));
     auto staticTree = new TexturedModel(loader->loadToVAO(treeData),
                                         new ModelTexture("tree", PNG, material));
 
     ModelData fluffyTreeData = OBJLoader::loadObjModel("fluffy-tree");
-    RawBoundingBox *pFluffyTreeBox = loader->loadToVAO(fluffyTreeData.getBoundingBox());
+    RawBoundingBox *pFluffyTreeBox = loader->loadToVAO(OBJLoader::loadBoundingBox(fluffyTreeData));
     auto staticFluffyTree = new TexturedModel(loader->loadToVAO(fluffyTreeData),
                                               new ModelTexture("tree", PNG, material));
 
@@ -116,8 +105,8 @@ void MainGameLoop::main() {
      */
     std::vector<Terrain *> allTerrains;
     std::vector<Light *> lights;
-    std::vector<Entity *> allEntities;
-    std::vector<AssimpEntity *> allScenes;
+    std::vector<Entity *> entities;
+    std::vector<AssimpEntity *> scenes;
     std::vector<Interactive *> allBoxes;
 
     /**
@@ -162,44 +151,43 @@ void MainGameLoop::main() {
     /**
      * Load each entity into the vector, including position, fontSize, and rotation
      */
-    auto lampy = new Entity(staticLamp, new BoundingBox(pLampBox, BoundingBoxIndex::addUniqueColor()),
+    auto lampy = new Entity(staticLamp, new BoundingBox(pLampBox, BoundingBoxIndex::genUniqueId()),
                             glm::vec3(120.0f, terrain->getHeightOfTerrain(120, -50), -50.0f));
-    allEntities.push_back(lampy);
-    allEntities.push_back(
-            new Entity(staticStall, new BoundingBox(pLampBox, BoundingBoxIndex::addUniqueColor()), glm::vec3(1.0f, 0.0f, -82.4f),
+    entities.push_back(lampy);
+    entities.push_back(
+            new Entity(staticStall, new BoundingBox(pLampBox, BoundingBoxIndex::genUniqueId()), glm::vec3(1.0f, 0.0f, -82.4f),
                        glm::vec3(0.0f, 180.0f, 0.0f)));
-    allEntities.push_back(new Entity(staticLamp, new BoundingBox(pLampBox, BoundingBoxIndex::addUniqueColor()),
-                                     glm::vec3(100.0f, terrain->getHeightOfTerrain(100, -50), -50.0f)));
-    allEntities.push_back(new Entity(staticLamp, new BoundingBox(pLampBox, BoundingBoxIndex::addUniqueColor()),
-                                     glm::vec3(110.0f, terrain->getHeightOfTerrain(110, -20), -20.0f)));
+    entities.push_back(new Entity(staticLamp, new BoundingBox(pLampBox, BoundingBoxIndex::genUniqueId()),
+                                  glm::vec3(100.0f, terrain->getHeightOfTerrain(100, -50), -50.0f)));
+    entities.push_back(new Entity(staticLamp, new BoundingBox(pLampBox, BoundingBoxIndex::genUniqueId()),
+                                  glm::vec3(110.0f, terrain->getHeightOfTerrain(110, -20), -20.0f)));
 
 
     for (int i = 0; i < 500; ++i) {
-        allEntities.push_back(
-                new Entity(staticGrass, new BoundingBox(pGrassBox, BoundingBoxIndex::addUniqueColor()), generateRandomPosition(terrain),
+        entities.push_back(
+                new Entity(staticGrass, new BoundingBox(pGrassBox, BoundingBoxIndex::genUniqueId()), generateRandomPosition(terrain),
                            generateRandomRotation(),
                            generateRandomScale(0.5, 1.50f)));
-        allEntities.push_back(new Entity(staticFluffyTree, new BoundingBox(pFluffyTreeBox,
-                                                                           BoundingBoxIndex::addUniqueColor()),
-                                         generateRandomPosition(terrain), generateRandomRotation(),
-                                         generateRandomScale(0.5, 1.50f)));
-        allEntities.push_back(
-                new Entity(staticTree, new BoundingBox(pTreeBox, BoundingBoxIndex::addUniqueColor()), generateRandomPosition(terrain),
+        entities.push_back(new Entity(staticFluffyTree, new BoundingBox(pFluffyTreeBox,
+                                                                        BoundingBoxIndex::genUniqueId()),
+                                      generateRandomPosition(terrain), generateRandomRotation(),
+                                      generateRandomScale(0.5, 1.50f)));
+        entities.push_back(
+                new Entity(staticTree, new BoundingBox(pTreeBox, BoundingBoxIndex::genUniqueId()), generateRandomPosition(terrain),
                            generateRandomRotation(),
                            generateRandomScale(.25, 1.50)));
-        allEntities.push_back(
-                new Entity(staticFern, new BoundingBox(pFernBox, BoundingBoxIndex::addUniqueColor()), Utils::roll(1, 4),
+        entities.push_back(
+                new Entity(staticFern, new BoundingBox(pFernBox, BoundingBoxIndex::genUniqueId()), Utils::roll(1, 4),
                            generateRandomPosition(terrain), generateRandomRotation(),
                            generateRandomScale(.25, 1.50)));
         if (i % 30 == 0) {
             auto pBackpackBox = OBJLoader::loadBoundingBox(pBackpack);
             auto pBackpackBoxs = loader->loadToVAO(pBackpackBox);
-            allScenes.push_back(
-                    new AssimpEntity(pBackpack, new BoundingBox(pBackpackBoxs, BoundingBoxIndex::addUniqueColor()), generateRandomPosition(terrain, 3.0f), generateRandomRotation(),
+            scenes.push_back(
+                    new AssimpEntity(pBackpack, new BoundingBox(pBackpackBoxs, BoundingBoxIndex::genUniqueId()), generateRandomPosition(terrain, 3.0f), generateRandomRotation(),
                                      generateRandomScale(3.25, 10.50)));
         }
     }
-    allEntities.push_back(dragonEntity);
 
     /**
      * Player Creation
@@ -208,10 +196,10 @@ void MainGameLoop::main() {
     auto playerOne = new TexturedModel(playerModel, new ModelTexture(
             "stallTexture", PNG));
 
-    auto player = new Player(playerOne, new BoundingBox(pStallBox, BoundingBoxIndex::addUniqueColor()), glm::vec3(100.0f, 3.0f, -50.0f),
+    auto player = new Player(playerOne, new BoundingBox(pStallBox, BoundingBoxIndex::genUniqueId()), glm::vec3(100.0f, 3.0f, -50.0f),
                              glm::vec3(0.0f, 180.0f, 0.0f), 1.0f);
     InteractiveModel::setInteractiveBox(player);
-    allEntities.push_back(player);
+    entities.push_back(player);
     auto playerCamera = new PlayerCamera(player);
 
     /**
@@ -243,14 +231,14 @@ void MainGameLoop::main() {
      */
     auto picker = new TerrainPicker(playerCamera, renderer->getProjectionMatrix(), terrain);
 
-    for (auto e: allEntities) {
+    for (auto e: entities) {
         if (e->getBoundingBox() != nullptr) {
             allBoxes.push_back(e);
         }
     }
-    allBoxes.reserve( allEntities.size() + allScenes.size() );
-    allBoxes.insert( allBoxes.end(), allEntities.begin(), allEntities.end());
-    allBoxes.insert( allBoxes.end(), allScenes.begin(), allScenes.end());
+    allBoxes.reserve(entities.size() + scenes.size() );
+    allBoxes.insert(allBoxes.end(), entities.begin(), entities.end());
+    allBoxes.insert(allBoxes.end(), scenes.begin(), scenes.end());
 
     /**
      * Main Game Loop
@@ -300,7 +288,7 @@ void MainGameLoop::main() {
 
         // non framebuffer
         {
-            renderer->renderScene(allEntities, allScenes, allTerrains, lights);
+            renderer->renderScene(entities, scenes, allTerrains, lights);
         }
 
 

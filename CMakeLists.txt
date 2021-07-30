@@ -118,7 +118,7 @@ add_executable(engine
         src/RenderEngine/FrameBuffers.h
         src/RenderEngine/AssimpEntityRenderer.cpp
         src/RenderEngine/MeshData.h
-        src/RenderEngine/BbData.h
+        src/RenderEngine/BoundingBoxData.h
         src/Util/CommonHeader.h
         src/Toolbox/Screenshot.h
         src/Interfaces/Clickable.h

@@ -8,7 +8,7 @@ glm::ivec3 BoundingBoxIndex::colors;
 
 int BoundingBoxIndex::totalColors;
 
-glm::vec3 BoundingBoxIndex::addUniqueColor() {
+glm::vec3 BoundingBoxIndex::genUniqueId() {
     totalColors++;
     colors.b = totalColors % 256;
     colors.g = ((totalColors - colors.b) / 256) % 256;

@@ -13,8 +13,8 @@
 
 /**
  * @name loadToVAO
- * @brief inputs positions, textureCoords, normals, and indices,
- *        creates a Vao, binds an indices buffer, stores the data
+ * @brief inputs positions, textureCoords, normals, and kBboxIndices,
+ *        creates a Vao, binds an kBboxIndices buffer, stores the data
  *        in the Data Attribute Lists, unbinds, and creates and
  *        returns a RawModel (for terrains and entities mainly)
  * @param positions
@@ -38,7 +38,7 @@ Loader::loadToVAO(std::vector<GLfloat> positions, std::vector<GLfloat> textureCo
 /**
  * @name loadToVAO
  * @brief inputs a ModelData *data object, which includes all the vectors of vertex,
- *        normals, texCoords, and indices to store as VAO and return a RawModel. Used for
+ *        normals, texCoords, and kBboxIndices to store as VAO and return a RawModel. Used for
  *        meshes and terrains
  * @param data
  * @return
@@ -61,7 +61,7 @@ RawModel *Loader::loadToVAO(const std::vector<GLfloat> &positions, int dimension
     return new RawModel(vaoId, positions.size() / dimensions);
 }
 
-RawBoundingBox *Loader::loadToVAO(BoundingBoxData box) {
+RawBoundingBox *Loader::loadToVAO(BoxData box) {
     GLuint vaoId = createVAO();
     glm::vec3 vBoxVertices[] =
             {
@@ -91,7 +91,7 @@ RawBoundingBox *Loader::loadToVAO(BoundingBoxData box) {
     return new RawBoundingBox(vaoId, box.indices.size());
 }
 
-RawBoundingBox *Loader::loadToVAO(BbData box) {
+RawBoundingBox *Loader::loadToVAO(BoundingBoxData box) {
     GLuint vaoId = createVAO();
 
     this->bindIndicesBuffer(box.getIndices());

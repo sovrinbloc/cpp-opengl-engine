@@ -18,9 +18,11 @@ protected:
     std::vector<int> indices;
 
 public:
-    MeshData(std::vector<float> vertices, std::vector<float> textureCoords, std::vector<float> normals,
+    explicit MeshData(std::vector<float> vertices, std::vector<float> textureCoords, std::vector<float> normals,
     std::vector<int> indices) : vertices(std::move(vertices)), textureCoords(std::move(textureCoords)), normals(std::move(normals)),
-    indices(std::move(std::move(indices))) {}
+    indices(std::move(indices)) {}
+
+    MeshData(std::vector<float> vertices, std::vector<int> indices) : vertices(std::move(vertices)), indices(std::move(indices)){};
 
     std::vector<float> getVertices() {
         return vertices;

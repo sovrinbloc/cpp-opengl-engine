@@ -20,7 +20,7 @@ ModelData OBJLoader::loadAssImp(
     std::vector<glm::vec3> vertices;
     std::vector<glm::vec2> uvs;
     std::vector<glm::vec3> normals;
-    BoundingBoxData box;
+    BoxData box;
 
     Assimp::Importer importer;
 
@@ -63,7 +63,7 @@ ModelData OBJLoader::loadAssImp(
     }
 
 
-    // Fill face indices
+    // Fill face kBboxIndices
     indices.reserve(3 * mesh->mNumFaces);
     for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
         // Assume the model has only triangles.
@@ -84,7 +84,7 @@ ModelData OBJLoader::loadAssImp(
         outNormals.push_back(normals[i].y);
         outNormals.push_back(normals[i].z);
     }
-    ModelData data(outVertices, outUvs, outNormals, indices, box);
+    ModelData data(outVertices, outUvs, outNormals, indices);
     return data;
     // The "scene" pointer will be deleted automatically by "importer"
 }
@@ -92,7 +92,7 @@ ModelData OBJLoader::loadAssImp(
 
 /**
  * @brief loadObjModel loads in an .obj file, and returns the vertices,
- *        normals, textureCoords, and indices in vector format.
+ *        normals, textureCoords, and kBboxIndices in vector format.
  * @param filename
  * @return
  */
@@ -101,7 +101,7 @@ ModelData OBJLoader::loadObjModel(const std::string &filename) {
     std::vector<glm::vec3> normals;
     std::vector<glm::vec2> textures;
     std::vector<GLint> indices;
-    BoundingBoxData box;
+    BoxData box;
 
     auto copy = FileSystem::Model(filename);
     FILE *file = std::fopen(std::move(FileSystem::Model(filename)).c_str(), "r");
@@ -172,7 +172,7 @@ ModelData OBJLoader::loadObjModel(const std::string &filename) {
     // converts data to an array and returns the furthest point
     convertDataToArrays(vertices, textures, normals, &verticesArray, &texturesArray, &normalsArray);
 
-    ModelData data(verticesArray, texturesArray, normalsArray, indices, box);
+    ModelData data(verticesArray, texturesArray, normalsArray, indices);
     return data;
 }
 
@@ -255,14 +255,17 @@ void OBJLoader::dealWithAlreadyProcessedVertex(Vertex *previousVertex, int newTe
     }
 }
 
-BbData OBJLoader::loadBoundingBox(const string &filename) {
+BoundingBoxData OBJLoader::loadBoundingBox(const string &filename) {
     auto obj = loadObjModel(filename);
-    return BbData(obj.getVertices(), obj.getIndices(), true);
+    return BoundingBoxData(obj.getVertices(), obj.getIndices(), true);
 }
 
-BbData OBJLoader::loadBoundingBox(ModelData *data) {
-    BoundingBoxData box;
-    const vector<float> &vertex = data->getVertices();
+BoundingBoxData OBJLoader::loadBoundingBox(ModelData &data, bool fullMesh) {
+    if (fullMesh) {
+        return BoundingBoxData(data.getVertices(), data.getIndices());
+    }
+    BoxData box;
+    const vector<float> &vertex = data.getVertices();
 
     for (int i = 0; i < vertex.size(); i += 3) {
         // Bounding Box
@@ -299,11 +302,11 @@ BbData OBJLoader::loadBoundingBox(ModelData *data) {
             0, 1, 4, 5     // Bottom wall
     };
 
-    return BbData(vBoxVertices, indices);
+    return BoundingBoxData(vBoxVertices, indices);
 }
 
-BbData OBJLoader::loadBoundingBox(AssimpMesh *meshData) {
-    BoundingBoxData box;
+BoundingBoxData OBJLoader::loadBoundingBox(AssimpMesh *meshData) {
+    BoxData box;
     for (auto data : meshData->meshes) {
         const vector<float> &vertex = data.getVertices();
 
@@ -332,7 +335,6 @@ BbData OBJLoader::loadBoundingBox(AssimpMesh *meshData) {
             box.vLowerLeftFront.x, box.vUpperRightBack.y, box.vUpperRightBack.z,
             box.vUpperRightBack.x, box.vUpperRightBack.y, box.vUpperRightBack.z
     };
-
     std::vector<int> indices = {
             0, 1, 2, 3, 8, // Front wall
             4, 5, 6, 7, 8, // Back wall
@@ -341,5 +343,5 @@ BbData OBJLoader::loadBoundingBox(AssimpMesh *meshData) {
             2, 3, 6, 7, 8, // Top wall
             0, 1, 4, 5     // Bottom wall
     };
-    return BbData(vBoxVertices, indices);
+    return BoundingBoxData(vBoxVertices, indices);
 }

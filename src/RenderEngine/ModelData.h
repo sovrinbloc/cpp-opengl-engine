@@ -8,8 +8,10 @@
 #include "glm/glm.hpp"
 #include "MeshData.h"
 #include <iostream>
+#include <utility>
 #include <vector>
-struct BoundingBoxData {
+
+struct BoxData {
     glm::vec3 vLowerLeftFront = glm::vec3(999999.0f, 999999.0f, -999999.0f);
     glm::vec3 vUpperRightBack = glm::vec3(-999999.0f, -999999.0f, 999999.0f);
     std::vector<int> indices =
@@ -26,21 +28,12 @@ struct BoundingBoxData {
 
 class ModelData : public MeshData {
 
-private:
-
-    BoundingBoxData boundingBox;
-
 public:
     ModelData(std::vector<float> vertices, std::vector<float> textureCoords, std::vector<float> normals,
-              std::vector<int> indices, BoundingBoxData boundingBox) :
-              boundingBox(boundingBox), MeshData(vertices,textureCoords,normals, indices) {
+              std::vector<int> indices) :
+            MeshData(std::move(vertices), std::move(textureCoords), std::move(normals),
+                     std::move(indices)) {
     }
-
-
-    BoundingBoxData getBoundingBox() {
-        return boundingBox;
-    }
-
 };
 
 #endif //ENGINE_MODELDATA_H

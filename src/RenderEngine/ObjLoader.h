@@ -13,7 +13,7 @@
 #include "Loader.h"
 #include "Vertex.h"
 #include "ModelData.h"
-#include "BbData.h"
+#include "BoundingBoxData.h"
 #include "AssimpEntityLoader.h"
 
 
@@ -23,11 +23,11 @@ public:
 
     static ModelData loadObjModel(const std::string& filename);
 
-    static BbData loadBoundingBox(const std::string& filename);
+    static BoundingBoxData loadBoundingBox(const std::string& filename);
 
-    static BbData loadBoundingBox(ModelData *data);
+    static BoundingBoxData loadBoundingBox(ModelData &data, bool fullMesh = false);
 
-    static BbData loadBoundingBox(AssimpMesh *data);
+    static BoundingBoxData loadBoundingBox(AssimpMesh *data);
 
     static void processVertex(float vertex, float uv, float normal, std::vector<Vertex*> *vertices, std::vector<int> *indices);
 

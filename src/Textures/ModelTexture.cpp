@@ -27,3 +27,9 @@ int ModelTexture::getNumberOfRows() const {
 void ModelTexture::setNumberOfRows(int numberOfRows) {
     ModelTexture::numberOfRows = numberOfRows;
 }
+
+ModelTexture::ModelTexture(std::string filename, ImageType type, bool useTransparency, bool useFakeLighting,
+                           Material materials) :
+        material(materials), hasTransparency(useTransparency), useFakeLighting(useFakeLighting), TextureLoader(FileSystem::Texture(std::move(filename)), type) {
+
+}

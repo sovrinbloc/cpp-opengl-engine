@@ -18,7 +18,7 @@ private:
     static int totalColors;
 
 public:
-    static glm::vec3 addUniqueColor();
+    static glm::vec3 genUniqueId();
 
     __attribute__((unused)) static int getIndexByColor(int r, int g, int b);
 

@@ -14,14 +14,14 @@
 #define GL_SILENCE_DEPRECATION
 #include <GLFW/glfw3.h>
 #include "../FontMeshCreator/FontModel.h"
-#include "BbData.h"
+#include "BoundingBoxData.h"
 
 class Loader {
 public:
     RawModel *loadToVAO(std::vector<GLfloat> positions, std::vector<GLfloat> textureCoords, std::vector<GLfloat> normals, const std::vector<GLint>& indices);
 
     /**
-     * @brief loadToVAO inputs all the positions, indices, textureCoords, and normals inside an object
+     * @brief loadToVAO inputs all the positions, kBboxIndices, textureCoords, and normals inside an object
      * @param data
      * @return
      */
@@ -31,9 +31,9 @@ public:
     RawModel *loadToVAO(const std::vector<float>& positions, int dimensions);
 
     // for Bounding Boxes for clicking
-    RawBoundingBox *loadToVAO(BoundingBoxData box);
+    RawBoundingBox *loadToVAO(BoxData box);
 
-    RawBoundingBox *loadToVAO(BbData box);
+    RawBoundingBox *loadToVAO(BoundingBoxData box);
 
     FontModel *loadFontVAO();
 
