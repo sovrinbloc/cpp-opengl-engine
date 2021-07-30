@@ -273,7 +273,7 @@ void MainGameLoop::main() {
                 glm::vec3 clickColor = Picker::getColor();
                 int element = BoundingBoxIndex::getIndexByColor(clickColor);
                 *clickColorText = GUIText(Colors::toString(clickColor) + ", Element: " + std::to_string(element),
-                                          0.5f, fonty, &arial, glm::vec2(10.0f, 20.0f), clickColor / 255.0f,
+                                          0.5f, fonty, &noodle, glm::vec2(10.0f, 20.0f), clickColor / 255.0f,
                                           0.75f * static_cast<float>(DisplayManager::Width()), false);
                 Interactive *pClickedModel = InteractiveModel::getInteractiveBox(BoundingBoxIndex::getIndexByColor(clickColor));
                 if (pClickedModel != nullptr) {

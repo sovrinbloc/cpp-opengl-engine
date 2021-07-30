@@ -18,8 +18,8 @@ Interactive *InteractiveModel::getInteractiveBox(int index) {
 
 void InteractiveModel::setInteractiveBox(int index, Interactive *interactive) {
     auto it = interactiveBox.find(index);
-    if (it == interactiveBox.end()) {
-        std::cout << "Error: Please add Alpha attribute to color picing. Already found Interactive object at index: "
+    if (it != interactiveBox.end()) {
+        std::cout << "Error: Please add Alpha attribute to color picking. Already found Interactive object at index: "
                   << std::to_string(index) << std::endl;
     }
     InteractiveModel::interactiveBox[index] = interactive;
