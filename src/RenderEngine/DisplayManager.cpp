@@ -26,7 +26,8 @@ int DisplayManager::createDisplay() {
 #endif
 
     glfwWindowHint(GLFW_SAMPLES, 4);
-    window = glfwCreateWindow(Width(), Height(), "GAME ENGINE: Manifest (Alpha & Omega)", nullptr, nullptr);
+//    window = glfwCreateWindow(Width(), Height(), "GAME ENGINE: Manifest (Alpha & Omega)", nullptr, nullptr);
+    window = glfwCreateWindow(Width(), Height(), "star wars scaperune", nullptr, nullptr);
     if (window == nullptr) {
         printf("Failed to create GLFW window\n");
         glfwTerminate();

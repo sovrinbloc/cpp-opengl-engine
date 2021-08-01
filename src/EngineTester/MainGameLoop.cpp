@@ -24,7 +24,74 @@
 #include "../RenderEngine/FrameBuffers.h"
 #include "../Interaction/InteractiveModel.h"
 
+#include "../Util/CommonHeader.h"
+void testCraftStuff(float x, float y, float z) {
+    float result;
+    PRINT_FOURLN("x, y, z = ", x, y, z);
+    int nearestX = roundf(x);
+    int nearestY = roundf(y);
+    int nearestZ = roundf(z);
+    PRINT_FOURLN("nearestX, nearestY, nearestZ: roundf(x), roundf(y), roundf(z)", nearestX, nearestY, nearestZ);
+    float marginX = x - nearestX;
+    float marginY = y - nearestY;
+    float marginZ = z - nearestZ;
+    PRINT_FOURLN("marginX, marginY, marginZ: (x - nearestX), (y - nearestY), (z - nearestZ):", marginX, marginY, marginZ);
+    float padding = 0.25;
+    for (int dy = 0; dy < 2; dy++) {
+        if (marginX < -padding) {
+            x = nearestX - padding;
+        }
+        if (marginX > padding) {
+            x = nearestX + padding;
+        }
+        if (marginY < -padding ) {
+            y = nearestY - padding;
+            result = 1;
+        }
+        if (marginY > padding) {
+            y = nearestY + padding;
+            result = 1;
+        }
+        if (marginZ < -padding) {
+            z = nearestZ - padding;
+        }
+        if (marginZ > padding) {
+            z = nearestZ + padding;
+        }
+        PRINT_FOURLN("x, y, z", x, y, z);
+    }
+}
+#include "../World/Block.h"
+void testMap() {
+    std::map<int, Block>a;
+    a[1] = {1, 2, 3, 4};
+    a[4] = {3, 4, 6, 2};
+    a[29] = {3, 39, 12, 43};
+
+    std::map<int, Block>::iterator  it2 = a.find(29120);
+    if (it2 == a.end()) {
+        std::cout << "could not find it." << std::endl;
+    }
+
+    std::map<int, Block>::iterator  it;
+    for(it = a.begin(); it != a.end(); it++) {
+        std::cout  << it->first << ": " << it->second.x << ", "<< it->second.y << ", "<< it->second.z << ", "<< it->second.w << ", " << std::endl;
+    }
+    std::cout << a[92108].x << ", " << a[92108].y << ", " << a[92108].z << ", " << a[92108].w << ", " << std::endl;
+}
+
 void MainGameLoop::main() {
+    testMap();
+    return;
+    for (auto x:std::vector<float>{0, 0.25f, 0.3f, 0.4f, 0.49f, 0.51f, 0.6f, 0.75f, .9f, 1.0f, 1.1f, 1.4f}) {
+        for (auto ynum:std::vector<float>{Utils::randomFloat() * 1000, Utils::randomFloat() * 1000, Utils::randomFloat() * 1000, Utils::randomFloat() * 1000, Utils::randomFloat() * 1000, Utils::randomFloat() * 1000, Utils::randomFloat() * 1000, Utils::randomFloat() * 1000}) {
+            for (auto znum:std::vector<float>{Utils::randomFloat() * 1000, Utils::randomFloat() * 1000, Utils::randomFloat() * 1000, Utils::randomFloat() * 1000, Utils::randomFloat() * 1000, Utils::randomFloat() * 1000, Utils::randomFloat() * 1000, Utils::randomFloat() * 1000}) {
+                testCraftStuff(x, ynum, znum);
+            }
+        }
+    }
+//    testCraftStuff();
+    return;
 
     // Initialite Display
     DisplayManager::createDisplay();

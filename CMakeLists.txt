@@ -129,7 +129,17 @@ add_executable(engine
         src/Interaction/InteractiveModel.h
         src/Entities/Entity.cpp
         src/Entities/AssimpEntity.cpp
-        src/Entities/Light.cpp)
+        src/Entities/Light.cpp
+        src/World/World.cpp
+        src/World/World.h
+        src/World/HashMap.h
+        src/World/Chunk.cpp
+        src/World/Chunk.h
+        src/World/Map.cpp
+        src/World/Map.h
+        src/World/Block.h
+        src/World/WorldCommon.h
+        )
 
 if (EXISTS deps/glrequired)
     message(STATUS "Requiring OpenGL")
