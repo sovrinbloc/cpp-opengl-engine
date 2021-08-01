@@ -23,8 +23,10 @@
 #include "../Toolbox/TerrainPicker.h"
 #include "../RenderEngine/FrameBuffers.h"
 #include "../Interaction/InteractiveModel.h"
-
 #include "../Util/CommonHeader.h"
+
+// test to load objects.
+#include <thread>
 void testCraftStuff(float x, float y, float z) {
     float result;
     PRINT_FOURLN("x, y, z = ", x, y, z);
@@ -80,9 +82,8 @@ void testMap() {
     std::cout << a[92108].x << ", " << a[92108].y << ", " << a[92108].z << ", " << a[92108].w << ", " << std::endl;
 }
 
-void MainGameLoop::main() {
+void testLoader() {
     testMap();
-    return;
     for (auto x:std::vector<float>{0, 0.25f, 0.3f, 0.4f, 0.49f, 0.51f, 0.6f, 0.75f, .9f, 1.0f, 1.1f, 1.4f}) {
         for (auto ynum:std::vector<float>{Utils::randomFloat() * 1000, Utils::randomFloat() * 1000, Utils::randomFloat() * 1000, Utils::randomFloat() * 1000, Utils::randomFloat() * 1000, Utils::randomFloat() * 1000, Utils::randomFloat() * 1000, Utils::randomFloat() * 1000}) {
             for (auto znum:std::vector<float>{Utils::randomFloat() * 1000, Utils::randomFloat() * 1000, Utils::randomFloat() * 1000, Utils::randomFloat() * 1000, Utils::randomFloat() * 1000, Utils::randomFloat() * 1000, Utils::randomFloat() * 1000, Utils::randomFloat() * 1000}) {
@@ -90,8 +91,8 @@ void MainGameLoop::main() {
             }
         }
     }
-//    testCraftStuff();
-    return;
+}
+void MainGameLoop::main() {
 
     // Initialite Display
     DisplayManager::createDisplay();
@@ -125,24 +126,57 @@ void MainGameLoop::main() {
     /**
      * Loader Textures and Models
      */
-    ModelTexture *grassTexture;
+    ModelData lampData;
+    BoundingBoxData lampBbData;
 
-    ModelData lampData = OBJLoader::loadObjModel("lamp");
+    ModelData fernData;
+    BoundingBoxData fernBbData;
+
+    ModelData grassData;
+    BoundingBoxData grassBnData;
+
+    ModelData stallData;
+    BoundingBoxData stallBbData;
+
+    ModelData treeData;
+    BoundingBoxData treeBbData;
+
+    ModelData fluffyTreeData;
+    BoundingBoxData fluffyTreeBbData;
+
+    auto f = [](ModelData *pModelData, BoundingBoxData *pBbData, const std::string filename) {
+        *pModelData = OBJLoader::loadObjModel(filename);
+        *pBbData = OBJLoader::loadBoundingBox(*pModelData);
+    };
+
+    std::vector<std::thread> vThreads;
+
+    std::vector<const std::string> modelFiles = {"lamp", "fern", "grassModel", "Stall", "tree", "fluffy-tree"};
+    std::vector<ModelData*> modelDatas = {&lampData, &fernData, &grassData, &stallData, &treeData, &fluffyTreeData};
+    std::vector<BoundingBoxData*>bbDatas = {&lampBbData, &fernBbData, &grassBnData, &stallBbData, &treeBbData, &fluffyTreeBbData};
+
+    for (int i = 0; i < modelDatas.size(); ++i) {
+        std::thread thread (f, modelDatas[i], bbDatas[i], modelFiles[i]);
+        vThreads.push_back(std::move(thread));
+    }
+
+    for (auto &&modelThread : vThreads) {
+        (modelThread).join();
+    }
+
     // load bb version 1
-    BoundingBoxData box = OBJLoader::loadBoundingBox("lamp"); // load by adding a new mesh to count as bounding box
-    RawBoundingBox *pLampBox = loader->loadToVAO(box);
-    auto staticLamp = new TexturedModel(loader->loadToVAO(lampData), new ModelTexture("lamp", PNG));
+    RawBoundingBox *pLampBox = loader->loadToVAO(lampBbData);
+    RawModel *pLampModelData = loader->loadToVAO(lampData);
+    auto staticLamp = new TexturedModel(pLampModelData, new ModelTexture("lamp", PNG));
 
 
     // loading bb version 2
-    ModelData fernData = OBJLoader::loadObjModel("fern");
-    RawBoundingBox *pFernBox = loader->loadToVAO(OBJLoader::loadBoundingBox(fernData)); // load by previously loaded object
+    RawBoundingBox *pFernBox = loader->loadToVAO(fernBbData); // load by previously loaded object
     auto staticFern = new TexturedModel(loader->loadToVAO(fernData), new ModelTexture("fern", PNG));
     staticFern->getModelTexture()->setNumberOfRows(2);
 
-    ModelData grassData = OBJLoader::loadObjModel("grassModel");;
-    RawBoundingBox *pGrassBox = loader->loadToVAO(OBJLoader::loadBoundingBox(grassData));
-    grassTexture = new ModelTexture("grassTexture", PNG, true, true);
+    RawBoundingBox *pGrassBox = loader->loadToVAO(grassBnData);
+    auto grassTexture = new ModelTexture("grassTexture", PNG, true, true);
     auto staticGrass = new TexturedModel(loader->loadToVAO(grassData), grassTexture);
 
     const Material material = Material{
@@ -150,22 +184,19 @@ void MainGameLoop::main() {
             .reflectivity = 2.0f
     };
 
-    ModelData stallData = OBJLoader::loadObjModel("Stall");;
-    RawBoundingBox *pStallBox = loader->loadToVAO(OBJLoader::loadBoundingBox(stallData));
+    RawBoundingBox *pStallBox = loader->loadToVAO(stallBbData);
     auto staticStall = new TexturedModel(loader->loadToVAO(stallData),
                                          new ModelTexture("stallTexture", PNG, material));
 
-    ModelData treeData = OBJLoader::loadObjModel("tree");;
-    RawBoundingBox *pTreeBox = loader->loadToVAO(OBJLoader::loadBoundingBox(treeData));
+    RawBoundingBox *pTreeBox = loader->loadToVAO(treeBbData);
     auto staticTree = new TexturedModel(loader->loadToVAO(treeData),
                                         new ModelTexture("tree", PNG, material));
 
-    ModelData fluffyTreeData = OBJLoader::loadObjModel("fluffy-tree");
-    RawBoundingBox *pFluffyTreeBox = loader->loadToVAO(OBJLoader::loadBoundingBox(fluffyTreeData));
+
+    RawBoundingBox *pFluffyTreeBox = loader->loadToVAO(fluffyTreeBbData);
     auto staticFluffyTree = new TexturedModel(loader->loadToVAO(fluffyTreeData),
                                               new ModelTexture("tree", PNG, material));
 
-    auto pBackpack = new AssimpMesh("Backpack/backpack");
 
     /**
      * Entity holders to be rendered
@@ -247,13 +278,6 @@ void MainGameLoop::main() {
                 new Entity(staticFern, new BoundingBox(pFernBox, BoundingBoxIndex::genUniqueId()), Utils::roll(1, 4),
                            generateRandomPosition(terrain), generateRandomRotation(),
                            generateRandomScale(.25, 1.50)));
-        if (i % 30 == 0) {
-            auto pBackpackBox = OBJLoader::loadBoundingBox(pBackpack);
-            auto pBackpackBoxs = loader->loadToVAO(pBackpackBox);
-            scenes.push_back(
-                    new AssimpEntity(pBackpack, new BoundingBox(pBackpackBoxs, BoundingBoxIndex::genUniqueId()), generateRandomPosition(terrain, 3.0f), generateRandomRotation(),
-                                     generateRandomScale(3.25, 10.50)));
-        }
     }
 
     /**

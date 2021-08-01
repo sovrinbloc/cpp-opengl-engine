@@ -28,6 +28,8 @@ public:
                     bool mesh = false) :
             mesh(mesh), MeshData(std::move(vertices), std::move(indices)) {}
 
+            BoundingBoxData(){}
+
     bool isMesh() const {
         return mesh;
     }

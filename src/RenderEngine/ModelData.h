@@ -34,6 +34,7 @@ public:
             MeshData(std::move(vertices), std::move(textureCoords), std::move(normals),
                      std::move(indices)) {
     }
+    ModelData()= default;
 };
 
 #endif //ENGINE_MODELDATA_H

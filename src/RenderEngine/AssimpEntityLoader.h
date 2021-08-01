@@ -27,14 +27,10 @@ using namespace std;
 
 /**
  * std::vector<AssimpEntity *> allScenes;
- * AssimpMesh assimpModel = AssimpMesh(FileSystem::Path("/src/Resources/Models/Backpack/backpack.obj"));
- * allScenes.push_back(new AssimpEntity(&assimpModel, glm::vec3(x, y, z), rot, Utils::randomFloat() * 2));
- * then in MainGameLoop renderer...
- * for (AssimpEntity *pack : allScenes) {
- *          renderer->processAssimpEntity(pack);
- *  }
- *  0r...
- *  renderer->processModel(&assimpModel); if it's a single model
+ * AssimpMesh *pBackpack = new AssimpMesh("Backpack/backpack");
+ * BoundingBoxData pBackpackBox = OBJLoader::loadBoundingBox(pBackpack);
+ * auto pBackpackBoxs = loader->loadToVAO(pBackpackBox);
+ * scenes.push_back( new AssimpEntity(pBackpack, new BoundingBox(pBackpackBoxs, BoundingBoxIndex::genUniqueId()), generateRandomPosition(terrain, 3.0f), generateRandomRotation(),generateRandomScale(3.25, 10.50)));
  */
 class AssimpMesh {
 
@@ -62,6 +58,7 @@ public:
                   .reflectivity = 0.5f
           }, bool gamma = false);
 
+    AssimpMesh(){}
     // draws the model, and thus all its meshes
     void render(AssimpStaticShader *shader);
 

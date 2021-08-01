@@ -24,22 +24,6 @@ public:
     World();
 
     /**
-     *  @brief ensure_chunks: deletes any chunks outside the range. also deletes
-     *                        or removes any model data, VAO, etc, that won't be
-     *                        used or needed.
-     *                           Then, we remove the entire chunk from the system,
-     *                        and replace it with another chunk. But we first load
-     *                        the world in the map, then with chunk->ensure(), we
-     *                        load anything into the VAO that is needed to be loaded.
-     *
-     *  @var int x_char_map : the position p of the person divided by max chunks :
-     *        floorf(roundf(char_x) / CHUNK_SIZE)
-     *  @var int z_char_map : the position p of the person divided by max chunks :
-     *        floorf(roundf(char_z) / CHUNK_SIZE)
-     */
-    void ensureChunks(int xCharMap, int zCharMap);
-
-    /**
      * @brief setBlock sets the specific block in the location.
      * @param x
      * @param y
@@ -61,6 +45,22 @@ public:
      */
     Chunk *findChunk(int xPos, int zPos);
 
+    /**
+     *  @brief ensure_chunks: deletes any chunks outside the range. also deletes
+     *                        or removes any model data, VAO, etc, that won't be
+     *                        used or needed.
+     *                           Then, we remove the entire chunk from the system,
+     *                        and replace it with another chunk. But we first load
+     *                        the world in the map, then with chunk->ensure(), we
+     *                        load anything into the VAO that is needed to be loaded.
+     *
+     *  @var int x_char_map : the position p of the person divided by max chunks :
+     *        floorf(roundf(char_x) / CHUNK_SIZE)
+     *  @var int z_char_map : the position p of the person divided by max chunks :
+     *        floorf(roundf(char_z) / CHUNK_SIZE)
+     */
+    void ensureChunks(int xCharMap, int zCharMap);
+
     int collide(int height, float *charX, float *charY, float *charZ);
 
     int hitTest(int previous, float charX, float charY, float charZ, float rx, float ry,
@@ -81,6 +81,11 @@ public:
      */
     void getSightVector(float rx, float ry, float *dx, float *dy, float *dz);
 
+    /**
+     *
+     * @param w
+     * @return
+     */
     int isObstacle(int w);
 
     int playerIntersects(int height, float x, float y, float z, int hx, int hy, int hz);

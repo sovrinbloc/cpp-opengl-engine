@@ -11,6 +11,14 @@ World::World() {
     chunks = std::vector<Chunk *>(MAX_CHUNKS);
 }
 
+void World::setBlock(int x, int y, int z, int texture) {
+    int p = static_cast<int>(floorf((float) x / CHUNK_SIZE));
+    int q = static_cast<int>(floorf((float) z / CHUNK_SIZE));
+    Chunk *chunk = findChunk(p, q);
+    chunk->map.set(x, y, z, texture);
+    chunk->update();
+}
+
 void World::ensureChunks(int xCharMap, int zCharMap) {
     for (auto chunk : chunks) {
         if (chunk->distanceFrom(xCharMap, zCharMap) >= DELETE_CHUNK_RADIUS) {
@@ -33,14 +41,6 @@ void World::ensureChunks(int xCharMap, int zCharMap) {
             }
         }
     }
-}
-
-void World::setBlock(int x, int y, int z, int texture) {
-    int p = static_cast<int>(floorf((float) x / CHUNK_SIZE));
-    int q = static_cast<int>(floorf((float) z / CHUNK_SIZE));
-    Chunk *chunk = findChunk(p, q);
-    chunk->map.set(x, y, z, texture);
-    chunk->update();
 }
 
 Chunk *World::findChunk(int xPos, int zPos) {

@@ -24,6 +24,8 @@ public:
 
     MeshData(std::vector<float> vertices, std::vector<int> indices) : vertices(std::move(vertices)), indices(std::move(indices)){};
 
+    MeshData(){}
+
     std::vector<float> getVertices() {
         return vertices;
     }
