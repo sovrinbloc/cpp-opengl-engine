@@ -6,8 +6,8 @@
 #include "DisplayManager.h"
 #include "RenderStyle.h"
 #include "AssimpEntityLoader.h"
-#include "../Util/Colors.h"
-#include "../Util/Utils.h"
+#include "../Util/ColorName.h"
+#include "../OpenGLWrapper/OpenGLUtils.h"
 
 MasterRenderer::MasterRenderer(PlayerCamera *cameraInput, Loader *loader) : shader(new StaticShader()),
                                                             renderer(new EntityRenderer(shader)),
@@ -35,7 +35,7 @@ void MasterRenderer::cleanUp() {
     bShader->cleanUp();
 }
 
-glm::vec3 MasterRenderer::skyColor = const_cast<glm::vec3 &>(Colors::Skyblue);
+Color MasterRenderer::skyColor = const_cast<Color &>(ColorName::Skyblue);
 
 /**
  * @brief prepares and clears buffer and screen for each iteration of loop
@@ -43,10 +43,9 @@ glm::vec3 MasterRenderer::skyColor = const_cast<glm::vec3 &>(Colors::Skyblue);
 void MasterRenderer::prepare() {
     // render
     // ------
-    glClearColor(skyColor.x, skyColor.y, skyColor.z, 1);
     shader->loadSkyColorVariable(skyColor);
     terrainShader->loadSkyColorVariable(skyColor);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    OpenGLUtils::clearFrameBuffer(skyColor);
 
 }
 
@@ -188,6 +187,5 @@ void MasterRenderer::render() {
 void MasterRenderer::prepareBoundingBoxRender() {
     // render
     // ------
-    glClearColor(1.0f, 1.0f, 1.0f, 1);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    OpenGLUtils::clearFrameBuffer(Color(1.0f));
 }

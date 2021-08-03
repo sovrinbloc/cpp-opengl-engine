@@ -6,7 +6,7 @@
 #define ENGINE_INTERACTIVE_H
 
 #include "Clickable.h"
-#include "Moveable.h"
-class Interactive : public Clickable, public Moveable {};
+#include "Positionable.h"
+class Interactive : public Clickable, public Positionable {};
 
 #endif //ENGINE_INTERACTIVE_H

@@ -6,11 +6,12 @@
 #define ENGINE_BOUNDINGBOX_H
 #include "RawBoundingBox.h"
 #include "glm/glm.hpp"
+#include "../Toolbox/Color.h"
 
 class BoundingBox {
 private:
     RawBoundingBox *rawBoundingBox;
-    glm::vec3 color;
+    Color color;
 public:
 public:
 
@@ -28,11 +29,11 @@ public:
         return BoundingBox::rawBoundingBox;
     }
 
-    glm::vec3 getBoxColor() {
+    Color getBoxColor() {
         return BoundingBox::color;
     }
 
-    void setColor(const glm::vec3 &color) {
+    void setColor(const Color &color) {
         BoundingBox::color = color;
     }
 };

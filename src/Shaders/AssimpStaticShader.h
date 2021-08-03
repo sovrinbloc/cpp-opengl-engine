@@ -83,7 +83,7 @@ public:
 
     void loadMaterial(Material material);
 
-    void loadSkyColorVariable(glm::vec3 skyColor);
+    void loadSkyColorVariable(Color skyColor);
 
 
 

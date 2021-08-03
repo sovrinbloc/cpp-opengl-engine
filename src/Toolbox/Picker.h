@@ -7,12 +7,12 @@
 
 #include "glm/glm.hpp"
 #include "../Entities/Camera.h"
-
+#include "Color.h"
 class Picker {
 public:
     static glm::vec3 calculateMouseRay(glm::mat4 projectionMatrix, glm::mat4 viewMatrix);
 
-    static glm::vec3 getColor();
+    static Color getColor();
 
 private:
 

@@ -90,7 +90,7 @@ public:
 
     void loadFakeLightingVariable(bool useFakeLighting);
 
-    void loadSkyColorVariable(glm::vec3 skyColor);
+    void loadSkyColorVariable(Color skyColor);
 
     void loadNumberOfRows(int rows);
 

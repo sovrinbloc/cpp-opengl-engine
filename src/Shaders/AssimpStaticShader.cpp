@@ -64,8 +64,8 @@ void AssimpStaticShader::loadMaterial(Material material) {
     this->setFloat(location_materialReflectivity, material.reflectivity);
 }
 
-void AssimpStaticShader::loadSkyColorVariable(glm::vec3 skyColor) {
-    this->setVec3(location_skyColor, skyColor);
+void AssimpStaticShader::loadSkyColorVariable(Color skyColor) {
+    this->setVec3(location_skyColor, skyColor.getColorRGB());
 }
 
 void AssimpStaticShader::getAllUniformLocations() {

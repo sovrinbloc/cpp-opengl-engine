@@ -8,6 +8,7 @@
 
 #include "../Shaders/ShaderProgram.h"
 #include "../RenderEngine/DisplayManager.h"
+#include "../Toolbox/Color.h"
 #include <glm/gtc/matrix_transform.hpp>
 
 class FontShader : public ShaderProgram{
@@ -31,7 +32,7 @@ public:
 
     void loadProjectionMatrix(glm::mat4 matrix = glm::ortho(0.0f, static_cast<float>(DisplayManager::Width()), 0.0f, static_cast<float>(DisplayManager::Height())));
 
-    void loadTextColor(glm::vec3 textColor = glm::vec3(0.0f));
+    void loadTextColor(Color textColor = Color(0.0f));
 
 protected:
     void getAllUniformLocations() override;

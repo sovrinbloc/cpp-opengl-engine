@@ -67,8 +67,8 @@ void StaticShader::loadFakeLightingVariable(bool useFakeLighting) {
     this->setBool(location_useFakeLighting, useFakeLighting);
 }
 
-void StaticShader::loadSkyColorVariable(glm::vec3 skyColor) {
-    this->setVec3(location_skyColor, skyColor);
+void StaticShader::loadSkyColorVariable(Color skyColor) {
+    this->setVec3(location_skyColor, skyColor.getColorRGB());
 }
 
 void StaticShader::loadNumberOfRows(int rows) {

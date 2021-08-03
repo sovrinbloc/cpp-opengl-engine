@@ -5,6 +5,8 @@
 
 #include <cstdio>
 #include "DisplayManager.h"
+#include "../OpenGLWrapper/OpenGLUtils.h"
+
 GLint DisplayManager::SRC_WIDTH = 800;
 GLint DisplayManager::SRC_HEIGHT = 600;
 GLint DisplayManager::FBO_WIDTH = RETINA_SCALE(SRC_WIDTH);
@@ -33,7 +35,7 @@ int DisplayManager::createDisplay() {
         glfwTerminate();
         return -1;
     }
-    glEnable(GL_MULTISAMPLE);
+    OpenGLUtils::antialias(true);
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwGetFramebufferSize(DisplayManager::window, &FBO_WIDTH, &FBO_HEIGHT);
@@ -45,7 +47,7 @@ int DisplayManager::createDisplay() {
 
     // configure global opengl state
     // -----------------------------
-    glEnable(GL_DEPTH_TEST);
+    OpenGLUtils::enableDepthTest(true);
     return 1;
 }
 

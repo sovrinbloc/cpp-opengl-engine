@@ -9,6 +9,7 @@
 #include "glm/glm.hpp"
 #include "TextMeshData.h"
 #include "FontModel.h"
+#include "../Toolbox/Color.h"
 
 class GUIText {
 private:
@@ -22,7 +23,7 @@ private:
 
     glm::vec2 position;
 
-    glm::vec3 color = glm::vec3(0.0f, 0.0f, 0.0f);
+    Color color = Color(0.0f);
 
     float lineMaxLength = 1.0f;
 
@@ -61,7 +62,7 @@ public:
      *            - whether the textString should be centered or not.
      */
     GUIText(const std::string &textString, float fontSize, FontModel *font, FontType *fontType, glm::vec2(position),
-            glm::vec3 color, float maxLineLength, bool centered);
+            Color color, float maxLineLength, bool centered);
 
     glm::vec2 &getPosition();
 
@@ -73,9 +74,9 @@ public:
 
     const std::string &getText() const;
 
-    glm::vec3 getColor();
+    Color getColor();
 
-    void setColor(glm::vec3 color);
+    void setColor(Color color);
 
     void remove();
 

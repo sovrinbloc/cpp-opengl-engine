@@ -10,6 +10,7 @@
 #include "../RenderEngine/DisplayManager.h"
 #include "../Interfaces/Interactive.h"
 #include <map>
+#include "../Toolbox/Color.h"
 
 class BoundingBoxIndex {
 private:
@@ -18,13 +19,13 @@ private:
     static int totalColors;
 
 public:
-    static glm::vec3 genUniqueId();
+    static ColorRGB genUniqueId();
 
     __attribute__((unused)) static int getIndexByColor(int r, int g, int b);
 
-    static int getIndexByColor(glm::vec3 color);
+    static int getIndexByColor(Color color);
 
-    glm::vec4 getColorByIndex(int index);
+    ColorRGBA getColorByIndex(int index);
 
 private:
     static glm::vec3 formatColor(glm::vec3 color);

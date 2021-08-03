@@ -6,7 +6,7 @@
 #include "../FontRendering/TextMaster.h"
 
 GUIText::GUIText(const std::string &textString, float fontSize, FontModel *font, FontType *fontType, glm::vec2(position),
-                 glm::vec3 color, float maxLineLength = 1.0f, bool centered = false) {
+                 Color color, float maxLineLength = 1.0f, bool centered = false) {
     this->textString = textString;
     this->font = font;
     this->fontType = fontType;
@@ -38,11 +38,11 @@ float GUIText::getFontSize() const {
     return this->fontSize;
 }
 
-glm::vec3 GUIText::getColor() {
+Color GUIText::getColor() {
     return this->color;
 }
 
-void GUIText::setColor(glm::vec3 color) {
+void GUIText::setColor(Color color) {
     this->color = color;
 }
 

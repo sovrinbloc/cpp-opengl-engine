@@ -23,6 +23,8 @@ public:
 
     World();
 
+    World(glm::vec3 &charPos);
+
     /**
      * @brief setBlock sets the specific block in the location.
      * @param x
@@ -61,9 +63,9 @@ public:
      */
     void ensureChunks(int xCharMap, int zCharMap);
 
-    int collide(int height, float *charX, float *charY, float *charZ);
+    int collide(int height, glm::vec3 &charPos);
 
-    int hitTest(int previous, float charX, float charY, float charZ, float rx, float ry,
+    int hitTest(int previous, const glm::vec3 &charPos, float rx, float ry,
                 int *bestX, int *bestY, int *bestZ);
 
     /**
@@ -89,6 +91,8 @@ public:
     int isObstacle(int w);
 
     int playerIntersects(int height, float x, float y, float z, int hx, int hy, int hz);
+
+    glm::vec2 getWorldPos(float xCharPos, float yCharPos );
 
 
 };

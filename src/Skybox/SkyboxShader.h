@@ -32,7 +32,7 @@ public:
 
     void loadViewMatrix(glm::mat4 matrix);
 
-    void loadFogColor(glm::vec3 color);
+    void loadFogColor(Color color);
 
     void loadBlendFactor(float blend);
 

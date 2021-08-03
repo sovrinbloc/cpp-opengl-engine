@@ -26,10 +26,10 @@ private:
     unsigned int dayTextureId;
     unsigned int nightTextureId;
     SkyboxShader *shader;
-    glm::vec3 *skyColor;
+    Color *skyColor;
 
 public:
-    SkyboxRenderer(Loader *loader, glm::mat4 projectionMatrix, glm::vec3 *skyColor);
+    SkyboxRenderer(Loader *loader, glm::mat4 projectionMatrix, Color *skyColor);
 
     void render(Camera *camera);
 

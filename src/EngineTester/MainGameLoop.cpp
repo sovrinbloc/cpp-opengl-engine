@@ -18,7 +18,7 @@
 #include "../FontMeshCreator/TextMeshData.h"
 #include "../FontMeshCreator/GUIText.h"
 #include "../FontRendering/FontRenderer.h"
-#include "../Util/Colors.h"
+#include "../Util/ColorName.h"
 #include "../FontRendering/TextMaster.h"
 #include "../Toolbox/TerrainPicker.h"
 #include "../RenderEngine/FrameBuffers.h"
@@ -114,12 +114,12 @@ void MainGameLoop::main() {
     FontModel *fonty = loader->loadFontVAO();
     texts->push_back(new GUIText(
             "This is sample text because I know what I am doing whether you like it or not so I am joe.This is sample text because I know what I am doing whether you like it or not so I am joe.",
-            0.50f, fonty, &noodle, glm::vec2(25.0f, 225.0f), Colors::Whitesmoke,
+            0.50f, fonty, &noodle, glm::vec2(25.0f, 225.0f), ColorName::Whitesmoke,
             0.50f * static_cast<float>(DisplayManager::Width()),
             false));
-    texts->push_back(new GUIText("Joseph Alai MCMXII", 0.5f, fonty, &arial, glm::vec2(540.0f, 570.0f), Colors::Cyan,
+    texts->push_back(new GUIText("Joseph Alai MCMXII", 0.5f, fonty, &arial, glm::vec2(540.0f, 570.0f), ColorName::Cyan,
                                  0.75f * static_cast<float>(DisplayManager::Width()), false));
-    auto clickColorText = new GUIText("Color: ", 0.5f, fonty, &arial, glm::vec2(10.0f, 20.0f), Colors::Green,
+    auto clickColorText = new GUIText("Color: ", 0.5f, fonty, &arial, glm::vec2(10.0f, 20.0f), ColorName::Green,
                                       0.75f * static_cast<float>(DisplayManager::Width()), false);
     texts->push_back(clickColorText);
 
@@ -144,7 +144,7 @@ void MainGameLoop::main() {
     ModelData fluffyTreeData;
     BoundingBoxData fluffyTreeBbData;
 
-    auto f = [](ModelData *pModelData, BoundingBoxData *pBbData, const std::string filename) {
+    auto f = [](ModelData *pModelData, BoundingBoxData *pBbData, const std::string& filename) {
         *pModelData = OBJLoader::loadObjModel(filename);
         *pBbData = OBJLoader::loadBoundingBox(*pModelData);
     };
@@ -349,10 +349,10 @@ void MainGameLoop::main() {
         if (InputMaster::hasPendingClick()) {
             if (InputMaster::mouseClicked(LeftClick)) {
                 renderer->renderBoundingBoxes(allBoxes);
-                glm::vec3 clickColor = Picker::getColor();
+                Color clickColor = Picker::getColor();
                 int element = BoundingBoxIndex::getIndexByColor(clickColor);
-                *clickColorText = GUIText(Colors::toString(clickColor) + ", Element: " + std::to_string(element),
-                                          0.5f, fonty, &noodle, glm::vec2(10.0f, 20.0f), clickColor / 255.0f,
+                *clickColorText = GUIText(ColorName::toString(clickColor) + ", Element: " + std::to_string(element),
+                                          0.5f, fonty, &noodle, glm::vec2(10.0f, 20.0f), clickColor,
                                           0.75f * static_cast<float>(DisplayManager::Width()), false);
                 Interactive *pClickedModel = InteractiveModel::getInteractiveBox(BoundingBoxIndex::getIndexByColor(clickColor));
                 if (pClickedModel != nullptr) {

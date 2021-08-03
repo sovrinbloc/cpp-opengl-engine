@@ -52,55 +52,55 @@ Chunk *World::findChunk(int xPos, int zPos) {
     return nullptr;
 }
 
-int World::collide(int height, float *charX, float *charY, float *charZ) {
+int World::collide(int height, glm::vec3 &charPos) {
     int result = 0;
-    int p = static_cast<int>(floorf(roundf(*charX) / CHUNK_SIZE));
-    int q = static_cast<int>(floorf(roundf(*charZ) / CHUNK_SIZE));
+    int p = static_cast<int>(floorf(roundf(charPos.x) / CHUNK_SIZE));
+    int q = static_cast<int>(floorf(roundf(charPos.z) / CHUNK_SIZE));
     Chunk *chunk = findChunk(p, q);
     if (!chunk) {
         return result;
     }
     Map *map = &chunk->map;
-    int nearX = static_cast<int>(roundf(*charX));
-    int nearY = static_cast<int>(roundf(*charY));
-    int nearZ = static_cast<int>(roundf(*charZ));
-    float marginX = *charX - static_cast<float>(nearX);
-    float marginY = *charY - static_cast<float>(nearY);
-    float marginZ = *charZ - static_cast<float>(nearZ);
+    int nearX = static_cast<int>(roundf(charPos.x));
+    int nearY = static_cast<int>(roundf(charPos.y));
+    int nearZ = static_cast<int>(roundf(charPos.z));
+    float marginX = charPos.x - static_cast<float>(nearX);
+    float marginY = charPos.y - static_cast<float>(nearY);
+    float marginZ = charPos.z - static_cast<float>(nearZ);
     float padding = 0.25;
 
     // keeps a .25 margin away from any non-passible object.
     for (int dy = 0; dy < height; dy++) {
         if (marginX < -padding && isObstacle(map->get(nearX - 1, nearY - dy, nearZ))) {
-            *charX = static_cast<float>(nearX) - padding;
+            charPos.x = static_cast<float>(nearX) - padding;
         }
         if (marginX > padding && isObstacle(map->get(nearX + 1, nearY - dy, nearZ))) {
-            *charX = static_cast<float>(nearX) + padding;
+            charPos.x = static_cast<float>(nearX) + padding;
         }
         if (marginY < -padding && isObstacle(map->get(nearX, nearY - dy - 1, nearZ))) {
-            *charY = static_cast<float>(nearY) - padding;
+            charPos.y = static_cast<float>(nearY) - padding;
             result = 1;
         }
         if (marginY > padding && isObstacle(map->get(nearX, nearY - dy + 1, nearZ))) {
-            *charY = static_cast<float>(nearY) + padding;
+            charPos.y = static_cast<float>(nearY) + padding;
             result = 1;
         }
         if (marginZ < -padding && isObstacle(map->get(nearX, nearY - dy, nearZ - 1))) {
-            *charZ = static_cast<float>(nearZ) - padding;
+            charPos.z = static_cast<float>(nearZ) - padding;
         }
         if (marginZ > padding && isObstacle(map->get(nearX, nearY - dy, nearZ + 1))) {
-            *charZ = static_cast<float>(nearZ) + padding;
+            charPos.z = static_cast<float>(nearZ) + padding;
         }
     }
     return result;
 }
 
-int World::hitTest(int previous, float charX, float charY, float charZ, float rx, float ry, int *bestX, int *bestY,
+int World::hitTest(int previous, const glm::vec3 &charPos, float rx, float ry, int *bestX, int *bestY,
                    int *bestZ) {
     int result = 0;
     float best = 0;
-    int p = static_cast<int>(floorf(roundf(charX) / CHUNK_SIZE));
-    int q = static_cast<int>(floorf(roundf(charZ) / CHUNK_SIZE));
+    int p = static_cast<int>(floorf(roundf(charPos.x) / CHUNK_SIZE));
+    int q = static_cast<int>(floorf(roundf(charPos.z) / CHUNK_SIZE));
     float camFrontX, camFrontY, camFrontZ;
 
     // todo: figure out how this works
@@ -111,12 +111,12 @@ int World::hitTest(int previous, float charX, float charY, float charZ, float rx
         }
         int hitX, hitY, hitZ;
         int blockType = chunk->map.hitTest(8, previous,
-                                           charX, charY, charZ, camFrontX, camFrontY, camFrontZ, &hitX, &hitY,
+                                           charPos.x, charPos.y, charPos.z, camFrontX, camFrontY, camFrontZ, &hitX, &hitY,
                                            &hitZ);
         if (blockType > 0) {
             float distance = sqrtf(
-                    powf(static_cast<float>(hitX) - charX, 2) + powf(static_cast<float>(hitY) - charY, 2) +
-                    powf(static_cast<float>(hitZ) - charZ, 2));
+                    powf(static_cast<float>(hitX) - charPos.x, 2) + powf(static_cast<float>(hitY) - charPos.y, 2) +
+                    powf(static_cast<float>(hitZ) - charPos.z, 2));
             if (best == 0 || distance < best) {
                 best = distance;
                 *bestX = hitX;

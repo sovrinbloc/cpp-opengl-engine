@@ -78,7 +78,7 @@ add_executable(engine
         src/Skybox/SkyboxShader.h
         src/Skybox/SkyboxRenderer.cpp
         src/Skybox/SkyboxRenderer.h
-        src/Util/Colors.h
+        src/Util/ColorName.h
         src/Toolbox/MousePicker.cpp
         src/Toolbox/MousePicker.h
         src/FontMeshCreator/TextMeshData.cpp
@@ -122,9 +122,9 @@ add_executable(engine
         src/Util/CommonHeader.h
         src/Toolbox/Screenshot.h
         src/Interfaces/Clickable.h
-        src/Interfaces/Moveable.h
+        src/Interfaces/Positionable.h
         src/Interfaces/Interactive.h
-        src/Util/Colors.cpp
+        src/Util/ColorName.cpp
         src/Interaction/InteractiveModel.cpp
         src/Interaction/InteractiveModel.h
         src/Entities/Entity.cpp
@@ -139,6 +139,10 @@ add_executable(engine
         src/World/Map.h
         src/World/Block.h
         src/World/WorldCommon.h
+        src/OpenGLWrapper/OpenGLUtils.cpp
+        src/OpenGLWrapper/OpenGLUtils.h
+        src/Toolbox/Color.h
+        src/Toolbox/Color.cpp
         )
 
 if (EXISTS deps/glrequired)

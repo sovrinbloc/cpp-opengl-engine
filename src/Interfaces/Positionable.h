@@ -2,12 +2,12 @@
 // Created by Joseph Alai on 7/29/21.
 //
 
-#ifndef ENGINE_MOVEABLE_H
-#define ENGINE_MOVEABLE_H
+#ifndef ENGINE_POSITIONABLE_H
+#define ENGINE_POSITIONABLE_H
 
 #include "glm/glm.hpp"
 
-class Moveable {
+class Positionable {
 public:
     virtual glm::vec3 &getPosition() = 0;
 
@@ -30,4 +30,4 @@ public:
     virtual void setTransformation(glm::vec3 translate, glm::vec3 rotate, float scalar) = 0;
 };
 
-#endif //ENGINE_MOVEABLE_H
+#endif //ENGINE_POSITIONABLE_H

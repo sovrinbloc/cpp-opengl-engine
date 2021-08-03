@@ -20,8 +20,9 @@ __attribute__((unused)) int BoundingBoxIndex::getIndexByColor(int r, int g, int 
     return (r) | (g << 8) | (b << 16);
 }
 
-int BoundingBoxIndex::getIndexByColor(glm::vec3 color) {
-    glm::ivec3 iColor = static_cast<glm::ivec3>(formatColor(color));
+int BoundingBoxIndex::getIndexByColor(Color color) {
+
+    glm::ivec3 iColor = static_cast<glm::ivec3>(formatColor(color.getColorRGB()));
     auto index = (iColor.r) | (iColor.g << 8) | (iColor.b << 16);
     if (iColor == glm::ivec3(255)) {
         return -1;

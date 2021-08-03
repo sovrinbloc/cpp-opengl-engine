@@ -30,15 +30,15 @@ glm::vec2 Picker::getNormalizedDeviceCoords() {
     return glm::vec2(x, -y);
 }
 
-glm::vec3 Picker::getColor() {
-    unsigned char pixel[3];
+Color Picker::getColor() {
+    unsigned char pixel[4];
     glFlush();
     glFinish();
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     int width, height;
     glfwGetFramebufferSize(DisplayManager::window, &width, &height);
     glReadPixels(static_cast<int>(width / DisplayManager::Width() * static_cast<int>(InputMaster::mouseX)),
-                 static_cast<int>(static_cast<int>(height) - (height / DisplayManager::Height() * static_cast<int>(InputMaster::mouseY))), 1, 1, GL_RGB,
+                 static_cast<int>(static_cast<int>(height) - (height / DisplayManager::Height() * static_cast<int>(InputMaster::mouseY))), 1, 1, GL_RGBA,
                  GL_UNSIGNED_BYTE, pixel);
-    return glm::vec3(pixel[0], pixel[1], pixel[2]);
+    return Color(pixel[0], pixel[1], pixel[2], pixel[3]);
 }

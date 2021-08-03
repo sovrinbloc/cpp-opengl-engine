@@ -27,8 +27,8 @@ void BoundingBoxShader::loadViewMatrix(glm::mat4 matrix) {
 }
 
 
-void BoundingBoxShader::loadBoxColor(glm::vec3 color) {
-    this->setVec3(location_boxColor, color);
+void BoundingBoxShader::loadBoxColor(Color color) {
+    this->setVec3(location_boxColor, color.getColorRGB());
 }
 
 void BoundingBoxShader::loadViewPosition(Camera *camera) {

@@ -5,6 +5,7 @@
 #include "BoundingBoxRenderer.h"
 #include "../Toolbox/Maths.h"
 #include "../RenderEngine/RenderStyle.h"
+#include "../OpenGLWrapper/OpenGLUtils.h"
 
 BoundingBoxRenderer::BoundingBoxRenderer(BoundingBoxShader *shader, glm::mat4 projectionMatrix) :
         shader(shader) {
@@ -41,7 +42,7 @@ void BoundingBoxRenderer::render(std::map<RawBoundingBox *, std::vector<Interact
 
 void BoundingBoxRenderer::prepareRawBoundingBox(RawBoundingBox *box) {
 
-    glDisable(GL_CULL_FACE);
+    OpenGLUtils::cullBackFaces(false);
     glBindVertexArray(box->getVaoId());
     glEnableVertexAttribArray(0); // position
 
@@ -56,7 +57,7 @@ void BoundingBoxRenderer::unbindBox(RawBoundingBox *box) {
     if (!box->isMesh()) {
         glDisable(GL_PRIMITIVE_RESTART_INDEX);
     }
-    glEnable(GL_CULL_FACE);
+    OpenGLUtils::cullBackFaces(true);
 
     // clean up
     glDisableVertexAttribArray(0); // position

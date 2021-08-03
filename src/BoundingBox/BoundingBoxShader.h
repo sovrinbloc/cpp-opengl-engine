@@ -41,7 +41,7 @@ public:
 
     void loadViewMatrix(glm::mat4 matrix = glm::mat4(1.0f));
 
-    void loadBoxColor(glm::vec3 color = glm::vec3(0.0f));
+    void loadBoxColor(Color color = Color(0.0f));
 
     void loadViewPosition(Camera *camera);
 

@@ -13,7 +13,7 @@
 #define ESZ(elem) (int)elem.size()
 
 #define PRINT(x) std::cout << " " << (x)
-#define PRINT_HX(h,x) PRINT(h) << ": " << ", " << (x)
+#define PRINT_HX(h,x) PRINT(h) << ": " << (x)
 #define PRINT_X(x) PRINT_HX(#x,x)
 #define PRINT_HXT(h,x,t) PRINT_HX(h,x) << ", " << (t)
 #define PRINT_FOUR(h,x,t,r) PRINT_HXT(h,x,t) << ", " << (r)

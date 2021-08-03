@@ -59,8 +59,8 @@ void TerrainShader::loadMaterial(Material material) {
     this->setFloat(location_materialReflectivity, material.reflectivity);
 }
 
-void TerrainShader::loadSkyColorVariable(glm::vec3 skyColor) {
-    this->setVec3(location_skyColor, skyColor);
+void TerrainShader::loadSkyColorVariable(Color skyColor) {
+    this->setVec3(location_skyColor, skyColor.getColorRGB());
 }
 
 void TerrainShader::loadViewPosition(Camera *camera) {

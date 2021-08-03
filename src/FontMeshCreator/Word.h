@@ -7,6 +7,7 @@
 
 
 #include "Character.h"
+#include "../Toolbox/Color.h"
 #include <iostream>
 #include <vector>
 
@@ -18,7 +19,7 @@ private:
 
     double fontSize;
 
-    glm::vec3 color;
+    Color color;
 
 protected:
 
@@ -38,14 +39,14 @@ public:
      * Create a new empty word.
      * @param fontSize - the font size of the text which this word is in.
      */
-    explicit Word(glm::vec3 color, double fontSize);
+    explicit Word(Color color, double fontSize);
 
     /**
      * @return The width of the word in terms of screen size.
      */
     double getWordWidth();
 
-    const glm::vec3 &getColor() const;
+    const Color &getColor() const;
 };
 
 

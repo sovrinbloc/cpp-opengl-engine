@@ -4,7 +4,7 @@
 
 #include "Word.h"
 
-Word::Word(glm::vec3 color, double fontSize){
+Word::Word(Color color, double fontSize){
     this->fontSize = fontSize;
     this->color = color;
 }
@@ -34,6 +34,6 @@ double Word::getWordWidth(){
     return width;
 }
 
-const glm::vec3 &Word::getColor() const {
+const Color &Word::getColor() const {
     return color;
 }

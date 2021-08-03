@@ -18,8 +18,8 @@ void FontShader::loadProjectionMatrix(glm::mat4 matrix) {
     this->setMat4(location_projectionMatrix, matrix);
 }
 
-void FontShader::loadTextColor(glm::vec3 color) {
-    this->setVec3(location_textColor, color);
+void FontShader::loadTextColor(Color color) {
+    this->setVec3(location_textColor, color.getColorRGB());
 }
 
 void FontShader::getAllUniformLocations() {
