@@ -143,6 +143,8 @@ add_executable(engine
         src/OpenGLWrapper/OpenGLUtils.h
         src/Toolbox/Color.h
         src/Toolbox/Color.cpp
+        src/Collision/BoundingRegion.cpp
+        src/Collision/BoundingRegion.h
         )
 
 if (EXISTS deps/glrequired)

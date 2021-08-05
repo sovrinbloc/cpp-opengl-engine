@@ -8,10 +8,17 @@
 #include <utility>
 
 #include "MeshData.h"
+#include "../Collision/BoundingRegion.h"
+
+enum ClickBoxTypes {
+    BOX = 0x00,
+    SPHERE = 0x01,
+    MESH = 0x02
+};
 
 class BoundingBoxData : public MeshData {
 private:
-    bool mesh = false;
+    BoundingRegion boundingRegion;
     static constexpr int kBboxIndices[] = {
             0, 1, 2, 3, 8, // Front wall
             4, 5, 6, 7, 8, // Back wall
@@ -21,17 +28,16 @@ private:
             0, 1, 4, 5
     };
 public:
-    explicit BoundingBoxData(std::vector<float> vertices,
+    explicit BoundingBoxData(BoundingRegion boundingRegion, std::vector<float> vertices,
                     std::vector<int> indices = std::vector<int>(BoundingBoxData::kBboxIndices, BoundingBoxData::kBboxIndices +
                                                                                       sizeof(BoundingBoxData::kBboxIndices) /
-                                                                                      sizeof(int)),
-                    bool mesh = false) :
-            mesh(mesh), MeshData(std::move(vertices), std::move(indices)) {}
+                                                                                      sizeof(int))) :
+            boundingRegion(boundingRegion), MeshData(std::move(vertices), std::move(indices)) {}
 
             BoundingBoxData(){}
 
-    bool isMesh() const {
-        return mesh;
+    BoundingRegion getBoundingRegion() const {
+        return boundingRegion;
     }
 };
 

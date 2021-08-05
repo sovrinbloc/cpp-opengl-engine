@@ -98,7 +98,7 @@ RawBoundingBox *Loader::loadToVAO(BoundingBoxData box) {
     this->storeDataInAttributeList(0, 3, std::move(box.getVertices()));
 
     unbindVAO();
-    return new RawBoundingBox(vaoId, box.getIndices().size(), box.isMesh());
+    return new RawBoundingBox(vaoId, box.getIndices().size(), false);
 }
 
 FontModel *Loader::loadFontVAO() {

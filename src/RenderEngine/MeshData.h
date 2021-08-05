@@ -16,15 +16,33 @@ protected:
     std::vector<float> textureCoords;
     std::vector<float> normals;
     std::vector<int> indices;
+    glm::vec3 min;
+    glm::vec3 max;
 
 public:
-    explicit MeshData(std::vector<float> vertices, std::vector<float> textureCoords, std::vector<float> normals,
-    std::vector<int> indices) : vertices(std::move(vertices)), textureCoords(std::move(textureCoords)), normals(std::move(normals)),
-    indices(std::move(indices)) {}
 
+    explicit MeshData(std::vector<float> vertices, std::vector<float> textureCoords, std::vector<float> normals,
+    std::vector<int> indices, glm::vec3 min, glm::vec3 max) : vertices(std::move(vertices)), textureCoords(std::move(textureCoords)), normals(std::move(normals)),
+    indices(std::move(indices)), min(min), max(max) {}
     MeshData(std::vector<float> vertices, std::vector<int> indices) : vertices(std::move(vertices)), indices(std::move(indices)){};
 
     MeshData(){}
+
+    const glm::vec3 &getMin() const {
+        return min;
+    }
+
+    void setMin(const glm::vec3 &min) {
+        MeshData::min = min;
+    }
+
+    const glm::vec3 &getMax() const {
+        return max;
+    }
+
+    void setMax(const glm::vec3 &max) {
+        MeshData::max = max;
+    }
 
     std::vector<float> getVertices() {
         return vertices;

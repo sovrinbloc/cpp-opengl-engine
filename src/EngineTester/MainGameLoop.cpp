@@ -146,7 +146,7 @@ void MainGameLoop::main() {
 
     auto f = [](ModelData *pModelData, BoundingBoxData *pBbData, const std::string& filename) {
         *pModelData = OBJLoader::loadObjModel(filename);
-        *pBbData = OBJLoader::loadBoundingBox(*pModelData);
+        *pBbData = OBJLoader::loadBoundingBox(*pModelData, ClickBoxTypes::BOX, BoundTypes::AABB);
     };
 
     std::vector<std::thread> vThreads;

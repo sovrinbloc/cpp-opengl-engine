@@ -12,8 +12,8 @@
 #include <vector>
 
 struct BoxData {
-    glm::vec3 vLowerLeftFront = glm::vec3(999999.0f, 999999.0f, -999999.0f);
-    glm::vec3 vUpperRightBack = glm::vec3(-999999.0f, -999999.0f, 999999.0f);
+    glm::vec3 vLowerLeftFront = glm::vec3((float)(~0));
+    glm::vec3 vUpperRightBack = glm::vec3(-(float)(~0));
     std::vector<int> indices =
             {
                     0, 1, 2, 3, 8, // Front wall
@@ -27,12 +27,11 @@ struct BoxData {
 };
 
 class ModelData : public MeshData {
-
 public:
     ModelData(std::vector<float> vertices, std::vector<float> textureCoords, std::vector<float> normals,
-              std::vector<int> indices) :
+              std::vector<int> indices, glm::vec3 min, glm::vec3 max) :
             MeshData(std::move(vertices), std::move(textureCoords), std::move(normals),
-                     std::move(indices)) {
+                     std::move(indices), min, max) {
     }
     ModelData()= default;
 };

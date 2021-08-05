@@ -84,7 +84,7 @@ ModelData OBJLoader::loadAssImp(
         outNormals.push_back(normals[i].y);
         outNormals.push_back(normals[i].z);
     }
-    ModelData data(outVertices, outUvs, outNormals, indices);
+    ModelData data(outVertices, outUvs, outNormals, indices, box.vLowerLeftFront, box.vUpperRightBack);
     return data;
     // The "scene" pointer will be deleted automatically by "importer"
 }
@@ -101,7 +101,8 @@ ModelData OBJLoader::loadObjModel(const std::string &filename) {
     std::vector<glm::vec3> normals;
     std::vector<glm::vec2> textures;
     std::vector<GLint> indices;
-    BoxData box;
+    glm::vec3 vMin;
+    glm::vec3 vMax;
 
     auto copy = FileSystem::Model(filename);
     FILE *file = std::fopen(std::move(FileSystem::Model(filename)).c_str(), "r");
@@ -123,13 +124,13 @@ ModelData OBJLoader::loadObjModel(const std::string &filename) {
 
             // Bounding Box
             // Update lower-left-front corner of BB
-            box.vLowerLeftFront.x = min(box.vLowerLeftFront.x, vertex.x);
-            box.vLowerLeftFront.y = min(box.vLowerLeftFront.y, vertex.y);
-            box.vLowerLeftFront.z = max(box.vLowerLeftFront.z, vertex.z);
+            vMin.x = min(vMin.x, vertex.x);
+            vMin.y = min(vMin.y, vertex.y);
+            vMin.z = max(vMin.z, vertex.z);
             // Update upper-right-back corner of BB
-            box.vUpperRightBack.x = max(box.vUpperRightBack.x, vertex.x);
-            box.vUpperRightBack.y = max(box.vUpperRightBack.y, vertex.y);
-            box.vUpperRightBack.z = min(box.vUpperRightBack.z, vertex.z);
+            vMax.x = max(vMax.x, vertex.x);
+            vMax.y = max(vMax.y, vertex.y);
+            vMax.z = min(vMax.z, vertex.z);
 
         } else if (strcmp(lineHeader, "vt") == 0) {
             glm::vec2 uv;
@@ -172,7 +173,7 @@ ModelData OBJLoader::loadObjModel(const std::string &filename) {
     // converts data to an array and returns the furthest point
     convertDataToArrays(vertices, textures, normals, &verticesArray, &texturesArray, &normalsArray);
 
-    ModelData data(verticesArray, texturesArray, normalsArray, indices);
+    ModelData data(verticesArray, texturesArray, normalsArray, indices, vMin, vMax);
     return data;
 }
 
@@ -255,44 +256,24 @@ void OBJLoader::dealWithAlreadyProcessedVertex(Vertex *previousVertex, int newTe
     }
 }
 
-BoundingBoxData OBJLoader::loadBoundingBox(const string &filename) {
-    auto obj = loadObjModel(filename);
-    return BoundingBoxData(obj.getVertices(), obj.getIndices(), true);
+BoundingBoxData OBJLoader::loadBoundingBox(const string &filename, ClickBoxTypes boxType = ClickBoxTypes::BOX,
+                                           BoundTypes boundType = BoundTypes::AABB) {
+    auto data = loadObjModel(filename);
+    BoundingRegion br(boundType);
+    if (boundType == BoundTypes::AABB) {
+        br.min = data.getMin();
+        br.max = data.getMax();
+    } else {
+        OBJLoader::generateSphere(data, br);
+    }
+
+    return BoundingBoxData(br, data.getVertices(), data.getIndices());
 }
 
-BoundingBoxData OBJLoader::loadBoundingBox(ModelData &data, bool fullMesh) {
-    if (fullMesh) {
-        return BoundingBoxData(data.getVertices(), data.getIndices());
-    }
-    BoxData box;
-    const vector<float> &vertex = data.getVertices();
-
-    for (int i = 0; i < vertex.size(); i += 3) {
-        // Bounding Box
-        // Update lower-left-front corner of BB
-        box.vLowerLeftFront.x = min(box.vLowerLeftFront.x, vertex[i]);
-        box.vLowerLeftFront.y = min(box.vLowerLeftFront.y, vertex[i + 1]);
-        box.vLowerLeftFront.z = max(box.vLowerLeftFront.z, vertex[i + 2]);
-        // Update upper-right-back corner of BB
-        box.vUpperRightBack.x = max(box.vUpperRightBack.x, vertex[i]);
-        box.vUpperRightBack.y = max(box.vUpperRightBack.y, vertex[i + 1]);
-        box.vUpperRightBack.z = min(box.vUpperRightBack.z, vertex[i + 2]);
-    }
-
-    std::vector<float> vBoxVertices = {
-            // Front wall of bounding box
-            box.vLowerLeftFront.x, box.vLowerLeftFront.y, box.vLowerLeftFront.z,
-            box.vUpperRightBack.x, box.vLowerLeftFront.y, box.vLowerLeftFront.z,
-            box.vLowerLeftFront.x, box.vUpperRightBack.y, box.vLowerLeftFront.z,
-            box.vUpperRightBack.x, box.vUpperRightBack.y, box.vLowerLeftFront.z,
-
-            // Back wall of bounding box
-            box.vLowerLeftFront.x, box.vLowerLeftFront.y, box.vUpperRightBack.z,
-            box.vUpperRightBack.x, box.vLowerLeftFront.y, box.vUpperRightBack.z,
-            box.vLowerLeftFront.x, box.vUpperRightBack.y, box.vUpperRightBack.z,
-            box.vUpperRightBack.x, box.vUpperRightBack.y, box.vUpperRightBack.z
-    };
-
+BoundingBoxData OBJLoader::loadBoundingBox(ModelData &data, ClickBoxTypes boxType = ClickBoxTypes::BOX,
+                                           BoundTypes boundType = BoundTypes::AABB) {
+    BoundingRegion br(boundType);
+    std::vector<float> vertices;
     std::vector<int> indices = {
             0, 1, 2, 3, 8, // Front wall
             4, 5, 6, 7, 8, // Back wall
@@ -302,12 +283,74 @@ BoundingBoxData OBJLoader::loadBoundingBox(ModelData &data, bool fullMesh) {
             0, 1, 4, 5     // Bottom wall
     };
 
-    return BoundingBoxData(vBoxVertices, indices);
+    // asks for a mesh instead of a box (clickBox)
+    if (boxType == ClickBoxTypes::MESH) {
+        // asks for a BoundType AABB
+        vertices = data.getVertices();
+        indices = data.getIndices();
+    } else { // asks for a BOX clickBoxType
+        // asks for a BoundType AABB (box)
+        vertices = OBJLoader::generateBox(data.getMin(), data.getMax());
+    }
+
+    if (boundType == BoundTypes::AABB) {
+        // box around the mesh
+        br.min = data.getMin();
+        br.max = data.getMax();
+    } else { // asks for BoundType Sphere
+        // sphere around mesh
+        OBJLoader::generateSphere(data, br);
+    }
+
+    return BoundingBoxData(br, vertices, indices);
 }
 
-BoundingBoxData OBJLoader::loadBoundingBox(AssimpMesh *meshData) {
+void OBJLoader::generateSphere(ModelData &data, BoundingRegion &br) {
+    br.center = BoundingRegion(data.getMin(), data.getMax()).calculateCenter();
+    float maxRadiusSquared = 0.0f;
+
+    for (unsigned int i = 0; i < data.getVertices().size(); i++) {
+        float radiusSquared = 0.0f; // distance for this vertex
+        for (int j = 0; j < 3; ++j) {
+            radiusSquared += ((data.getVertices()[i]) - br.center[j]) * ((data.getVertices()[i]) - br.center[j]);
+        }
+        if (radiusSquared > maxRadiusSquared) {
+            // found new squared radius
+            // a^2 * b*2 > |a| > |b|
+            maxRadiusSquared = radiusSquared;
+        }
+    }
+    br.radius = sqrt(maxRadiusSquared);
+}
+
+vector<float> OBJLoader::generateBox(glm::vec3 min, glm::vec3 max) {
+    vector<float> vertices = {
+            // Front wall of bounding box
+            min.x, min.y, min.z,
+            max.x, min.y, min.z,
+            min.x, max.y, min.z,
+            max.x, max.y, min.z,
+
+            // Back wall of bounding box
+            min.x, min.y, max.z,
+            max.x, min.y, max.z,
+            min.x, max.y, max.z,
+            max.x, max.y, max.z
+    };
+    return vertices;
+}
+
+/**
+ * @brief TODO: Fix this, it doesn't work at all
+ * @param data
+ * @param boxType
+ * @param boundingType
+ * @return
+ */
+BoundingBoxData OBJLoader::loadBoundingBox(AssimpMesh *data, ClickBoxTypes boxType = ClickBoxTypes::BOX,
+                                           BoundTypes boundingType = BoundTypes::AABB) {
     BoxData box;
-    for (auto data : meshData->meshes) {
+    for (auto data : data->meshes) {
         const vector<float> &vertex = data.getVertices();
 
         for (int i = 0; i < vertex.size(); i += 3) {
@@ -322,7 +365,7 @@ BoundingBoxData OBJLoader::loadBoundingBox(AssimpMesh *meshData) {
             box.vUpperRightBack.z = min(box.vUpperRightBack.z, vertex[i + 2]);
         }
     }
-    std::vector<float> vBoxVertices = {
+    std::vector<float> vertices = {
             // Front wall of bounding box
             box.vLowerLeftFront.x, box.vLowerLeftFront.y, box.vLowerLeftFront.z,
             box.vUpperRightBack.x, box.vLowerLeftFront.y, box.vLowerLeftFront.z,
@@ -343,5 +386,11 @@ BoundingBoxData OBJLoader::loadBoundingBox(AssimpMesh *meshData) {
             2, 3, 6, 7, 8, // Top wall
             0, 1, 4, 5     // Bottom wall
     };
-    return BoundingBoxData(vBoxVertices, indices);
+
+    BoundingRegion br(boundingType);
+    // box around the mesh
+    br.min = box.vLowerLeftFront;
+    br.max = box.vUpperRightBack;
+
+    return BoundingBoxData(br, vertices, indices);
 }

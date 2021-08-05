@@ -13,7 +13,6 @@ private:
     RawBoundingBox *rawBoundingBox;
     Color color;
 public:
-public:
 
     /**
      * @brief BoundingBox stores the RawBoundingBox [the VaoId] (from loaded mesh details),

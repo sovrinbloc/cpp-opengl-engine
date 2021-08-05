@@ -15,7 +15,7 @@
 #include "ModelData.h"
 #include "BoundingBoxData.h"
 #include "AssimpEntityLoader.h"
-
+#include "../Collision/BoundingRegion.h"
 
 class OBJLoader {
 public:
@@ -23,11 +23,11 @@ public:
 
     static ModelData loadObjModel(const std::string& filename);
 
-    static BoundingBoxData loadBoundingBox(const std::string& filename);
+    static BoundingBoxData loadBoundingBox(const std::string& filename, ClickBoxTypes boxType, BoundTypes boundType);
 
-    static BoundingBoxData loadBoundingBox(ModelData &data, bool fullMesh = false);
+    static BoundingBoxData loadBoundingBox(ModelData &data, ClickBoxTypes boxType, BoundTypes boundType);
 
-    static BoundingBoxData loadBoundingBox(AssimpMesh *data);
+    static BoundingBoxData loadBoundingBox(AssimpMesh *data, ClickBoxTypes boxType, BoundTypes boundingType);
 
     static void processVertex(float vertex, float uv, float normal, std::vector<Vertex*> *vertices, std::vector<int> *indices);
 
@@ -41,6 +41,10 @@ public:
 
     static void dealWithAlreadyProcessedVertex(Vertex *previousVertex, int newTextureIndex,
                                                int newNormalIndex, std::vector<int>*indices, std::vector<Vertex*> *vertices);
+
+    static vector<float> generateBox(glm::vec3 min, glm::vec3 max);
+
+    static void generateSphere(ModelData &data, BoundingRegion &br);
 };
 #endif //ENGINE_OBJLOADER_H
 
