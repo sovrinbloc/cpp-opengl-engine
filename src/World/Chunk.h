@@ -12,7 +12,7 @@
 
 class Chunk {
 public:
-    Map map;
+    Map *map;
     int p;
     int q;
 
@@ -53,7 +53,6 @@ public:
      * @brief Update makes sure the actual VAO's, etc, are loaded.
      */
     void update();
-
 
 };
 

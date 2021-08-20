@@ -2,8 +2,8 @@
 // Created by Joseph Alai on 8/3/21.
 //
 
-#ifndef ENGINE_BOUNDINGREGION_H
-#define ENGINE_BOUNDINGREGION_H
+#ifndef ENGINE_AABB_H
+#define ENGINE_AABB_H
 
 #include <glm/glm.hpp>
 
@@ -12,7 +12,7 @@ enum class BoundTypes {
     SPHERE = 0x01,
 };
 
-class BoundingRegion {
+class AABB {
 
 public:
     BoundTypes type;
@@ -29,15 +29,15 @@ public:
      */
 
     // initialize with type
-    explicit BoundingRegion(BoundTypes type);
+    explicit AABB(BoundTypes type);
 
     // initialize as sphere
-    BoundingRegion(glm::vec3 center, float radius);
+    AABB(glm::vec3 center, float radius);
 
     // initialize as AABB
-    BoundingRegion(glm::vec3 min, glm::vec3 max);
+    AABB(glm::vec3 min, glm::vec3 max);
 
-    BoundingRegion();
+    AABB();
 
     /*
      * Calculating values for the region
@@ -57,12 +57,12 @@ public:
     bool containsPoint(glm::vec3 pt);
 
     // determines if region is inside of region
-    bool containsRegion(BoundingRegion br);
+    bool containsRegion(AABB br);
 
     // determines if region intersects (partial containment)
-    bool intersectsWith(BoundingRegion br);
+    bool intersectsWith(AABB br);
 
 };
 
 
-#endif //ENGINE_BOUNDINGREGION_H
+#endif //ENGINE_AABB_H

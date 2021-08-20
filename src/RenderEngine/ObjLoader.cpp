@@ -259,7 +259,7 @@ void OBJLoader::dealWithAlreadyProcessedVertex(Vertex *previousVertex, int newTe
 BoundingBoxData OBJLoader::loadBoundingBox(const string &filename, ClickBoxTypes boxType = ClickBoxTypes::BOX,
                                            BoundTypes boundType = BoundTypes::AABB) {
     auto data = loadObjModel(filename);
-    BoundingRegion br(boundType);
+    AABB br(boundType);
     if (boundType == BoundTypes::AABB) {
         br.min = data.getMin();
         br.max = data.getMax();
@@ -272,7 +272,7 @@ BoundingBoxData OBJLoader::loadBoundingBox(const string &filename, ClickBoxTypes
 
 BoundingBoxData OBJLoader::loadBoundingBox(ModelData &data, ClickBoxTypes boxType = ClickBoxTypes::BOX,
                                            BoundTypes boundType = BoundTypes::AABB) {
-    BoundingRegion br(boundType);
+    AABB br(boundType);
     std::vector<float> vertices;
     std::vector<int> indices = {
             0, 1, 2, 3, 8, // Front wall
@@ -305,8 +305,8 @@ BoundingBoxData OBJLoader::loadBoundingBox(ModelData &data, ClickBoxTypes boxTyp
     return BoundingBoxData(br, vertices, indices);
 }
 
-void OBJLoader::generateSphere(ModelData &data, BoundingRegion &br) {
-    br.center = BoundingRegion(data.getMin(), data.getMax()).calculateCenter();
+void OBJLoader::generateSphere(ModelData &data, AABB &br) {
+    br.center = AABB(data.getMin(), data.getMax()).calculateCenter();
     float maxRadiusSquared = 0.0f;
 
     for (unsigned int i = 0; i < data.getVertices().size(); i++) {
@@ -387,7 +387,7 @@ BoundingBoxData OBJLoader::loadBoundingBox(AssimpMesh *data, ClickBoxTypes boxTy
             0, 1, 4, 5     // Bottom wall
     };
 
-    BoundingRegion br(boundingType);
+    AABB br(boundingType);
     // box around the mesh
     br.min = box.vLowerLeftFront;
     br.max = box.vUpperRightBack;

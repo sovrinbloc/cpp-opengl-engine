@@ -2,14 +2,14 @@
 // Created by Joseph Alai on 8/3/21.
 //
 
-#include "BoundingRegion.h"
+#include "AABB.h"
 
 /**
  * @brief initialize with type
  *
  * @param type
  */
-BoundingRegion::BoundingRegion(BoundTypes type) : type(type) {}
+AABB::AABB(BoundTypes type) : type(type) {}
 
 /**
  * @brief initialize as sphere
@@ -17,7 +17,7 @@ BoundingRegion::BoundingRegion(BoundTypes type) : type(type) {}
  * @param center
  * @param radius
  */
-BoundingRegion::BoundingRegion(glm::vec3 center, float radius) :
+AABB::AABB(glm::vec3 center, float radius) :
         type(BoundTypes::SPHERE), center(center), radius(radius) {}
 
 /**
@@ -26,7 +26,7 @@ BoundingRegion::BoundingRegion(glm::vec3 center, float radius) :
  * @param min
  * @param max
  */
-BoundingRegion::BoundingRegion(glm::vec3 min, glm::vec3 max) :
+AABB::AABB(glm::vec3 min, glm::vec3 max) :
         type(BoundTypes::AABB), min(min), max(max) {}
 
 /*
@@ -38,7 +38,7 @@ BoundingRegion::BoundingRegion(glm::vec3 min, glm::vec3 max) :
  *
  * @return
  */
-glm::vec3 BoundingRegion::calculateCenter() {
+glm::vec3 AABB::calculateCenter() {
     return (type == BoundTypes::SPHERE) ? center : (max + min) / 2.0f;
 }
 
@@ -47,7 +47,7 @@ glm::vec3 BoundingRegion::calculateCenter() {
  *
  * @return
  */
-glm::vec3 BoundingRegion::calculateDimensions() {
+glm::vec3 AABB::calculateDimensions() {
     return (type == BoundTypes::AABB) ? (min + max) : glm::vec3(2.0f * radius);
 }
 
@@ -57,7 +57,7 @@ glm::vec3 BoundingRegion::calculateDimensions() {
  * @param pt
  * @return
  */
-bool BoundingRegion::containsPoint(glm::vec3 pt) {
+bool AABB::containsPoint(glm::vec3 pt) {
     if (type == BoundTypes::AABB) {
         return (max.x > pt.x) && (min.x < pt.x) &&
                (max.y > pt.y) && (min.y < pt.y) &&
@@ -81,7 +81,7 @@ bool BoundingRegion::containsPoint(glm::vec3 pt) {
  * @param br
  * @return
  */
-bool BoundingRegion::containsRegion(BoundingRegion br) {
+bool AABB::containsRegion(AABB br) {
     if (br.type == BoundTypes::AABB) {
         // if br is a box, just has to contain min and max
         return containsPoint(br.min) && containsPoint(br.max);
@@ -123,7 +123,7 @@ bool BoundingRegion::containsRegion(BoundingRegion br) {
  * @param br
  * @return
  */
-bool BoundingRegion::intersectsWith(BoundingRegion br) {
+bool AABB::intersectsWith(AABB br) {
     // overlap on all axes
 
     if (type == BoundTypes::AABB && br.type == BoundTypes::AABB) {
@@ -174,4 +174,4 @@ bool BoundingRegion::intersectsWith(BoundingRegion br) {
     return br.intersectsWith(*this);
 }
 
-BoundingRegion::BoundingRegion() {}
+AABB::AABB() {}

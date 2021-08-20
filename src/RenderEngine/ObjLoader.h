@@ -15,7 +15,7 @@
 #include "ModelData.h"
 #include "BoundingBoxData.h"
 #include "AssimpEntityLoader.h"
-#include "../Collision/BoundingRegion.h"
+#include "../Collision/AABB.h"
 
 class OBJLoader {
 public:
@@ -44,7 +44,7 @@ public:
 
     static vector<float> generateBox(glm::vec3 min, glm::vec3 max);
 
-    static void generateSphere(ModelData &data, BoundingRegion &br);
+    static void generateSphere(ModelData &data, AABB &br);
 };
 #endif //ENGINE_OBJLOADER_H
 

@@ -226,6 +226,14 @@ void MainGameLoop::main() {
     allTerrains.push_back(new Terrain(-1, 0, loader, texturePack, blendMap, "heightMap"));
     allTerrains.push_back(terrain);
 
+    /**
+     * Assimp Data
+     */
+    auto *pBackpack = new AssimpMesh("Backpack/backpack");
+    auto pBackpackBox = OBJLoader::loadBoundingBox(pBackpack, ClickBoxTypes::BOX, BoundTypes::AABB);
+    auto pBackpackBoxs = loader->loadToVAO(pBackpackBox);
+    scenes.push_back(new AssimpEntity(pBackpack, new BoundingBox(pBackpackBoxs, BoundingBoxIndex::genUniqueId()), generateRandomPosition(terrain, 3.0f), generateRandomRotation(),generateRandomScale(3.25, 10.50)));
+
 
     /**
      * Light Generation

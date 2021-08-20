@@ -8,10 +8,28 @@
 #include <iostream>
 #include "Block.h"
 #include <map>
-class Map {
-    unsigned int mask; // the size of the array
 
+enum EntityType {
+    Tree1 = 0x00,
+    Tree2 = 0x01,
+    Fern1 = 0x02,
+    Fern2 = 0x03,
+    Fern3 = 0x04,
+    Fern4 = 0x05,
+    Grass = 0x06,
+    Stall = 0x07,
+    Lamp = 0x08,
+    Grass = 0x09,
+    Backpack = 0x10,
+    Nothing = -1
+};
+class Map {
+public:
+    unsigned int mask; // the size of the array
     std::map<long, Block *> entries;
+
+    Block *data; // instead of map for entries
+    unsigned int size; // the amount of blocks
 public:
 
     Map();
@@ -64,6 +82,13 @@ public:
     int hitTest(float maxDistance, int previous, float charX, float charY, float charZ, float camFrontX,
                 float camFrontY, float camFrontZ, int *hitX, int *hitY, int *hitZ);
 
+    void grow();
+
+    void mapAlloc();
+
+    void mapFree();
+
+    void makeWorld(int x_chunk_pos, int z_chunk_pos);
 };
 
 #endif //ENGINE_MAP_H

@@ -15,7 +15,7 @@ void World::setBlock(int x, int y, int z, int texture) {
     int p = static_cast<int>(floorf((float) x / CHUNK_SIZE));
     int q = static_cast<int>(floorf((float) z / CHUNK_SIZE));
     Chunk *chunk = findChunk(p, q);
-    chunk->map.set(x, y, z, texture);
+    chunk->map->set(x, y, z, texture);
     chunk->update();
 }
 
@@ -60,7 +60,7 @@ int World::collide(int height, glm::vec3 &charPos) {
     if (!chunk) {
         return result;
     }
-    Map *map = &chunk->map;
+    Map *map = chunk->map;
     int nearX = static_cast<int>(roundf(charPos.x));
     int nearY = static_cast<int>(roundf(charPos.y));
     int nearZ = static_cast<int>(roundf(charPos.z));
@@ -110,7 +110,7 @@ int World::hitTest(int previous, const glm::vec3 &charPos, float rx, float ry, i
             continue;
         }
         int hitX, hitY, hitZ;
-        int blockType = chunk->map.hitTest(8, previous,
+        int blockType = chunk->map->hitTest(8, previous,
                                            charPos.x, charPos.y, charPos.z, camFrontX, camFrontY, camFrontZ, &hitX, &hitY,
                                            &hitZ);
         if (blockType > 0) {

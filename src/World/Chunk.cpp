@@ -4,11 +4,13 @@
 
 #include "Chunk.h"
 #include "../Util/CommonHeader.h"
+#include "WorldCommon.h"
+
 Chunk::Chunk(int p, int q) {
     this->p = p;
     this->q = q;
     faces = 0;
-    map = Map("newworld.mapfile");
+    map = new Map("newworld.mapfile");
     update();
 }
 

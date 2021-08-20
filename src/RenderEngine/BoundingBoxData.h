@@ -8,7 +8,7 @@
 #include <utility>
 
 #include "MeshData.h"
-#include "../Collision/BoundingRegion.h"
+#include "../Collision/AABB.h"
 
 enum ClickBoxTypes {
     BOX = 0x00,
@@ -18,7 +18,7 @@ enum ClickBoxTypes {
 
 class BoundingBoxData : public MeshData {
 private:
-    BoundingRegion boundingRegion;
+    AABB boundingRegion;
     static constexpr int kBboxIndices[] = {
             0, 1, 2, 3, 8, // Front wall
             4, 5, 6, 7, 8, // Back wall
@@ -28,7 +28,7 @@ private:
             0, 1, 4, 5
     };
 public:
-    explicit BoundingBoxData(BoundingRegion boundingRegion, std::vector<float> vertices,
+    explicit BoundingBoxData(AABB boundingRegion, std::vector<float> vertices,
                     std::vector<int> indices = std::vector<int>(BoundingBoxData::kBboxIndices, BoundingBoxData::kBboxIndices +
                                                                                       sizeof(BoundingBoxData::kBboxIndices) /
                                                                                       sizeof(int))) :
@@ -36,7 +36,7 @@ public:
 
             BoundingBoxData(){}
 
-    BoundingRegion getBoundingRegion() const {
+    AABB getBoundingRegion() const {
         return boundingRegion;
     }
 };
