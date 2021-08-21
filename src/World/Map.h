@@ -12,17 +12,17 @@
 enum EntityType {
     Tree1 = 0x00,
     Tree2 = 0x01,
-    Fern1 = 0x02,
-    Fern2 = 0x03,
-    Fern3 = 0x04,
-    Fern4 = 0x05,
-    Grass = 0x06,
-    Stall = 0x07,
-    Lamp = 0x08,
-    Grass = 0x09,
-    Backpack = 0x10,
+    Fern = 0x02,
+    Grass = 0x03,
+    Stall = 0x04,
+    Lamp = 0x05,
+    Backpack = 0x06,
+    Ground,
+    PlantYellow,
+    Clouds,
     Nothing = -1
 };
+
 class Map {
 public:
     unsigned int mask; // the size of the array
@@ -33,6 +33,8 @@ public:
 public:
 
     Map();
+
+    ~Map();
 
     explicit Map(std::string mapName);
 
