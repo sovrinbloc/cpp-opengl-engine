@@ -14,14 +14,14 @@
 #define DOT3(v1, v2) ((v1)[0] * (v2)[0] + (v1)[1] * (v2)[1] + (v1)[2] * (v2)[2])
 class Noise {
 public:
-    const static float GRAD3[16][3] = {
+    constexpr const static float GRAD3[16][3] = {
             { 1, 1, 0}, {-1, 1, 0}, { 1,-1, 0}, {-1,-1, 0},
             { 1, 0, 1}, {-1, 0, 1}, { 1, 0,-1}, {-1, 0,-1},
             { 0, 1, 1}, { 0,-1, 1}, { 0, 1,-1}, { 0,-1,-1},
             { 1, 0,-1}, {-1, 0,-1}, { 0,-1, 1}, { 0, 1, 1}
     };
 
-    const static unsigned char PERM[] = {
+    constexpr const static unsigned char PERM[] = {
             151, 160, 137,  91,  90,  15, 131,  13,
             201,  95,  96,  53, 194, 233,   7, 225,
             140,  36, 103,  30,  69, 142,   8,  99,

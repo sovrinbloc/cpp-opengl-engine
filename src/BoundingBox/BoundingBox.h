@@ -9,6 +9,8 @@
 #include "../Toolbox/Color.h"
 
 class BoundingBox {
+// BoundingBox: A RawBoundingBox + Color
+
 private:
     RawBoundingBox *rawBoundingBox;
     Color color;
@@ -28,11 +30,20 @@ public:
         return BoundingBox::rawBoundingBox;
     }
 
+    /**
+     * @brief Returns the Color (Unique ID) of the box
+     *
+     * @return
+     */
     Color getBoxColor() {
         return BoundingBox::color;
     }
 
-    void setColor(const Color &color) {
+    /**
+     * @brief Sets the Color (Unique ID) of the bounding box
+     * @param color
+     */
+    void setBoxColor(const Color &color) {
         BoundingBox::color = color;
     }
 };

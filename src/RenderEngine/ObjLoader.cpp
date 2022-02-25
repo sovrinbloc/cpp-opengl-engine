@@ -12,7 +12,13 @@
 
 using namespace std;
 
-
+/**
+ * @brief Loads an ASSIMP model, and returns the vertices,
+ *        normals, textureCoords, and kBboxIndices in vector format. It also gets the min and max of the mesh
+ *        so as to programmitcally generate a Bounding Box from it, if needed.
+ * @param path
+ * @return
+ */
 ModelData OBJLoader::loadAssImp(
         string path
 ) {
@@ -92,7 +98,8 @@ ModelData OBJLoader::loadAssImp(
 
 /**
  * @brief loadObjModel loads in an .obj file, and returns the vertices,
- *        normals, textureCoords, and kBboxIndices in vector format.
+ *        normals, textureCoords, and kBboxIndices in vector format. It also gets the min and max of the mesh
+ *        so as to programmitcally generate a Bounding Box from it, if needed.
  * @param filename
  * @return
  */
@@ -201,6 +208,18 @@ int *OBJLoader::convertIndicesListToArray(vector<int> indices) {
     return indicesArray;
 }
 
+/**
+ * @brief Converts the vector data of a loaded object (multiple vectors) into three single arrays to be loaded into
+ *        OpenGL easily.
+ *
+ * @param vertices
+ * @param textures
+ * @param normals
+ * @param verticesArray
+ * @param texturesArray
+ * @param normalsArray
+ * @return
+ */
 float OBJLoader::convertDataToArrays(vector<Vertex *> vertices, vector<glm::vec2> textures,
                                      vector<glm::vec3> normals, vector<float> *verticesArray,
                                      vector<float> *texturesArray,
@@ -256,6 +275,14 @@ void OBJLoader::dealWithAlreadyProcessedVertex(Vertex *previousVertex, int newTe
     }
 }
 
+/**
+ * @brief Creates a bounding box, either a mesh, or programmatically generates a box from a mesh.
+ *
+ * @param filename
+ * @param boxType
+ * @param boundType
+ * @return
+ */
 BoundingBoxData OBJLoader::loadBoundingBox(const string &filename, ClickBoxTypes boxType = ClickBoxTypes::BOX,
                                            BoundTypes boundType = BoundTypes::AABB) {
     auto data = loadObjModel(filename);
@@ -270,6 +297,23 @@ BoundingBoxData OBJLoader::loadBoundingBox(const string &filename, ClickBoxTypes
     return BoundingBoxData(br, data.getVertices(), data.getIndices());
 }
 
+/**
+ * @brief Loads the bounding box based on the mesh given.
+ *
+ *        Have the choice of creating a rectangular bounding box programmatically, based on the max and min of the mesh,
+ *        or loading a mesh as a bounding box. MESH loading BoundingBox is useful when the mesh is something like a
+ *        tree, and when the box is rendered, it covers an entire box around the tree from top to bottom. It covers the
+ *        volume of not only the trunk and the leaves on top, but from the leaves vertically all the way to the ground,
+ *        making it so they cannot click the empty space between the leaves and the ground, because the box is taking up
+ *        that space too. So creating a low-poly tree mesh (two quads, one to cover the leaves on top, and one to cover
+ *        the trunk), they can easily create a bounding box that is not a huge monolith, and that lets the player click
+ *        in all the space accurately around the tree.
+ *
+ * @param data
+ * @param boxType BOX or MESH
+ * @param boundType
+ * @return
+ */
 BoundingBoxData OBJLoader::loadBoundingBox(ModelData &data, ClickBoxTypes boxType = ClickBoxTypes::BOX,
                                            BoundTypes boundType = BoundTypes::AABB) {
     AABB br(boundType);
@@ -323,6 +367,13 @@ void OBJLoader::generateSphere(ModelData &data, AABB &br) {
     br.radius = sqrt(maxRadiusSquared);
 }
 
+/**
+ * @brief Generates a bounding box programmatically, based on the min and max vertices values of x, y, and z.
+ *
+ * @param min
+ * @param max
+ * @return
+ */
 vector<float> OBJLoader::generateBox(glm::vec3 min, glm::vec3 max) {
     vector<float> vertices = {
             // Front wall of bounding box

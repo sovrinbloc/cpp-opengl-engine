@@ -16,15 +16,22 @@ BoundingBoxRenderer::BoundingBoxRenderer(BoundingBoxShader *shader, glm::mat4 pr
 
 }
 
+/**
+ * @brief Load the bounding boxes as well as the transformations of those boxes, and render them.
+ *
+ * @param entities
+ */
 void BoundingBoxRenderer::render(std::map<RawBoundingBox *, std::vector<Interactive *>> *entities) {
-    auto it = entities->begin();
+    auto itEntityMap = entities->begin();
     RawBoundingBox *pRawBox;
-    while (it != entities->end()) {
-        pRawBox = it->first;
+    while (itEntityMap != entities->end()) {
+
+        // bind the VAO of the box
+        pRawBox = itEntityMap->first;
         prepareRawBoundingBox(pRawBox);
 
-        std::vector<Interactive *> batch = entities->find(pRawBox)->second;
-        batch = entities->find(pRawBox)->second;
+//        std::vector<Interactive *> batch = entities->find(pRawBox)->second;
+        std::vector<Interactive *> batch = itEntityMap->second;
         for (Interactive *entity : batch) {
             prepareInstance(entity);
 
@@ -36,10 +43,15 @@ void BoundingBoxRenderer::render(std::map<RawBoundingBox *, std::vector<Interact
             glDrawElements(glDrawType, pRawBox->getVertexCount(), GL_UNSIGNED_INT, 0);
         }
         unbindBox(pRawBox);
-        it++;
+        itEntityMap++;
     }
 }
 
+/**
+ * @brief Binds the VAO of the box so it can be rendered.
+ *
+ * @param box
+ */
 void BoundingBoxRenderer::prepareRawBoundingBox(RawBoundingBox *box) {
 
     OpenGLUtils::cullBackFaces(false);

@@ -117,7 +117,7 @@ void MainGameLoop::main() {
             0.50f, fonty, &noodle, glm::vec2(25.0f, 225.0f), ColorName::Whitesmoke,
             0.50f * static_cast<float>(DisplayManager::Width()),
             false));
-    texts->push_back(new GUIText("Joseph Alai MCMXII", 0.5f, fonty, &arial, glm::vec2(540.0f, 570.0f), ColorName::Cyan,
+    texts->push_back(new GUIText("Joseph Alai MCMXII", 0.5f, fonty, &arial, glm::vec2(540.0f, 50.0f), ColorName::Cyan,
                                  0.75f * static_cast<float>(DisplayManager::Width()), false));
     auto clickColorText = new GUIText("Color: ", 0.5f, fonty, &arial, glm::vec2(10.0f, 20.0f), ColorName::Green,
                                       0.75f * static_cast<float>(DisplayManager::Width()), false);
@@ -144,6 +144,9 @@ void MainGameLoop::main() {
     ModelData fluffyTreeData;
     BoundingBoxData fluffyTreeBbData;
 
+    /**
+     * Load the models concurrently
+     */
     auto f = [](ModelData *pModelData, BoundingBoxData *pBbData, const std::string& filename) {
         *pModelData = OBJLoader::loadObjModel(filename);
         *pBbData = OBJLoader::loadBoundingBox(*pModelData, ClickBoxTypes::BOX, BoundTypes::AABB);
@@ -163,6 +166,9 @@ void MainGameLoop::main() {
     for (auto &&modelThread : vThreads) {
         (modelThread).join();
     }
+    /**
+     * End loading the models concurrently.
+     */
 
     // load bb version 1
     RawBoundingBox *pLampBox = loader->loadToVAO(lampBbData);
@@ -259,6 +265,8 @@ void MainGameLoop::main() {
      */
     auto lampy = new Entity(staticLamp, new BoundingBox(pLampBox, BoundingBoxIndex::genUniqueId()),
                             glm::vec3(120.0f, terrain->getHeightOfTerrain(120, -50), -50.0f));
+
+
     entities.push_back(lampy);
     entities.push_back(
             new Entity(staticStall, new BoundingBox(pLampBox, BoundingBoxIndex::genUniqueId()), glm::vec3(1.0f, 0.0f, -82.4f),
@@ -322,7 +330,7 @@ void MainGameLoop::main() {
      * Framebuffers
      */
     auto reflectFbo = new FrameBuffers();
-    auto gui = new GuiTexture(reflectFbo->getReflectionTexture(), glm::vec2(-0.25f - 0.25f), glm::vec2(0.3f));
+    auto gui = new GuiTexture(reflectFbo->getReflectionTexture(), glm::vec2(0.75f,   0.75f), glm::vec2(0.2f));
     guis.push_back(gui);
 
     /**
@@ -354,6 +362,10 @@ void MainGameLoop::main() {
 //            lights[1]->setPosition(glm::vec3(terrainPoint.x, terrainPoint.y + 15.0f, terrainPoint.z));
 //        }
 
+        /*
+         * After the user has clicked, render the bounding boxes off-screen, and grab the pixel color of where their
+         * mouse is. This color is the Hash ID generated which points to a specific object. So it returns the object.
+         */
         if (InputMaster::hasPendingClick()) {
             if (InputMaster::mouseClicked(LeftClick)) {
                 renderer->renderBoundingBoxes(allBoxes);

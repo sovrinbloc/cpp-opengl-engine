@@ -1,4 +1,19 @@
-Installing Dependencies: 
+
+# Links
+[Contents of Project](CONTENTS.md)
+
+# Installation Overview
+Most of the installation is done through downloading and installing dependencies, and making sure they are correctly included within the CMakeLists.txt.
+
+## Dependencies Overview
+- OpenGL
+- GLM
+- GLFW
+- ASSIMP-4
+- FreeType2
+
+
+## Installing Dependencies 
 `deps/`
 
  - `GLFW 3.3 (glfw3)`: https://github.com/glfw/glfw
@@ -6,7 +21,7 @@ Installing Dependencies:
  - `glm (GLM 0.9.9.9)`:  `brew install glm` and link. Or: https://github.com/g-truc/glm.git
  - `sqlite3`: `brew install sqlite` and `ln -s ...`
 
-##FreeType 
+###FreeType 
  - `Freetype`: download version 2.11.0 from `https://download.savannah.gnu.org/releases/freetype/freetype-2.11.0.tar.gz` (the main freetype website)
  - `./autogen.sh`
  - Configure without `brotli`
@@ -21,7 +36,7 @@ include_directories(deps/ft2/include)
 target_link_libraries(engine freetype)
 ```
 
-## For The Laptop
+### For The Laptop
 ```
 if(EXISTS deps/glrequired)
  message(STATUS "Requiring OpenGL")
@@ -30,3 +45,4 @@ if(EXISTS deps/glrequired)
  target_link_libraries(engine OpenGL::GL)
 endif()
 ```
+

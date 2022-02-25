@@ -69,7 +69,7 @@ public:
 
     void processAssimpEntity(AssimpEntity *scene);
 
-    void processBoundingBox(Interactive *boxHolder);
+    void processBoundingBox(Interactive *entityWithBox);
 
     void renderScene(std::vector<Entity *> entities, std::vector<AssimpEntity *> aEntities,
                      std::vector<Terrain *> terrains, std::vector<Light *> lights);

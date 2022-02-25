@@ -130,15 +130,15 @@ void MasterRenderer::processAssimpEntity(AssimpEntity *scene) {
     }
 }
 
-void MasterRenderer::processBoundingBox(Interactive *boxHolder) {
-    auto boxColor = boxHolder->getBoundingBox()->getRawBoundingBox();
-    auto batchIterator = boxes->find(boxColor);
-    if (batchIterator != boxes->end()) {
-        batchIterator->second.push_back(boxHolder);
+void MasterRenderer::processBoundingBox(Interactive *entityWithBox) {
+    auto coloredBox = entityWithBox->getBoundingBox()->getRawBoundingBox();
+    auto itBoxes = boxes->find(coloredBox);
+    if (itBoxes != boxes->end()) {
+        itBoxes->second.push_back(entityWithBox);
     } else {
         std::vector<Interactive *> newBatch;
-        newBatch.push_back(boxHolder);
-        (*boxes)[boxColor] = newBatch;
+        newBatch.push_back(entityWithBox);
+        (*boxes)[coloredBox] = newBatch;
     }
 }
 
@@ -159,10 +159,18 @@ void MasterRenderer::renderScene(std::vector<Entity *> entities, std::vector<Ass
     render(lights);
 }
 
+/**
+ * Renders Bounding Boxes
+ *
+ * Inputs a variety of Interactive objects, which means each of them have bounding boxes. Then the bounding boxes
+ * are rendered with each of their colors.
+ *
+ * @param boxes
+ */
 void MasterRenderer::renderBoundingBoxes(std::vector<Interactive*> boxes) {
-    for (Interactive *ent : boxes) {
-        if (ent->getBoundingBox() != nullptr) {
-            processBoundingBox(ent);
+    for (Interactive *entity : boxes) {
+        if (entity->getBoundingBox() != nullptr) {
+            processBoundingBox(entity);
         }
     }
     render();
