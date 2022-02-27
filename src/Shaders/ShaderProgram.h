@@ -64,6 +64,9 @@ public:
 
     void stop();
 
+    /**
+     * @brief Delete and detach Shader program.
+     */
     void cleanUp();
 
     // utility uniform functions with a string.

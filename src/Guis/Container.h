@@ -7,7 +7,6 @@
 
 #include <vector>
 #include "UiConstraints.h"
-
 class Container {
 public:
     enum GuiType {
@@ -17,29 +16,40 @@ public:
         CONTAINER
     };
 protected:
+    Container *parent = nullptr;
+    GuiType type;
+    std::string name;
+    uint groupId;
+    uint childId;
+protected:
+
     std::vector<Container *> children;
     std::vector<Container *> childrenToAdd;
     std::vector<Container *> childrenToRemove;
-    UiConstraints constraints;
-    GuiType type;
-protected:
-    Container *parent = nullptr;
+    UiConstraints *constraints = nullptr;
     bool sterile = false;
 public:
-
     /**
      * @brief Initializes a basic container, which is similar to a linked list. Specifies what type of container it is,
      *        and if it is capable of having children.
      * @param type
      * @param sterile
      */
-    explicit Container(GuiType type, bool sterile) : type(type), sterile(sterile) {
+    explicit Container(GuiType type, bool sterile, std::string name = "component") : type(type), sterile(sterile), name(name) {
         childrenToRemove = std::vector<Container *>();
         children = std::vector<Container *>();
         childrenToAdd = std::vector<Container *>();
     }
 
     virtual ~Container(){}
+
+    const std::string &getName() const {
+        return name;
+    }
+
+    void setName(const std::string &name) {
+        Container::name = name;
+    }
 
     /**
      * @brief Gets the component type: TEXT, IMAGE, COLORED_SQUARE, CONTAINER
@@ -67,7 +77,8 @@ public:
      * @param child
      * @param constraints
      */
-    void addChild(Container *child, UiConstraints constraints) {
+    void addChild(Container *child, UiConstraints *constraints) {
+        child->setParent(this);
         child->constraints = constraints;
         childrenToAdd.push_back(child);
     }
@@ -79,8 +90,19 @@ public:
      *
      * @return
      */
-    const UiConstraints &getConstraints() const {
+    UiConstraints *getConstraints() {
         return constraints;
+    }
+
+    /**
+     * @brief Gets the constraints (size & position) of the component to be applied to itself and its' children.
+     *
+     * // todo: Should a constrained size smaller than the component itself either truncate or shrink the component?
+     *
+     * @return
+     */
+    void setConstraints(UiConstraints *constraints) {
+        this->constraints = constraints;
     }
 
     /**

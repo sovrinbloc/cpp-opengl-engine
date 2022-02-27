@@ -20,11 +20,7 @@ bool GuiComponent::isClicked()  {
 }
 
 bool GuiComponent::isMouseOver()  {
-    return mouseOver;
-}
-
-void GuiComponent::setConstraints(UiConstraints constraints)  {
-    this->constraints = constraints;
+    return false;
 }
 
 bool GuiComponent::isMouseOverChild()  {

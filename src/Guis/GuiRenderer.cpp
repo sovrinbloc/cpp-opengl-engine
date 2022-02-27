@@ -47,10 +47,18 @@ void GuiRenderer::render(std::vector<GuiTexture*> guis) {
     shader->stop();
 }
 
+/**
+ * @brief delete and detach Shader program.
+ */
 void GuiRenderer::cleanUp() {
     shader->cleanUp();
 }
 
+/**
+ * @brief Loads any variables from the gui into the Shader program.
+ *
+ * @param gui
+ */
 void GuiRenderer::prepareInstance(GuiTexture *gui) {
     glm::mat4 matrix = Maths::createTransformationMatrix(gui->getPosition(), gui->getScale());
     shader->loadTransformationMatrix(matrix);

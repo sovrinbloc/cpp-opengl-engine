@@ -22,3 +22,4 @@ engine.cbp*
 CMakeDoxy*
 bin/*
 *.tga
+.gitmessage

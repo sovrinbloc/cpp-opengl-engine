@@ -6,45 +6,45 @@
 #define ENGINE_UICONSTRAINTS_H
 
 
-#include <vec2.hpp>
+#include "glm/glm.hpp"
 
 class UiConstraints {
 
 private:
-    glm::ivec2 position = glm::vec2(0.0f);
+    glm::vec2 position = glm::vec2(0.0f);
 
     // todo: Should a constrained size smaller than the component itself either truncate or shrink the component?
-    glm::ivec2 size = glm::vec2(0.0f);
+    glm::vec2 size = glm::vec2(0.0f);
 public:
     UiConstraints();
 
-    UiConstraints(int x, int y, int width, int height);
+    UiConstraints(float x, float y, float width, float height);
 
-    UiConstraints(glm::ivec2 position, glm::ivec2 size);
+    UiConstraints(glm::vec2 position, glm::vec2 size);
 
-    const glm::ivec2 &getPosition() const;
+    const glm::vec2 &getPosition() const;
 
-    void setPosition(const glm::ivec2 &position);
+    void setPosition(const glm::vec2 &position);
 
-    const glm::ivec2 &getSize() const;
+    const glm::vec2 &getSize() const;
 
-    void setSize(const glm::ivec2 &size);
+    void setSize(const glm::vec2 &size);
 
-    int getX() const;
+    float getX() const;
 
-    void setX(int x);
+    void setX(float x);
 
-    int getY() const;
+    float getY() const;
 
-    void setY(int y);
+    void setY(float y);
 
-    int getWidth() const;
+    float getWidth() const;
 
-    void setWidth(int width);
+    void setWidth(float width);
 
-    int getHeight() const;
+    float getHeight() const;
 
-    void setHeight(int height);
+    void setHeight(float height);
 };
 
 

@@ -4,10 +4,17 @@
 
 #ifndef ENGINE_GUICOMPONENT_H
 #define ENGINE_GUICOMPONENT_H
+
+#include <iostream>
 #include "UiContainer.h"
+
 class GuiComponent : public UiContainer {
 public:
     explicit GuiComponent(GuiType type) : UiContainer(type) {}
+
+    GuiComponent(GuiType type, UiConstraints *constraints) : UiContainer(type) {
+        this->setConstraints(constraints);
+    }
 
     void show() override;
 
@@ -19,8 +26,7 @@ public:
 
     bool isMouseOver() override;
 
-    void setConstraints(UiConstraints constraints) override;
-
     bool isMouseOverChild() override;
 };
+
 #endif //ENGINE_GUICOMPONENT_H

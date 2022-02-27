@@ -7,6 +7,7 @@
 
 
 #include "../Terrain/Terrain.h"
+#include "../Guis/FontMeshCreator/GUIText.h"
 
 class MainGameLoop {
 public:
@@ -17,5 +18,8 @@ public:
     static glm::vec3 generateRandomRotation();
 
     static float generateRandomScale(float min, float max);
+
+    static void newUiComponent(Loader *loader, GUIText *text);
 };
+
 #endif //CRAFTPROJ_MAINGAMELOOP_H

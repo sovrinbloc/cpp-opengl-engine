@@ -11,7 +11,7 @@
 
 class UiContainer : public Container {
 protected:
-    UiConstraints constraints;
+    UiConstraints *constraints;
     UiContainer *parent = nullptr;
 
     bool visible = true;
@@ -30,8 +30,6 @@ public:
     virtual void hide() = 0;
 
     virtual bool isDisplayed() = 0;
-
-    virtual void setConstraints(UiConstraints constraints) = 0;
 
     // interactionable should probably be it's own interface:
 

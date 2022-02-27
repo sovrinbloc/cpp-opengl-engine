@@ -16,7 +16,6 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include "../Guis/FontMeshCreator/TextMeshData.h"
-#include "../Guis/FontMeshCreator/GUIText.h"
 #include "../Guis/FontRendering/FontRenderer.h"
 #include "../Util/ColorName.h"
 #include "../Guis/FontRendering/TextMaster.h"
@@ -26,6 +25,7 @@
 #include "../Util/CommonHeader.h"
 // test to load objects.
 #include <thread>
+
 void testCraftStuff(float x, float y, float z) {
     float result;
     PRINT_FOURLN("x, y, z = ", x, y, z);
@@ -36,7 +36,8 @@ void testCraftStuff(float x, float y, float z) {
     float marginX = x - nearestX;
     float marginY = y - nearestY;
     float marginZ = z - nearestZ;
-    PRINT_FOURLN("marginX, marginY, marginZ: (x - nearestX), (y - nearestY), (z - nearestZ):", marginX, marginY, marginZ);
+    PRINT_FOURLN("marginX, marginY, marginZ: (x - nearestX), (y - nearestY), (z - nearestZ):", marginX, marginY,
+                 marginZ);
     float padding = 0.25;
     for (int dy = 0; dy < 2; dy++) {
         if (marginX < -padding) {
@@ -45,7 +46,7 @@ void testCraftStuff(float x, float y, float z) {
         if (marginX > padding) {
             x = nearestX + padding;
         }
-        if (marginY < -padding ) {
+        if (marginY < -padding) {
             y = nearestY - padding;
             result = 1;
         }
@@ -62,21 +63,26 @@ void testCraftStuff(float x, float y, float z) {
         PRINT_FOURLN("x, y, z", x, y, z);
     }
 }
+
 #include "../World/Block.h"
+#include "../Guis/GuiComponent.h"
+#include "../Guis/UiMaster.h"
+
 void testMap() {
-    std::map<int, Block>a;
+    std::map<int, Block> a;
     a[1] = {1, 2, 3, 4};
     a[4] = {3, 4, 6, 2};
     a[29] = {3, 39, 12, 43};
 
-    std::map<int, Block>::iterator  it2 = a.find(29120);
+    std::map<int, Block>::iterator it2 = a.find(29120);
     if (it2 == a.end()) {
         std::cout << "could not find it." << std::endl;
     }
 
-    std::map<int, Block>::iterator  it;
-    for(it = a.begin(); it != a.end(); it++) {
-        std::cout  << it->first << ": " << it->second.x << ", "<< it->second.y << ", "<< it->second.z << ", "<< it->second.w << ", " << std::endl;
+    std::map<int, Block>::iterator it;
+    for (it = a.begin(); it != a.end(); it++) {
+        std::cout << it->first << ": " << it->second.x << ", " << it->second.y << ", " << it->second.z << ", "
+                  << it->second.w << ", " << std::endl;
     }
     std::cout << a[92108].x << ", " << a[92108].y << ", " << a[92108].z << ", " << a[92108].w << ", " << std::endl;
 }
@@ -84,13 +90,20 @@ void testMap() {
 void testLoader() {
     testMap();
     for (auto x:std::vector<float>{0, 0.25f, 0.3f, 0.4f, 0.49f, 0.51f, 0.6f, 0.75f, .9f, 1.0f, 1.1f, 1.4f}) {
-        for (auto ynum:std::vector<float>{Utils::randomFloat() * 1000, Utils::randomFloat() * 1000, Utils::randomFloat() * 1000, Utils::randomFloat() * 1000, Utils::randomFloat() * 1000, Utils::randomFloat() * 1000, Utils::randomFloat() * 1000, Utils::randomFloat() * 1000}) {
-            for (auto znum:std::vector<float>{Utils::randomFloat() * 1000, Utils::randomFloat() * 1000, Utils::randomFloat() * 1000, Utils::randomFloat() * 1000, Utils::randomFloat() * 1000, Utils::randomFloat() * 1000, Utils::randomFloat() * 1000, Utils::randomFloat() * 1000}) {
+        for (auto ynum:std::vector<float>{Utils::randomFloat() * 1000, Utils::randomFloat() * 1000,
+                                          Utils::randomFloat() * 1000, Utils::randomFloat() * 1000,
+                                          Utils::randomFloat() * 1000, Utils::randomFloat() * 1000,
+                                          Utils::randomFloat() * 1000, Utils::randomFloat() * 1000}) {
+            for (auto znum:std::vector<float>{Utils::randomFloat() * 1000, Utils::randomFloat() * 1000,
+                                              Utils::randomFloat() * 1000, Utils::randomFloat() * 1000,
+                                              Utils::randomFloat() * 1000, Utils::randomFloat() * 1000,
+                                              Utils::randomFloat() * 1000, Utils::randomFloat() * 1000}) {
                 testCraftStuff(x, ynum, znum);
             }
         }
     }
 }
+
 void MainGameLoop::main() {
 
     // Initialite Display
@@ -146,7 +159,7 @@ void MainGameLoop::main() {
     /**
      * Load the models concurrently
      */
-    auto f = [](ModelData *pModelData, BoundingBoxData *pBbData, const std::string& filename) {
+    auto f = [](ModelData *pModelData, BoundingBoxData *pBbData, const std::string &filename) {
         *pModelData = OBJLoader::loadObjModel(filename);
         *pBbData = OBJLoader::loadBoundingBox(*pModelData, ClickBoxTypes::BOX, BoundTypes::AABB);
     };
@@ -154,11 +167,12 @@ void MainGameLoop::main() {
     std::vector<std::thread> vThreads;
 
     std::vector<const std::string> modelFiles = {"lamp", "fern", "grassModel", "Stall", "tree", "fluffy-tree"};
-    std::vector<ModelData*> modelDatas = {&lampData, &fernData, &grassData, &stallData, &treeData, &fluffyTreeData};
-    std::vector<BoundingBoxData*>bbDatas = {&lampBbData, &fernBbData, &grassBnData, &stallBbData, &treeBbData, &fluffyTreeBbData};
+    std::vector<ModelData *> modelDatas = {&lampData, &fernData, &grassData, &stallData, &treeData, &fluffyTreeData};
+    std::vector<BoundingBoxData *> bbDatas = {&lampBbData, &fernBbData, &grassBnData, &stallBbData, &treeBbData,
+                                              &fluffyTreeBbData};
 
     for (int i = 0; i < modelDatas.size(); ++i) {
-        std::thread thread (f, modelDatas[i], bbDatas[i], modelFiles[i]);
+        std::thread thread(f, modelDatas[i], bbDatas[i], modelFiles[i]);
         vThreads.push_back(std::move(thread));
     }
 
@@ -237,7 +251,9 @@ void MainGameLoop::main() {
     auto *pBackpack = new AssimpMesh("Backpack/backpack");
     auto pBackpackBox = OBJLoader::loadBoundingBox(pBackpack, ClickBoxTypes::BOX, BoundTypes::AABB);
     auto pBackpackBoxs = loader->loadToVAO(pBackpackBox);
-    scenes.push_back(new AssimpEntity(pBackpack, new BoundingBox(pBackpackBoxs, BoundingBoxIndex::genUniqueId()), generateRandomPosition(terrain, 3.0f), generateRandomRotation(),generateRandomScale(3.25, 10.50)));
+    scenes.push_back(new AssimpEntity(pBackpack, new BoundingBox(pBackpackBoxs, BoundingBoxIndex::genUniqueId()),
+                                      generateRandomPosition(terrain, 3.0f), generateRandomRotation(),
+                                      generateRandomScale(3.25, 10.50)));
 
 
     /**
@@ -268,7 +284,8 @@ void MainGameLoop::main() {
 
     entities.push_back(lampy);
     entities.push_back(
-            new Entity(staticStall, new BoundingBox(pLampBox, BoundingBoxIndex::genUniqueId()), glm::vec3(1.0f, 0.0f, -82.4f),
+            new Entity(staticStall, new BoundingBox(pLampBox, BoundingBoxIndex::genUniqueId()),
+                       glm::vec3(1.0f, 0.0f, -82.4f),
                        glm::vec3(0.0f, 180.0f, 0.0f)));
     entities.push_back(new Entity(staticLamp, new BoundingBox(pLampBox, BoundingBoxIndex::genUniqueId()),
                                   glm::vec3(100.0f, terrain->getHeightOfTerrain(100, -50), -50.0f)));
@@ -278,7 +295,8 @@ void MainGameLoop::main() {
 
     for (int i = 0; i < 500; ++i) {
         entities.push_back(
-                new Entity(staticGrass, new BoundingBox(pGrassBox, BoundingBoxIndex::genUniqueId()), generateRandomPosition(terrain),
+                new Entity(staticGrass, new BoundingBox(pGrassBox, BoundingBoxIndex::genUniqueId()),
+                           generateRandomPosition(terrain),
                            generateRandomRotation(),
                            generateRandomScale(0.5, 1.50f)));
         entities.push_back(new Entity(staticFluffyTree, new BoundingBox(pFluffyTreeBox,
@@ -286,7 +304,8 @@ void MainGameLoop::main() {
                                       generateRandomPosition(terrain), generateRandomRotation(),
                                       generateRandomScale(0.5, 1.50f)));
         entities.push_back(
-                new Entity(staticTree, new BoundingBox(pTreeBox, BoundingBoxIndex::genUniqueId()), generateRandomPosition(terrain),
+                new Entity(staticTree, new BoundingBox(pTreeBox, BoundingBoxIndex::genUniqueId()),
+                           generateRandomPosition(terrain),
                            generateRandomRotation(),
                            generateRandomScale(.25, 1.50)));
         entities.push_back(
@@ -302,7 +321,8 @@ void MainGameLoop::main() {
     auto playerOne = new TexturedModel(playerModel, new ModelTexture(
             "stallTexture", PNG));
 
-    auto player = new Player(playerOne, new BoundingBox(pStallBox, BoundingBoxIndex::genUniqueId()), glm::vec3(100.0f, 3.0f, -50.0f),
+    auto player = new Player(playerOne, new BoundingBox(pStallBox, BoundingBoxIndex::genUniqueId()),
+                             glm::vec3(100.0f, 3.0f, -50.0f),
                              glm::vec3(0.0f, 180.0f, 0.0f), 1.0f);
     InteractiveModel::setInteractiveBox(player);
     entities.push_back(player);
@@ -312,17 +332,36 @@ void MainGameLoop::main() {
      * GUI Creation
      */
     std::vector<GuiTexture *> guis = std::vector<GuiTexture *>();
-    guis.push_back(new GuiTexture(loader->loadTexture("gui/lifebar")->getId(), glm::vec2(-0.72f, 0.9f),
-                                  glm::vec2(0.290f, 0.0900f)));
-    guis.push_back(new GuiTexture(loader->loadTexture("gui/green")->getId(), glm::vec2(-0.7f, 0.9f),
-                                  glm::vec2(0.185f, 0.070f)));
-    guis.push_back(new GuiTexture(loader->loadTexture("gui/heart")->getId(), glm::vec2(-0.9f, 0.9f),
-                                  glm::vec2(0.075f, 0.075f)));
+    GuiTexture *t1 = new GuiTexture(loader->loadTexture("gui/lifebar")->getId(), glm::vec2(-0.72f, 0.9f),
+                                    glm::vec2(0.290f, 0.0900f));
+    guis.push_back(t1);
+    GuiTexture *t2 = new GuiTexture(loader->loadTexture("gui/green")->getId(), glm::vec2(-0.7f, 0.9f),
+                                    glm::vec2(0.185f, 0.070f));
+    guis.push_back(t2);
+    GuiTexture *t3 = new GuiTexture(loader->loadTexture("gui/heart")->getId(), glm::vec2(-0.9f, 0.9f),
+                                    glm::vec2(0.075f, 0.075f));
+    guis.push_back(t3);
     auto sampleModifiedGui = new GuiTexture(loader->loadTexture("gui/lifebar")->getId(), glm::vec2(-0.72f, 0.3f),
-                               glm::vec2(0.290f, 0.0900f) / 3.0f);
+                                            glm::vec2(0.290f, 0.0900f) / 3.0f);
     guis.push_back(sampleModifiedGui);
 
-    sampleModifiedGui->addChild(sampleModifiedGui, UiConstraints(0, 0, 200, 200));
+    sampleModifiedGui->addChild(sampleModifiedGui, new UiConstraints(0, 0, 200, 200));
+
+    UiMaster::initialize();
+    GuiComponent *masterContainer = UiMaster::getMasterComponent();
+
+    GuiComponent *parent = new GuiComponent(Container::CONTAINER, new UiConstraints(0.01f, -0.01f, 50, 50));
+    parent->setName("parent");
+    masterContainer->addChild(parent, new UiConstraints(0.02f, -0.1f, 50, 50));
+
+    t1->setName("gui/lifebar");
+    t2->setName("gui/green");
+    t3->setName("gui/heart");
+    parent->addChild(t1, new UiConstraints(0.00f, -0.1f, 50, 50));
+    parent->addChild(t2, new UiConstraints(0.00f, -0.1f, 50, 50));
+    parent->addChild(t3, new UiConstraints(0.00f, -0.1f, 50, 50));
+
+    UiMaster::applyConstraints(masterContainer);
 
     /**
      * Renderers
@@ -334,7 +373,7 @@ void MainGameLoop::main() {
      * Framebuffers
      */
     auto reflectFbo = new FrameBuffers();
-    auto gui = new GuiTexture(reflectFbo->getReflectionTexture(), glm::vec2(0.75f,   0.75f), glm::vec2(0.2f));
+    auto gui = new GuiTexture(reflectFbo->getReflectionTexture(), glm::vec2(0.75f, 0.75f), glm::vec2(0.2f));
     guis.push_back(gui);
 
     /**
@@ -347,10 +386,11 @@ void MainGameLoop::main() {
             allBoxes.push_back(e);
         }
     }
-    allBoxes.reserve(entities.size() + scenes.size() );
+    allBoxes.reserve(entities.size() + scenes.size());
     allBoxes.insert(allBoxes.end(), entities.begin(), entities.end());
     allBoxes.insert(allBoxes.end(), scenes.begin(), scenes.end());
 
+    newUiComponent(loader, texts->at(0));
     /**
      * Main Game Loop
      */
@@ -378,7 +418,8 @@ void MainGameLoop::main() {
                 *clickColorText = GUIText(ColorName::toString(clickColor) + ", Element: " + std::to_string(element),
                                           0.5f, fonty, &noodle, glm::vec2(10.0f, 20.0f), clickColor,
                                           0.75f * static_cast<float>(DisplayManager::Width()), false);
-                Interactive *pClickedModel = InteractiveModel::getInteractiveBox(BoundingBoxIndex::getIndexByColor(clickColor));
+                Interactive *pClickedModel = InteractiveModel::getInteractiveBox(
+                        BoundingBoxIndex::getIndexByColor(clickColor));
                 if (pClickedModel != nullptr) {
                     if (auto a = dynamic_cast<Player *>(pClickedModel)) {
                         if (!a->hasMaterial()) {
@@ -388,7 +429,8 @@ void MainGameLoop::main() {
                             a->disableMaterial();
                         }
                     }
-                    printf("position: x, y, z: (%f, %f, %f)\n", pClickedModel->getPosition().x, pClickedModel->getPosition().y, pClickedModel->getPosition().z);
+                    printf("position: x, y, z: (%f, %f, %f)\n", pClickedModel->getPosition().x,
+                           pClickedModel->getPosition().y, pClickedModel->getPosition().z);
                 }
                 InputMaster::resetClick();
             }
@@ -429,6 +471,51 @@ void MainGameLoop::main() {
      * Close display
      */
     DisplayManager::closeDisplay();
+}
+
+void MainGameLoop::newUiComponent(Loader *loader, GUIText *text) {
+    std::cout << "I am in the loading of the new UiComponent... So this is what it is." << std::endl;
+    auto lifeBar = new GuiComponent(Container::CONTAINER);
+    lifeBar->setParent(lifeBar);
+    lifeBar->setConstraints(new UiConstraints(0.25, 1, 800, 800));
+    auto lifebar = new GuiTexture(loader->loadTexture("gui/lifebar")->getId(), glm::vec2(-0.72f, 0.9f),
+                                  glm::vec2(0.290f, 0.0900f));
+    auto green = new GuiTexture(loader->loadTexture("gui/green")->getId(), glm::vec2(-0.7f, 0.9f),
+                                glm::vec2(0.185f, 0.070f));
+    auto heart = new GuiTexture(loader->loadTexture("gui/heart")->getId(), glm::vec2(-0.9f, 0.9f),
+                                glm::vec2(0.075f, 0.075f));
+    FontType arial = TextMeshData::loadFont("arial", 48);
+
+    lifeBar->addChild(lifebar, new UiConstraints(0, 0, 120, 43));
+    lifeBar->addChild(green, new UiConstraints(10, 10, 110, 22));
+    lifeBar->addChild(heart, new UiConstraints(30, 40, 100, 52));
+    lifeBar->addChild(text, new UiConstraints(30, 40, 100, 52));
+
+
+    for (Container *component : lifeBar->getChildrenToAdd()) {
+        std::cout << "Inside loop soup..." << std::endl;
+        switch (component->getType()) {
+            case Container::IMAGE: {
+                GuiTexture *p = dynamic_cast<GuiTexture *>(component);
+                std::cout << "The texture is " << p->getTexture() << std::endl;
+            }
+                break;
+            case Container::TEXT: {
+                GUIText *p = dynamic_cast<GUIText *>(component);
+                std::cout << "The texture is " << p->getText() << std::endl;
+            }
+                break;
+            case Container::CONTAINER:
+                GuiComponent *p = dynamic_cast<GuiComponent *>(component);
+                std::cout << "The size of this is: " << p->getChildrenToAdd().size() << std::endl;
+                break;
+        }
+    }
+
+    // loop througu lifeBar
+    // add all the position modifications to the objects themselves
+    // they will render like normal, but be modified to fit the grouping
+
 }
 
 glm::vec3 MainGameLoop::generateRandomPosition(Terrain *terrain, float yOffset) {

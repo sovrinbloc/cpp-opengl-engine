@@ -4,56 +4,56 @@
 
 #include "UiConstraints.h"
 
-UiConstraints::UiConstraints(int x, int y, int width, int height) : position(glm::ivec2(x,y)), size(glm::ivec2(width, height)) {}
+UiConstraints::UiConstraints(float x, float y, float width, float height) : position(glm::vec2(x,y)), size(glm::vec2(width, height)) {}
 
-UiConstraints::UiConstraints(glm::ivec2 position, glm::ivec2 size) : position(position), size(size) {}
+UiConstraints::UiConstraints(glm::vec2 position, glm::vec2 size) : position(position), size(size) {}
 
-int UiConstraints::getX() const {
+float UiConstraints::getX() const {
     return UiConstraints::position.x;
 }
 
-void UiConstraints::setX(int x) {
+void UiConstraints::setX(float x) {
     UiConstraints::position.x = x;
 }
 
-int UiConstraints::getY() const {
+float UiConstraints::getY() const {
     return UiConstraints::position.y;
 }
 
-void UiConstraints::setY(int y) {
+void UiConstraints::setY(float y) {
     UiConstraints::position.y = y;
 }
 
-int UiConstraints::getWidth() const {
+float UiConstraints::getWidth() const {
     return UiConstraints::size.x;
 }
 
-void UiConstraints::setWidth(int width) {
+void UiConstraints::setWidth(float width) {
     size.x = width;
 }
 
-int UiConstraints::getHeight() const {
+float UiConstraints::getHeight() const {
     return UiConstraints::size.y;
 }
 
-void UiConstraints::setHeight(int height) {
+void UiConstraints::setHeight(float height) {
     size.y = height;
 }
 
 UiConstraints::UiConstraints() {}
 
-const glm::ivec2 &UiConstraints::getPosition() const {
+const glm::vec2 &UiConstraints::getPosition() const {
     return position;
 }
 
-void UiConstraints::setPosition(const glm::ivec2 &position) {
+void UiConstraints::setPosition(const glm::vec2 &position) {
     UiConstraints::position = position;
 }
 
-const glm::ivec2 &UiConstraints::getSize() const {
+const glm::vec2 &UiConstraints::getSize() const {
     return size;
 }
 
-void UiConstraints::setSize(const glm::ivec2 &size) {
+void UiConstraints::setSize(const glm::vec2 &size) {
     UiConstraints::size = size;
 }
