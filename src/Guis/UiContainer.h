@@ -7,10 +7,9 @@
 
 #include <vector>
 #include "UiConstraints.h"
-#include "FontMeshCreator/GUIText.h"
-#include "Texture/GuiTexture.h"
+#include "Container.h"
 
-class UiContainer : Container {
+class UiContainer : public Container {
 protected:
     UiConstraints constraints;
     UiContainer *parent = nullptr;
@@ -24,7 +23,7 @@ protected:
     bool initialized = false;//true after adding to parent and having screen space and alpha calced
     int level = 0;
 public:
-    UiContainer() : Container(false) {}
+    UiContainer(GuiType type) : Container(type, false) {}
 
     virtual void show() = 0;
 

@@ -146,7 +146,7 @@ add_executable(engine
         src/Collision/AABB.cpp
         src/Collision/AABB.h
         src/Toolbox/Noise.h
-        src/Guis/UiConstraints.cpp src/Guis/UiConstraints.h src/Guis/Alpha.cpp src/Guis/Alpha.h src/Guis/UiContainer.h src/Guis/GuiComponent.cpp src/Guis/Container.h src/Guis/GuiComponent.h)
+        src/Guis/UiConstraints.cpp src/Guis/UiConstraints.h src/Guis/Alpha.cpp src/Guis/Alpha.h src/Guis/UiContainer.h src/Guis/GuiComponent.cpp src/Guis/Container.h src/Guis/GuiComponent.h src/Guis/ColoredRect/GuiColoredRect.cpp src/Guis/ColoredRect/GuiColoredRect.h)
 
 if (EXISTS deps/glrequired)
     message(STATUS "Requiring OpenGL")

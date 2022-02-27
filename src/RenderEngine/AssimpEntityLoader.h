@@ -28,7 +28,7 @@ using namespace std;
 /**
  * std::vector<AssimpEntity *> allScenes;
  * AssimpMesh *pBackpack = new AssimpMesh("Backpack/backpack");
- * auto pBackpackBox = OBJLoader::loadBoundingBox(pBackpack, ClickBoxTypes::BOX, BoundTypes::AABB);
+ * auto pBackpackBox = OBJLoader::loadBoundingBox(pBackpack, ClickBoxTypes::COLORED_BOX, BoundTypes::AABB);
  * auto pBackpackBoxs = loader->loadToVAO(pBackpackBox);
     * scenes.push_back(new AssimpEntity(pBackpack, new BoundingBox(pBackpackBoxs, BoundingBoxIndex::genUniqueId()), generateRandomPosition(terrain, 3.0f), generateRandomRotation(),generateRandomScale(3.25, 10.50)));
  */

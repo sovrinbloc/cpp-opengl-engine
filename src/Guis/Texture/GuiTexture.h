@@ -5,9 +5,9 @@
 #ifndef ENGINE_GUITEXTURE_H
 #define ENGINE_GUITEXTURE_H
 #include "glm/glm.hpp"
-#include "../Container.h"
+#include "../GuiComponent.h"
 
-class GuiTexture : public Container {
+class GuiTexture : public GuiComponent {
 private:
     unsigned int textureId;
 

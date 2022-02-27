@@ -5,14 +5,15 @@
 #ifndef ENGINE_GUITEXT_H
 #define ENGINE_GUITEXT_H
 
-#include "../Container.h"
 #include <iostream>
 #include "glm/glm.hpp"
 #include "TextMeshData.h"
 #include "FontModel.h"
+//#include "../UiContainer.h"
 #include "../../Toolbox/Color.h"
+#include "../GuiComponent.h"
 
-class GUIText : public Container {
+class GUIText : public GuiComponent {
 private:
 
     glm::vec2 position;
@@ -95,6 +96,20 @@ public:
     void setNumberOfLines(int number);
 
     bool isCentered() const;
+
+//    void show() ;
+//
+//    bool isDisplayed() ;
+//
+//    void hide() ;
+//
+//    bool isClicked() ;
+//
+//    bool isMouseOver() ;
+//
+//    void setConstraints(UiConstraints constraints) ;
+//
+//    bool isMouseOverChild() ;
 
 protected:
 

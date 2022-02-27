@@ -310,7 +310,7 @@ BoundingBoxData OBJLoader::loadBoundingBox(const string &filename, ClickBoxTypes
  *        in all the space accurately around the tree.
  *
  * @param data
- * @param boxType BOX or MESH
+ * @param boxType COLORED_BOX or MESH
  * @param boundType
  * @return
  */
@@ -332,7 +332,7 @@ BoundingBoxData OBJLoader::loadBoundingBox(ModelData &data, ClickBoxTypes boxTyp
         // asks for a BoundType AABB
         vertices = data.getVertices();
         indices = data.getIndices();
-    } else { // asks for a BOX clickBoxType
+    } else { // asks for a COLORED_BOX clickBoxType
         // asks for a BoundType AABB (box)
         vertices = OBJLoader::generateBox(data.getMin(), data.getMax());
     }

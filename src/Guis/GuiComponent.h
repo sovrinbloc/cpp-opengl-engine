@@ -7,7 +7,7 @@
 #include "UiContainer.h"
 class GuiComponent : public UiContainer {
 public:
-    GuiComponent() : UiContainer() {}
+    explicit GuiComponent(GuiType type) : UiContainer(type) {}
 
     void show() override;
 

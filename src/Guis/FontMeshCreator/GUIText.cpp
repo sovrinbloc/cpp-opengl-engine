@@ -22,7 +22,7 @@
  * @param centered
  */
 GUIText::GUIText(const std::string &textString, float fontSize, FontModel *font, FontType *fontType, glm::vec2(position),
-                 Color color, float maxLineLength = 1.0f, bool centered = false) : Container(true) {
+                 Color color, float maxLineLength = 1.0f, bool centered = false) : GuiComponent(TEXT) {
     this->textString = textString;
     this->font = font;
     this->fontType = fontType;
