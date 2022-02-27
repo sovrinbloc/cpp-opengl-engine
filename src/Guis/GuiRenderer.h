@@ -6,7 +6,7 @@
 #define ENGINE_GUIRENDERER_H
 
 #include "../RenderEngine/Loader.h"
-#include "GuiTexture.h"
+#include "Texture/GuiTexture.h"
 #include "GuiShader.h"
 
 class GuiRenderer {
@@ -19,6 +19,8 @@ public:
     void render(std::vector<GuiTexture*> guis);
 
     void cleanUp();
+
+    void prepareInstance(GuiTexture* gui);
 private:
 };
 

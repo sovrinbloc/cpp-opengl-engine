@@ -9,7 +9,7 @@
 #include "FontRenderer.h"
 #include "../FontMeshCreator/TextMeshData.h"
 #include "../FontMeshCreator/GUIText.h"
-#include "../RenderEngine/Loader.h"
+#include "../../RenderEngine/Loader.h"
 
 class TextMaster {
 private:

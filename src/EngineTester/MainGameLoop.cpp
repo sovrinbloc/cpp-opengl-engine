@@ -10,21 +10,20 @@
 #include "../RenderEngine/EntityRenderer.h"
 #include "../RenderEngine/ObjLoader.h"
 #include "../RenderEngine/MasterRenderer.h"
-#include "../Guis/GuiTexture.h"
+#include "../Guis/Texture/GuiTexture.h"
 #include "../Guis/GuiRenderer.h"
 #include "../Toolbox/MousePicker.h"
 #include <ft2build.h>
 #include FT_FREETYPE_H
-#include "../FontMeshCreator/TextMeshData.h"
-#include "../FontMeshCreator/GUIText.h"
-#include "../FontRendering/FontRenderer.h"
+#include "../Guis/FontMeshCreator/TextMeshData.h"
+#include "../Guis/FontMeshCreator/GUIText.h"
+#include "../Guis/FontRendering/FontRenderer.h"
 #include "../Util/ColorName.h"
-#include "../FontRendering/TextMaster.h"
+#include "../Guis/FontRendering/TextMaster.h"
 #include "../Toolbox/TerrainPicker.h"
 #include "../RenderEngine/FrameBuffers.h"
 #include "../Interaction/InteractiveModel.h"
 #include "../Util/CommonHeader.h"
-
 // test to load objects.
 #include <thread>
 void testCraftStuff(float x, float y, float z) {
@@ -319,6 +318,11 @@ void MainGameLoop::main() {
                                   glm::vec2(0.185f, 0.070f)));
     guis.push_back(new GuiTexture(loader->loadTexture("gui/heart")->getId(), glm::vec2(-0.9f, 0.9f),
                                   glm::vec2(0.075f, 0.075f)));
+    auto sampleModifiedGui = new GuiTexture(loader->loadTexture("gui/lifebar")->getId(), glm::vec2(-0.72f, 0.3f),
+                               glm::vec2(0.290f, 0.0900f) / 3.0f);
+    guis.push_back(sampleModifiedGui);
+
+    sampleModifiedGui->addChild(sampleModifiedGui, UiConstraints(0, 0, 200, 200));
 
     /**
      * Renderers
@@ -389,6 +393,8 @@ void MainGameLoop::main() {
                 InputMaster::resetClick();
             }
         }
+
+        sampleModifiedGui->getPosition() += glm::vec2(0.001f, 0.001f);
 
         // framebuffer only
         reflectFbo->bindReflectionFrameBuffer();

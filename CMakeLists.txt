@@ -67,8 +67,8 @@ add_executable(engine
         src/Entities/PlayerCamera.cpp
         src/RenderEngine/AssimpMeshData.cpp
         src/RenderEngine/AssimpEntityLoader.cpp
-        src/Guis/GuiTexture.h
-        src/Guis/GuiTexture.cpp
+        src/Guis/Texture/GuiTexture.h
+        src/Guis/Texture/GuiTexture.cpp
         src/Guis/GuiRenderer.cpp
         src/Guis/GuiRenderer.h
         src/Guis/GuiShader.cpp
@@ -81,24 +81,24 @@ add_executable(engine
         src/Util/ColorName.h
         src/Toolbox/MousePicker.cpp
         src/Toolbox/MousePicker.h
-        src/FontMeshCreator/TextMeshData.cpp
-        src/FontMeshCreator/TextMeshData.h
-        src/FontRendering/FontShader.cpp
-        src/FontRendering/FontShader.h
-        src/FontRendering/FontRenderer.cpp
-        src/FontRendering/FontRenderer.h
-        src/FontMeshCreator/GUIText.cpp
-        src/FontMeshCreator/GUIText.h
-        src/FontMeshCreator/Character.h
-        src/FontMeshCreator/Word.cpp
-        src/FontMeshCreator/Word.h
-        src/FontMeshCreator/Line.cpp
-        src/FontMeshCreator/Line.h
-        src/FontMeshCreator/FontModel.h
-        src/FontRendering/TextMaster.cpp
-        src/FontRendering/TextMaster.h
-        src/FontMeshCreator/TextMeshCreator.cpp
-        src/FontMeshCreator/TextMeshCreator.h
+        src/Guis/FontMeshCreator/TextMeshData.cpp
+        src/Guis/FontMeshCreator/TextMeshData.h
+        src/Guis/FontRendering/FontShader.cpp
+        src/Guis/FontRendering/FontShader.h
+        src/Guis/FontRendering/FontRenderer.cpp
+        src/Guis/FontRendering/FontRenderer.h
+        src/Guis/FontMeshCreator/GUIText.cpp
+        src/Guis/FontMeshCreator/GUIText.h
+        src/Guis/FontMeshCreator/Character.h
+        src/Guis/FontMeshCreator/Word.cpp
+        src/Guis/FontMeshCreator/Word.h
+        src/Guis/FontMeshCreator/Line.cpp
+        src/Guis/FontMeshCreator/Line.h
+        src/Guis/FontMeshCreator/FontModel.h
+        src/Guis/FontRendering/TextMaster.cpp
+        src/Guis/FontRendering/TextMaster.h
+        src/Guis/FontMeshCreator/TextMeshCreator.cpp
+        src/Guis/FontMeshCreator/TextMeshCreator.h
         src/BoundingBox/RawBoundingBox.h
         src/Models/RawData.h
         src/BoundingBox/BoundingBox.h
@@ -146,7 +146,7 @@ add_executable(engine
         src/Collision/AABB.cpp
         src/Collision/AABB.h
         src/Toolbox/Noise.h
-        )
+        src/Guis/UiConstraints.cpp src/Guis/UiConstraints.h src/Guis/Alpha.cpp src/Guis/Alpha.h src/Guis/UiContainer.h src/Guis/GuiComponent.cpp src/Guis/Container.h src/Guis/GuiComponent.h)
 
 if (EXISTS deps/glrequired)
     message(STATUS "Requiring OpenGL")

@@ -37,8 +37,7 @@ void GuiRenderer::render(std::vector<GuiTexture*> guis) {
     for (auto gui : guis) {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, gui->getTexture());
-        glm::mat4 matrix = Maths::createTransformationMatrix(gui->getPosition(), gui->getScale());
-        shader->loadTransformationMatrix(matrix);
+        prepareInstance(gui);
         glDrawArrays(GL_TRIANGLE_STRIP, 0, quad->getVertexCount());
     }
     OpenGLUtils::enableDepthTest(true);
@@ -50,4 +49,9 @@ void GuiRenderer::render(std::vector<GuiTexture*> guis) {
 
 void GuiRenderer::cleanUp() {
     shader->cleanUp();
+}
+
+void GuiRenderer::prepareInstance(GuiTexture *gui) {
+    glm::mat4 matrix = Maths::createTransformationMatrix(gui->getPosition(), gui->getScale());
+    shader->loadTransformationMatrix(matrix);
 }

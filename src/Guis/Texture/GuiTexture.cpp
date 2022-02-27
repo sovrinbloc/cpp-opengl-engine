@@ -10,9 +10,10 @@
  * @param position
  * @param scale
  */
-GuiTexture::GuiTexture(unsigned int textureId, const glm::vec2 & position, const glm::vec2 & scale): textureId(textureId), position(position), scale(scale){}
+GuiTexture::GuiTexture(unsigned int textureId, const glm::vec2 &position, const glm::vec2 &scale) :
+        textureId(textureId), position(position), scale(scale), Container(true) {}
 
-unsigned int GuiTexture::getTexture() const {
+unsigned int GuiTexture::getTexture() {
     return textureId;
 }
 
@@ -20,6 +21,6 @@ glm::vec2 &GuiTexture::getPosition() {
     return position;
 }
 
-const glm::vec2 &GuiTexture::getScale() const {
+const glm::vec2 &GuiTexture::getScale() {
     return scale;
 }

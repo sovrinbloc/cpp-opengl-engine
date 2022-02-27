@@ -13,7 +13,7 @@
 #include "ModelData.h"
 #define GL_SILENCE_DEPRECATION
 #include <GLFW/glfw3.h>
-#include "../FontMeshCreator/FontModel.h"
+#include "../Guis/FontMeshCreator/FontModel.h"
 #include "BoundingBoxData.h"
 
 class Loader {

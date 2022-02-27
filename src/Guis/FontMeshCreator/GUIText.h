@@ -5,14 +5,20 @@
 #ifndef ENGINE_GUITEXT_H
 #define ENGINE_GUITEXT_H
 
+#include "../Container.h"
 #include <iostream>
 #include "glm/glm.hpp"
 #include "TextMeshData.h"
 #include "FontModel.h"
-#include "../Toolbox/Color.h"
+#include "../../Toolbox/Color.h"
 
-class GUIText {
+class GUIText : public Container {
 private:
+
+    glm::vec2 position;
+
+    float lineMaxLength = 1.0f;
+
     FontModel *font;
 
     FontType *fontType;
@@ -21,11 +27,7 @@ private:
 
     float fontSize;
 
-    glm::vec2 position;
-
     Color color = Color(0.0f);
-
-    float lineMaxLength = 1.0f;
 
     int numberOfLines;
 

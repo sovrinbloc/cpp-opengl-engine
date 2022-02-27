@@ -3,10 +3,26 @@
 //
 
 #include "GUIText.h"
-#include "../FontRendering/TextMaster.h"
+#include "../../Guis/FontRendering/TextMaster.h"
 
+/**
+ * @brief This inputs everything needed to render a Text GUI
+ *
+ * // todo: This automatically adds the text to TextMaster::load(this) in its' creation, which it should not be doing.
+ *        So we should remove that last line, and make an explicit adding and removing of each text because we will
+ *        need to do so.
+ *
+ * @param textString
+ * @param fontSize
+ * @param font
+ * @param fontType
+ * @param position
+ * @param color
+ * @param maxLineLength
+ * @param centered
+ */
 GUIText::GUIText(const std::string &textString, float fontSize, FontModel *font, FontType *fontType, glm::vec2(position),
-                 Color color, float maxLineLength = 1.0f, bool centered = false) {
+                 Color color, float maxLineLength = 1.0f, bool centered = false) : Container(true) {
     this->textString = textString;
     this->font = font;
     this->fontType = fontType;

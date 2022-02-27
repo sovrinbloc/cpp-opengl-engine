@@ -5,19 +5,24 @@
 #ifndef ENGINE_GUITEXTURE_H
 #define ENGINE_GUITEXTURE_H
 #include "glm/glm.hpp"
+#include "../Container.h"
 
-
-class GuiTexture {
+class GuiTexture : public Container {
 private:
     unsigned int textureId;
+
     glm::vec2 position;
+
+    /**
+     * Scale is the percentage out of the height and width of the window
+     */
     glm::vec2 scale;
 public:
-    unsigned int getTexture() const;
+    unsigned int getTexture() ;
 
     glm::vec2 &getPosition();
 
-    const glm::vec2 &getScale() const;
+    const glm::vec2 &getScale() ;
 
     GuiTexture(unsigned int textureId, const glm::vec2 &position, const glm::vec2 &scale);
 };
