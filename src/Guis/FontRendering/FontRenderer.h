@@ -20,6 +20,7 @@ public:
     void render(std::map<FontType*, std::vector<GUIText*>> *texts);
     void renderTextMesh(GUIText *text);
     void endRendering();
+    void prepareText(GUIText *text);
     void prepare();
 };
 

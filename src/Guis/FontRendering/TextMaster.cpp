@@ -11,13 +11,16 @@ FontRenderer *TextMaster::renderer;
 void TextMaster::init(Loader *theLoader) {
     renderer = new FontRenderer();
     loader = theLoader;
+    texts = new std::map<FontType*, std::vector<GUIText*>>();
 }
 
+/**
+ * @brief adds the GUIText* to a map[FontType]std::vector<GUIText*>{} map.
+ *
+ * @param text
+ */
 void TextMaster::loadText(GUIText *text) {
     FontType *font = text->getFontType();
-    if (texts == nullptr) {
-        texts = new std::map<FontType*, std::vector<GUIText*>>();
-    }
     auto batchIterator = texts->find(font);
     if (batchIterator != texts->end()) {
         batchIterator->second.push_back(text);

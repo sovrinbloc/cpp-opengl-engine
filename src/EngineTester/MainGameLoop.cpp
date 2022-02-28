@@ -129,8 +129,10 @@ void MainGameLoop::main() {
             0.50f, fonty, &noodle, glm::vec2(25.0f, 225.0f), ColorName::Whitesmoke,
             0.50f * static_cast<float>(DisplayManager::Width()),
             false));
-    texts->push_back(new GUIText("Joseph Alai MCMXII", 0.5f, fonty, &arial, glm::vec2(540.0f, 50.0f), ColorName::Cyan,
-                                 0.75f * static_cast<float>(DisplayManager::Width()), false));
+    GUIText *pNameText = new GUIText("Joseph Alai MCMXII", 0.5f, fonty, &arial, glm::vec2(540.0f, 50.0f),
+                                     ColorName::Cyan,
+                                     0.75f * static_cast<float>(DisplayManager::Width()), false);
+    texts->push_back(pNameText);
     auto clickColorText = new GUIText("Color: ", 0.5f, fonty, &arial, glm::vec2(10.0f, 20.0f), ColorName::Green,
                                       0.75f * static_cast<float>(DisplayManager::Width()), false);
     texts->push_back(clickColorText);
@@ -450,7 +452,7 @@ void MainGameLoop::main() {
             renderer->renderScene(entities, scenes, allTerrains, lights);
         }
 
-
+        pNameText->getPosition() += glm::vec2(.1f);
         TextMaster::render();
         guiRenderer->render(guis);
         DisplayManager::updateDisplay();

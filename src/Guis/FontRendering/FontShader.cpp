@@ -8,6 +8,7 @@ FontShader::FontShader()
         : ShaderProgram(VertexPath, FragmentPath, nullptr) {
     this->initialize();
     this->loadProjectionMatrix();
+    this->loadTransformationMatrix();
 }
 
 void FontShader::bindAttributes() {
@@ -25,4 +26,9 @@ void FontShader::loadTextColor(Color color) {
 void FontShader::getAllUniformLocations() {
     location_textColor = getUniformLocation(textColor);
     location_projectionMatrix = getUniformLocation(projectionMatrix);
+    location_transformationMatrix = getUniformLocation(transformationMatrix);
+}
+
+void FontShader::loadTransformationMatrix(glm::mat4 matrix) {
+    this->setMat4(location_transformationMatrix, matrix);
 }
