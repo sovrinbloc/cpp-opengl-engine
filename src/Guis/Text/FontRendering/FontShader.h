@@ -6,16 +6,16 @@
 #define ENGINE_FONTSHADER_H
 
 
-#include "../../Shaders/ShaderProgram.h"
-#include "../../RenderEngine/DisplayManager.h"
-#include "../../Toolbox/Color.h"
+#include "../../../Shaders/ShaderProgram.h"
+#include "../../../RenderEngine/DisplayManager.h"
+#include "../../../Toolbox/Color.h"
 #include <glm/gtc/matrix_transform.hpp>
 
 class FontShader : public ShaderProgram {
 private:
 
-    constexpr static const char *VertexPath = "/src/Guis/FontRendering/Shaders/VertexShader.glsl";
-    constexpr static const char *FragmentPath = "/src/Guis/FontRendering/Shaders/FragmentShader.glsl";
+    constexpr static const char *VertexPath = "/src/Guis/Text/FontRendering/Shaders/VertexShader.glsl";
+    constexpr static const char *FragmentPath = "/src/Guis/Text/FontRendering/Shaders/FragmentShader.glsl";
     // attribute names
     const std::string vertex = "vertex";
 

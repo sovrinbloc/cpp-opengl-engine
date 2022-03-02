@@ -9,9 +9,8 @@
 #include "glm/glm.hpp"
 #include "TextMeshData.h"
 #include "FontModel.h"
-//#include "../UiContainer.h"
-#include "../../Toolbox/Color.h"
-#include "../GuiComponent.h"
+#include "../../../Toolbox/Color.h"
+#include "../../GuiComponent.h"
 
 class GUIText : public GuiComponent {
 private:

@@ -4,9 +4,9 @@
 
 #include "FontRenderer.h"
 #include "../FontMeshCreator/TextMeshCreator.h"
-#include "../../OpenGLWrapper/OpenGLUtils.h"
-#include "../../Toolbox/Maths.h"
-#include "../../Util/CommonHeader.h"
+#include "../../../OpenGLWrapper/OpenGLUtils.h"
+#include "../../../Toolbox/Maths.h"
+#include "../../../Util/CommonHeader.h"
 
 FontRenderer::FontRenderer() {
     shader = new FontShader();

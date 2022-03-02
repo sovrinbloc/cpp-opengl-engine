@@ -4,7 +4,7 @@
 
 #include "UiMaster.h"
 #include "Texture/GuiTexture.h"
-#include "FontMeshCreator/GUIText.h"
+#include "Text/FontMeshCreator/GUIText.h"
 
 GuiComponent *UiMaster::masterContainer;
 UiConstraints *UiMaster::masterConstraints;

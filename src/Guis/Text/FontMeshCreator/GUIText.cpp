@@ -3,7 +3,7 @@
 //
 
 #include "GUIText.h"
-#include "../../Guis/FontRendering/TextMaster.h"
+#include "../FontRendering/TextMaster.h"
 
 /**
  * @brief This inputs everything needed to render a Text GUI

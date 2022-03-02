@@ -6,17 +6,17 @@
 #define ENGINE_GUISHADER_H
 
 
-#include "../Entities/CameraInput.h"
-#include "../Textures/ModelTexture.h"
-#include "../Shaders/ShaderProgram.h"
-#include "../Entities/Light.h"
+#include "../../Entities/CameraInput.h"
+#include "../../Textures/ModelTexture.h"
+#include "../../Shaders/ShaderProgram.h"
+#include "../../Entities/Light.h"
 
 
 class GuiShader : public ShaderProgram {
 
 private:
-    constexpr static const char *VertexPath = "/src/Guis/Shaders/VertexShader.glsl";
-    constexpr static const char *FragmentPath = "/src/Guis/Shaders/FragmentShader.glsl";
+    constexpr static const char *VertexPath = "/src/Guis/Texture/Shaders/VertexShader.glsl";
+    constexpr static const char *FragmentPath = "/src/Guis/Texture/Shaders/FragmentShader.glsl";
     // attribute names
     const std::string position = "position";
 

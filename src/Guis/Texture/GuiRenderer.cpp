@@ -3,8 +3,8 @@
 //
 
 #include "GuiRenderer.h"
-#include "../Toolbox/Maths.h"
-#include "../OpenGLWrapper/OpenGLUtils.h"
+#include "../../Toolbox/Maths.h"
+#include "../../OpenGLWrapper/OpenGLUtils.h"
 
 /**
  * @brief GuiRenderer loads the vertex of a square (2d) into a Vao (RawModel).

@@ -69,10 +69,10 @@ add_executable(engine
         src/RenderEngine/AssimpEntityLoader.cpp
         src/Guis/Texture/GuiTexture.h
         src/Guis/Texture/GuiTexture.cpp
-        src/Guis/GuiRenderer.cpp
-        src/Guis/GuiRenderer.h
-        src/Guis/GuiShader.cpp
-        src/Guis/GuiShader.h
+        src/Guis/Texture/GuiRenderer.cpp
+        src/Guis/Texture/GuiRenderer.h
+        src/Guis/Texture/GuiShader.cpp
+        src/Guis/Texture/GuiShader.h
         src/Util/LightUtil.h
         src/Skybox/SkyboxShader.cpp
         src/Skybox/SkyboxShader.h
@@ -81,24 +81,24 @@ add_executable(engine
         src/Util/ColorName.h
         src/Toolbox/MousePicker.cpp
         src/Toolbox/MousePicker.h
-        src/Guis/FontMeshCreator/TextMeshData.cpp
-        src/Guis/FontMeshCreator/TextMeshData.h
-        src/Guis/FontRendering/FontShader.cpp
-        src/Guis/FontRendering/FontShader.h
-        src/Guis/FontRendering/FontRenderer.cpp
-        src/Guis/FontRendering/FontRenderer.h
-        src/Guis/FontMeshCreator/GUIText.cpp
-        src/Guis/FontMeshCreator/GUIText.h
-        src/Guis/FontMeshCreator/Character.h
-        src/Guis/FontMeshCreator/Word.cpp
-        src/Guis/FontMeshCreator/Word.h
-        src/Guis/FontMeshCreator/Line.cpp
-        src/Guis/FontMeshCreator/Line.h
-        src/Guis/FontMeshCreator/FontModel.h
-        src/Guis/FontRendering/TextMaster.cpp
-        src/Guis/FontRendering/TextMaster.h
-        src/Guis/FontMeshCreator/TextMeshCreator.cpp
-        src/Guis/FontMeshCreator/TextMeshCreator.h
+        src/Guis/Text/FontMeshCreator/TextMeshData.cpp
+        src/Guis/Text/FontMeshCreator/TextMeshData.h
+        src/Guis/Text/FontRendering/FontShader.cpp
+        src/Guis/Text/FontRendering/FontShader.h
+        src/Guis/Text/FontRendering/FontRenderer.cpp
+        src/Guis/Text/FontRendering/FontRenderer.h
+        src/Guis/Text/FontMeshCreator/GUIText.cpp
+        src/Guis/Text/FontMeshCreator/GUIText.h
+        src/Guis/Text/FontMeshCreator/Character.h
+        src/Guis/Text/FontMeshCreator/Word.cpp
+        src/Guis/Text/FontMeshCreator/Word.h
+        src/Guis/Text/FontMeshCreator/Line.cpp
+        src/Guis/Text/FontMeshCreator/Line.h
+        src/Guis/Text/FontMeshCreator/FontModel.h
+        src/Guis/Text/FontRendering/TextMaster.cpp
+        src/Guis/Text/FontRendering/TextMaster.h
+        src/Guis/Text/FontMeshCreator/TextMeshCreator.cpp
+        src/Guis/Text/FontMeshCreator/TextMeshCreator.h
         src/BoundingBox/RawBoundingBox.h
         src/Models/RawData.h
         src/BoundingBox/BoundingBox.h
@@ -154,11 +154,14 @@ add_executable(engine
         src/Guis/GuiComponent.cpp
         src/Guis/Container.h
         src/Guis/GuiComponent.h
-        src/Guis/ColoredRect/GuiColoredRect.cpp
-        src/Guis/ColoredRect/GuiColoredRect.h
         src/Guis/UiMaster.cpp
         src/Guis/UiMaster.h
-        )
+        src/Guis/Rect/RectRenderer.cpp
+        src/Guis/Rect/RectRenderer.h
+        src/Guis/Rect/RectShader.cpp
+        src/Guis/Rect/RectShader.h
+        src/Guis/Rect/GuiRect.cpp
+        src/Guis/Rect/GuiRect.h)
 
 if (EXISTS deps/glrequired)
     message(STATUS "Requiring OpenGL")

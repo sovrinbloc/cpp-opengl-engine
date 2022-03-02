@@ -11,14 +11,14 @@
 #include "../RenderEngine/ObjLoader.h"
 #include "../RenderEngine/MasterRenderer.h"
 #include "../Guis/Texture/GuiTexture.h"
-#include "../Guis/GuiRenderer.h"
+#include "../Guis/Texture/GuiRenderer.h"
+#include "../Guis/Rect/RectRenderer.h"
 #include "../Toolbox/MousePicker.h"
 #include <ft2build.h>
 #include FT_FREETYPE_H
-#include "../Guis/FontMeshCreator/TextMeshData.h"
-#include "../Guis/FontRendering/FontRenderer.h"
+#include "../Guis/Text/FontRendering/FontRenderer.h"
 #include "../Util/ColorName.h"
-#include "../Guis/FontRendering/TextMaster.h"
+#include "../Guis/Text/FontRendering/TextMaster.h"
 #include "../Toolbox/TerrainPicker.h"
 #include "../RenderEngine/FrameBuffers.h"
 #include "../Interaction/InteractiveModel.h"
@@ -67,6 +67,7 @@ void testCraftStuff(float x, float y, float z) {
 #include "../World/Block.h"
 #include "../Guis/GuiComponent.h"
 #include "../Guis/UiMaster.h"
+#include "../Guis/Rect/GuiRect.h"
 
 void testMap() {
     std::map<int, Block> a;
@@ -347,6 +348,16 @@ void MainGameLoop::main() {
                                             glm::vec2(0.290f, 0.0900f) / 3.0f);
     guis.push_back(sampleModifiedGui);
 
+    std::vector<GuiRect *> rects = std::vector<GuiRect *>();
+    glm::vec3 color = glm::vec3(ColorName::Cyan.getR(), ColorName::Cyan.getG(), ColorName::Cyan.getB());
+    glm::vec2 position = glm::vec2(-0.75f, 0.67f);
+    glm::vec2 size = glm::vec2(0.290f, 0.0900f);
+    glm::vec2 scale = glm::vec2(0.25f, 0.33f);
+    float alpha = 0.33f;
+
+    rects.push_back(new GuiRect(color, position, size, scale, alpha));
+
+
     sampleModifiedGui->addChild(sampleModifiedGui, new UiConstraints(0, 0, 200, 200));
 
     UiMaster::initialize();
@@ -362,6 +373,7 @@ void MainGameLoop::main() {
     parent->addChild(t1, new UiConstraints(0.00f, -0.1f, 50, 50));
     parent->addChild(t2, new UiConstraints(0.00f, -0.1f, 50, 50));
     parent->addChild(t3, new UiConstraints(0.00f, -0.1f, 50, 50));
+    t1->addChild(pNameText, new UiConstraints(-500.00f, 40.1f, 50, 50));
 
     UiMaster::applyConstraints(masterContainer);
 
@@ -370,6 +382,7 @@ void MainGameLoop::main() {
      */
     auto renderer = new MasterRenderer(playerCamera, loader);
     auto guiRenderer = new GuiRenderer(loader);
+    auto rectRenderer = new RectRenderer(loader);
 
     /**
      * Framebuffers
@@ -403,9 +416,9 @@ void MainGameLoop::main() {
 
         glm::vec3 terrainPoint = picker->getCurrentTerrainPoint();
 
-//        if (terrainPoint != glm::vec3()) {
+//        if (terrainPoint != glm::size()) {
 //            lampy->setPosition(terrainPoint);
-//            lights[1]->setPosition(glm::vec3(terrainPoint.x, terrainPoint.y + 15.0f, terrainPoint.z));
+//            lights[1]->setPosition(glm::size(terrainPoint.x, terrainPoint.y + 15.0f, terrainPoint.z));
 //        }
 
         /*
@@ -455,6 +468,7 @@ void MainGameLoop::main() {
         pNameText->getPosition() += glm::vec2(.1f);
         TextMaster::render();
         guiRenderer->render(guis);
+        rectRenderer->render(rects);
         DisplayManager::updateDisplay();
 
 
@@ -466,6 +480,7 @@ void MainGameLoop::main() {
     TextMaster::cleanUp();
     fontRenderer->cleanUp();
     guiRenderer->cleanUp();
+    rectRenderer->cleanUp();
     renderer->cleanUp();
     loader->cleanUp();
 
