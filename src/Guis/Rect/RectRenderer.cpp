@@ -63,3 +63,27 @@ void RectRenderer::prepareInstance(GuiRect *gui) {
     shader->loadColor(gui->getColor());
     shader->loadAlpha(gui->getAlpha());
 }
+
+
+
+/**
+ * @brief render (MAIN LOOP) starts the shader, binds the Vao,
+ *        binds the texture, loads the transformations to the
+ *        shader, draws the quad, and then unbinds it all, and stops
+ *        the shader.
+ * @param guis
+ */
+void RectRenderer::render(GuiRect * gui) {
+    shader->start();
+    glBindVertexArray(quad->getVaoId());
+    glEnableVertexAttribArray(0);
+    OpenGLUtils::enableAlphaBlending();
+    OpenGLUtils::enableDepthTest(false);
+    prepareInstance(gui);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, quad->getVertexCount());
+    OpenGLUtils::enableDepthTest(true);
+    OpenGLUtils::disableBlending();
+    glDisableVertexAttribArray(0);
+    glBindVertexArray(0);
+    shader->stop();
+}

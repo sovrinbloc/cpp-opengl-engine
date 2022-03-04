@@ -63,3 +63,25 @@ void GuiRenderer::prepareInstance(GuiTexture *gui) {
     glm::mat4 matrix = Maths::createTransformationMatrix(gui->getPosition(), gui->getScale());
     shader->loadTransformationMatrix(matrix);
 }
+
+/**
+ * @bried Renders a single GuiTexture
+ *
+ * @param gui
+ */
+void GuiRenderer::render(GuiTexture *gui) {
+    shader->start();
+    glBindVertexArray(quad->getVaoId());
+    glEnableVertexAttribArray(0);
+    OpenGLUtils::enableAlphaBlending();
+    OpenGLUtils::enableDepthTest(false);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, gui->getTexture());
+    prepareInstance(gui);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, quad->getVertexCount());
+    OpenGLUtils::enableDepthTest(true);
+    OpenGLUtils::disableBlending();
+    glDisableVertexAttribArray(0);
+    glBindVertexArray(0);
+    shader->stop();
+}

@@ -58,3 +58,7 @@ void TextMaster::remove(GUIText *text) {
         std::cout << "Font not found in map, so could not delete. Please check logic." << std::endl;
     }
 }
+
+FontRenderer *TextMaster::getRenderer() {
+    return renderer;
+}

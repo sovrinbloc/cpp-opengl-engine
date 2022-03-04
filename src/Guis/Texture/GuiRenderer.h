@@ -21,6 +21,8 @@ public:
     void cleanUp();
 
     void prepareInstance(GuiTexture* gui);
+
+    void render(GuiTexture *gui);
 private:
 };
 

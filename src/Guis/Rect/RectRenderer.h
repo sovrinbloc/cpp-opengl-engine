@@ -18,6 +18,8 @@ public:
 
     void render(std::vector<GuiRect*> guis);
 
+    void render(GuiRect* gui);
+
     void cleanUp();
 
     void prepareInstance(GuiRect* gui);

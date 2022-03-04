@@ -128,3 +128,18 @@ void FontRenderer::endRendering() {
     OpenGLUtils::disableBlending();
     OpenGLUtils::cullBackFaces(false);
 }
+
+/**
+ * @brief Render a one-off... This was created for the UI Master and is not required for anything to work,
+ *        The reason this is created is so we can add a render inside the UiMaster, and render different
+ *        types of components in any order, instead of as vectors by type.
+ *
+ * @param text
+ */
+void FontRenderer::render(GUIText *text) {
+    prepare();
+    std::map<FontType *, std::vector<GUIText *>>::iterator it;
+    prepareText(text);
+    renderTextMesh(text);
+    endRendering();
+}

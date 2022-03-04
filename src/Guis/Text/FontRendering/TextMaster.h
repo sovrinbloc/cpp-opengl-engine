@@ -16,7 +16,6 @@ private:
     static Loader *loader;
     static std::map<FontType*, std::vector<GUIText*>> *texts;
     static FontRenderer *renderer;
-
 public:
     static void init(Loader *theLoader);
 
@@ -27,6 +26,8 @@ public:
     static void cleanUp();
 
     static void render();
+
+    static FontRenderer *getRenderer();
 
 };
 

@@ -7,6 +7,7 @@
 
 #include <vector>
 #include "UiConstraints.h"
+
 class Container {
 public:
     enum GuiType {
@@ -21,13 +22,13 @@ protected:
     std::string name;
     uint groupId;
     uint childId;
-protected:
-
     std::vector<Container *> children;
     std::vector<Container *> childrenToAdd;
     std::vector<Container *> childrenToRemove;
     UiConstraints *constraints = nullptr;
     bool sterile = false;
+    int layer = -1;
+    bool hidden;
 public:
     /**
      * @brief Initializes a basic container, which is similar to a linked list. Specifies what type of container it is,
@@ -35,18 +36,24 @@ public:
      * @param type
      * @param sterile
      */
-    explicit Container(GuiType type, bool sterile, std::string name = "component") : type(type), sterile(sterile), name(name) {
+    explicit Container(GuiType type, bool sterile, std::string name = "component") : type(type), sterile(sterile),
+                                                                                     name(name) {
         childrenToRemove = std::vector<Container *>();
         children = std::vector<Container *>();
         childrenToAdd = std::vector<Container *>();
     }
 
-    virtual ~Container(){}
+    virtual ~Container() {}
 
     const std::string &getName() const {
         return name;
     }
 
+    /**
+     * @brief set the name of this component for identification purposes.
+     *
+     * @param name
+     */
     void setName(const std::string &name) {
         Container::name = name;
     }
@@ -84,6 +91,28 @@ public:
     }
 
     /**
+     * @brief adds and removes children components from this container.
+     *        Then sorts the children by layer id.
+     */
+    void initialize() {
+        std::vector<Container *>::iterator it;
+        for (it = children.begin(); it < children.end(); it++) {
+            for (Container *c:childrenToRemove) {
+                if (*it == c) {
+                    children.erase(it);
+                }
+            }
+            (*(it))->initialize();
+        }
+        for (Container *c:childrenToAdd) {
+            children.push_back(c);
+            c->initialize();
+        }
+        std::cout << "added: " << children.size() << std::endl;
+        SortChildrenByLayer();
+    }
+
+    /**
      * @brief Gets the constraints (size & position) of the component to be applied to itself and its' children.
      *
      * // todo: Should a constrained size smaller than the component itself either truncate or shrink the component?
@@ -117,17 +146,19 @@ public:
      */
     void remove() { this->parent->removeChild(this); }
 
-    void initialize() {
-        // add children
-        // remove children
-    };
-
     /**
      * @brief Gets the children that are in queue to be added to the component.
      *
      * @return
      */
     std::vector<Container *> getChildrenToAdd() { return childrenToAdd; }
+
+    /**
+     * @brief Gets the children that are in queue to be added to the component.
+     *
+     * @return
+     */
+    std::vector<Container *> getChildren() { return children; }
 
     bool isSterile() {
         return sterile;
@@ -168,6 +199,85 @@ public:
         }
         childrenToRemove.clear();
     }
+
+    /**
+     * @brief gets the layer order. The lower the number, the sooner the render. Higher numbers appear on top of lower
+     *        numbers.
+     *
+     * @return
+     */
+    int getLayer() const {
+        return layer;
+    }
+
+    /**
+     * @brief Sets the layer of the item
+     * @details The layer is technically the order in which the components are rendered, from back to front.
+     *          Meaning, if something is layered 0, that component is rendered BEHIND something that is layered 1.
+     *
+     * @param layer
+     */
+    void setLayer(int layer) {
+        Container::layer = layer;
+    }
+
+    /**
+     * @brief Comparatory "less than" function for sort.
+     *
+     * @param other
+     * @return
+     */
+    bool operator<(const Container &other) const {
+        return layer < other.layer;
+    }
+
+    /**
+     * @brief Comparatory "greater than" function, for sort.
+     * @param other
+     *
+     * @return
+     */
+    bool operator>(const Container &other) const {
+        return layer > other.layer;
+    }
+
+    /**
+     * @brief Sorts the children by layer.
+     *
+     * @param recursively
+     * @return
+     */
+    std::vector<Container *> SortChildrenByLayer(bool recursively = false) {
+        std::vector<Container *> children_copy = this->children;
+        std::sort(children_copy.begin(), children_copy.end());
+        if (recursively) {
+            for (Container *c : this->children) {
+                c->SortChildrenByLayer(true);
+            }
+        }
+        return children_copy;
+    }
+
+    bool isHidden() const {
+        return hidden;
+    }
+
+    /**
+     * @brief Sets whether or not this component is hidden, and whether or not to apply it to the children as well.
+     *
+     * @param hidden
+     */
+    void setHidden(bool hidden, bool inheritance = true) {
+        Container::hidden = hidden;
+        if (!inheritance) {
+            return;
+        }
+
+        for (Container *c : this->children) {
+            c->setHidden(hidden, inheritance);
+        }
+    }
+
 };
 
 #endif //ENGINE_CONTAINER_H

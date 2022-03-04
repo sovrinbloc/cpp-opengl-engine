@@ -125,14 +125,16 @@ void MainGameLoop::main() {
 
     auto texts = new std::vector<GUIText *>();
     FontModel *fonty = loader->loadFontVAO();
-    texts->push_back(new GUIText(
+    GUIText *text1 = new GUIText(
             "This is sample text because I know what I am doing whether you like it or not so I am joe.This is sample text because I know what I am doing whether you like it or not so I am joe.",
             0.50f, fonty, &noodle, glm::vec2(25.0f, 225.0f), ColorName::Whitesmoke,
             0.50f * static_cast<float>(DisplayManager::Width()),
-            false));
-    GUIText *pNameText = new GUIText("Joseph Alai MCMXII", 0.5f, fonty, &arial, glm::vec2(540.0f, 50.0f),
-                                     ColorName::Cyan,
-                                     0.75f * static_cast<float>(DisplayManager::Width()), false);
+            false);
+    texts->push_back(text1);
+    GUIText *text2 = new GUIText("Joseph Alai MCMXII", 0.5f, fonty, &arial, glm::vec2(540.0f, 50.0f),
+                                 ColorName::Cyan,
+                                 0.75f * static_cast<float>(DisplayManager::Width()), false);
+    GUIText *pNameText = text2;
     texts->push_back(pNameText);
     auto clickColorText = new GUIText("Color: ", 0.5f, fonty, &arial, glm::vec2(10.0f, 20.0f), ColorName::Green,
                                       0.75f * static_cast<float>(DisplayManager::Width()), false);
@@ -355,12 +357,23 @@ void MainGameLoop::main() {
     glm::vec2 scale = glm::vec2(0.25f, 0.33f);
     float alpha = 0.33f;
 
-    rects.push_back(new GuiRect(color, position, size, scale, alpha));
+    GuiRect *guiRect = new GuiRect(color, position, size, scale, alpha);
+    rects.push_back(guiRect);
 
 
     sampleModifiedGui->addChild(sampleModifiedGui, new UiConstraints(0, 0, 200, 200));
 
-    UiMaster::initialize();
+
+    /**
+     * Renderers
+     */
+    auto renderer = new MasterRenderer(playerCamera, loader);
+    auto guiRenderer = new GuiRenderer(loader);
+    auto rectRenderer = new RectRenderer(loader);
+
+    // initializes the UiMaster with these renderers.
+    UiMaster::initialize(loader, guiRenderer, fontRenderer, rectRenderer);
+
     GuiComponent *masterContainer = UiMaster::getMasterComponent();
 
     GuiComponent *parent = new GuiComponent(Container::CONTAINER, new UiConstraints(0.01f, -0.01f, 50, 50));
@@ -375,14 +388,16 @@ void MainGameLoop::main() {
     parent->addChild(t3, new UiConstraints(0.00f, -0.1f, 50, 50));
     t1->addChild(pNameText, new UiConstraints(-500.00f, 40.1f, 50, 50));
 
+    parent->addChild(text1, new UiConstraints(0.00f, -0.1f, 50, 50));
+    parent->addChild(text2, new UiConstraints(0.00f, -0.1f, 50, 50));
+    parent->addChild(clickColorText, new UiConstraints(0.00f, -0.1f, 50, 50));
+    
+    masterContainer->addChild(guiRect, new UiConstraints(0.0f, -0.1f, 50, 50));
+
+    masterContainer->initialize();
+
     UiMaster::applyConstraints(masterContainer);
 
-    /**
-     * Renderers
-     */
-    auto renderer = new MasterRenderer(playerCamera, loader);
-    auto guiRenderer = new GuiRenderer(loader);
-    auto rectRenderer = new RectRenderer(loader);
 
     /**
      * Framebuffers
@@ -466,9 +481,11 @@ void MainGameLoop::main() {
         }
 
         pNameText->getPosition() += glm::vec2(.1f);
-        TextMaster::render();
-        guiRenderer->render(guis);
-        rectRenderer->render(rects);
+
+//        TextMaster::render();
+//        guiRenderer->render(guis);
+//        rectRenderer->render(rects);
+        UiMaster::render();
         DisplayManager::updateDisplay();
 
 
@@ -507,9 +524,10 @@ void MainGameLoop::newUiComponent(Loader *loader, GUIText *text) {
     lifeBar->addChild(green, new UiConstraints(10, 10, 110, 22));
     lifeBar->addChild(heart, new UiConstraints(30, 40, 100, 52));
     lifeBar->addChild(text, new UiConstraints(30, 40, 100, 52));
+    lifeBar->initialize();
 
 
-    for (Container *component : lifeBar->getChildrenToAdd()) {
+    for (Container *component : lifeBar->getChildren()) {
         std::cout << "Inside loop soup..." << std::endl;
         switch (component->getType()) {
             case Container::IMAGE: {
@@ -522,10 +540,17 @@ void MainGameLoop::newUiComponent(Loader *loader, GUIText *text) {
                 std::cout << "The texture is " << p->getText() << std::endl;
             }
                 break;
-            case Container::CONTAINER:
+
+                // this falls through to the next case because they will both be containers.
+            case Container::COLORED_BOX: {
+                GuiRect *r = dynamic_cast<GuiRect *>(component);
+                std::cout << "The color is: " << r->getColor().r << r->getColor().g << r->getColor().b;
+            }
+            case Container::CONTAINER: {
                 GuiComponent *p = dynamic_cast<GuiComponent *>(component);
-                std::cout << "The size of this is: " << p->getChildrenToAdd().size() << std::endl;
+                std::cout << "The size of this is: " << p->getChildren().size() << std::endl;
                 break;
+            }
         }
     }
 
