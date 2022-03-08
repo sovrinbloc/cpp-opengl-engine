@@ -1,6 +1,7 @@
 
 # Links
-[Contents of Project](CONTENTS.md)
+- [Contents of Project](readmes/CONTENTS.md)
+- [Usage](readmes/USAGE.md)
 
 # Installation Overview
 Most of the installation is done through downloading and installing dependencies, and making sure they are correctly included within the CMakeLists.txt.

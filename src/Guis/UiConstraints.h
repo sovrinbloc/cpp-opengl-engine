@@ -13,6 +13,9 @@ class UiConstraints {
 private:
     glm::vec2 position = glm::vec2(0.0f);
 
+    // the parent's position modification
+    glm::vec2 positionAdjustment = glm::vec2(0.0f);
+    bool adjusted = false;
     // todo: Should a constrained size smaller than the component itself either truncate or shrink the component?
     glm::vec2 size = glm::vec2(0.0f);
 public:
@@ -22,7 +25,13 @@ public:
 
     UiConstraints(glm::vec2 position, glm::vec2 size);
 
-    const glm::vec2 &getPosition() const;
+    glm::vec2 &getPosition();
+
+    glm::vec2 getAdjustedPosition();
+
+    void setPositionAdjustment(glm::vec2 position);
+
+    bool hasAdjustedPosition();
 
     void setPosition(const glm::vec2 &position);
 

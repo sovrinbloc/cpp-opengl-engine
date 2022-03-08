@@ -42,12 +42,25 @@ void UiConstraints::setHeight(float height) {
 
 UiConstraints::UiConstraints() {}
 
-const glm::vec2 &UiConstraints::getPosition() const {
+glm::vec2 &UiConstraints::getPosition() {
     return position;
 }
 
 void UiConstraints::setPosition(const glm::vec2 &position) {
     UiConstraints::position = position;
+}
+
+glm::vec2 UiConstraints::getAdjustedPosition() {
+    return positionAdjustment + position;
+}
+
+void UiConstraints::setPositionAdjustment(glm::vec2 position) {
+    this->positionAdjustment = position;
+    adjusted = true; // flag to see if we need to grab a different position
+}
+
+bool UiConstraints::hasAdjustedPosition() {
+    return adjusted;
 }
 
 const glm::vec2 &UiConstraints::getSize() const {

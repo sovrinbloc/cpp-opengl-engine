@@ -358,6 +358,10 @@ void MainGameLoop::main() {
     float alpha = 0.33f;
 
     GuiRect *guiRect = new GuiRect(color, position, size, scale, alpha);
+    glm::vec2 position2 = glm::vec2(-0.55f, 0.37f);
+    glm::vec3 color2 = glm::vec3(ColorName::Green.getR(), ColorName::Green.getG(),
+                                                    ColorName::Green.getB());
+    GuiRect *guiRect2 = new GuiRect(color2, position2, size, scale, alpha);
     rects.push_back(guiRect);
 
 
@@ -377,25 +381,36 @@ void MainGameLoop::main() {
     GuiComponent *masterContainer = UiMaster::getMasterComponent();
 
     GuiComponent *parent = new GuiComponent(Container::CONTAINER, new UiConstraints(0.01f, -0.01f, 50, 50));
-    parent->setName("parent");
-    masterContainer->addChild(parent, new UiConstraints(0.02f, -0.1f, 50, 50));
+    parent->setName("Parent");
+    masterContainer->setName("Master Container");
 
     t1->setName("gui/lifebar");
     t2->setName("gui/green");
     t3->setName("gui/heart");
+
+
+
+    masterContainer->addChild(guiRect, new UiConstraints(0.0f, -0.1f, 50, 50));
+    masterContainer->addChild(guiRect2, new UiConstraints(0.0f, -0.1f, 50, 50));
+    masterContainer->addChild(parent, new UiConstraints(0.02f, -0.1f, 50, 50));
     parent->addChild(t1, new UiConstraints(0.00f, -0.1f, 50, 50));
     parent->addChild(t2, new UiConstraints(0.00f, -0.1f, 50, 50));
     parent->addChild(t3, new UiConstraints(0.00f, -0.1f, 50, 50));
-    t1->addChild(pNameText, new UiConstraints(-500.00f, 40.1f, 50, 50));
-
     parent->addChild(text1, new UiConstraints(0.00f, -0.1f, 50, 50));
     parent->addChild(text2, new UiConstraints(0.00f, -0.1f, 50, 50));
     parent->addChild(clickColorText, new UiConstraints(0.00f, -0.1f, 50, 50));
-    
-    masterContainer->addChild(guiRect, new UiConstraints(0.0f, -0.1f, 50, 50));
 
+    t1->addChild(pNameText, new UiConstraints(-500.00f, 40.1f, 50, 50));
+
+//    masterContainer->addChild(t1, new UiConstraints(0.0f, -0.1f, 50, 50));
+//    masterContainer->addChild(t2, new UiConstraints(0.0f, -0.1f, 50, 50));
+//    masterContainer->addChild(t3, new UiConstraints(0.0f, -0.1f, 50, 50));
+
+    guiRect->setName("GuiRect");
+    guiRect2->setName("GuiRect2");
     masterContainer->initialize();
 
+    UiMaster::createRenderQueue(masterContainer);
     UiMaster::applyConstraints(masterContainer);
 
 
@@ -486,6 +501,8 @@ void MainGameLoop::main() {
 //        guiRenderer->render(guis);
 //        rectRenderer->render(rects);
         UiMaster::render();
+        UiMaster::getMasterComponent()->getConstraints()->getPosition() += glm::vec2(0.001f, 0.0f);
+        UiMaster::applyConstraints(masterContainer);
         DisplayManager::updateDisplay();
 
 

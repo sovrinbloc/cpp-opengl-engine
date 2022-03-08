@@ -25,8 +25,12 @@ protected:
     std::vector<Container *> children;
     std::vector<Container *> childrenToAdd;
     std::vector<Container *> childrenToRemove;
-    UiConstraints *constraints = nullptr;
+    UiConstraints *constraints = new UiConstraints();
+public:
+
+protected:
     bool sterile = false;
+
     int layer = -1;
     bool hidden;
 public:
@@ -42,9 +46,7 @@ public:
         children = std::vector<Container *>();
         childrenToAdd = std::vector<Container *>();
     }
-
     virtual ~Container() {}
-
     const std::string &getName() const {
         return name;
     }
@@ -108,6 +110,7 @@ public:
             children.push_back(c);
             c->initialize();
         }
+        childrenToAdd.clear();
         std::cout << "added: " << children.size() << std::endl;
         SortChildrenByLayer();
     }

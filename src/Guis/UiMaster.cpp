@@ -23,6 +23,11 @@ std::map<int, Container *> UiMaster::groupMap = std::map<int, Container *>();
 std::map<int, int> UiMaster::tmpGroupMap = std::map<int, int>();
 int UiMaster::group = 0;
 
+
+void UiMaster::applyConstraints() {
+    applyConstraints(masterContainer);
+}
+
 /**
  * @brief This function is to be utilized for children only. Said, the original parent is the master parent, and has
  *        simply master attributes. Anything to be done to the master parent is NOT to be done or called in this fn.
@@ -35,52 +40,72 @@ void UiMaster::applyConstraints(GuiComponent *component) {
     if (component->getParent() != nullptr) {
         std::cout << "There is a parent named: " << component->getParent()->getName() << std::endl;
     }
-    for (Container *c : component->SortChildrenByLayer(true)) {
-        bool selfModification = c->getConstraints()->getY() != 0 || c->getConstraints()->getX() != 0;
-        if (selfModification) {
-            glm::vec2 cPos = c->getConstraints()->getPosition();
 
-            if (c->getParent() != nullptr && c->getParent()->getConstraints() != nullptr) {
-                cPos += c->getParent()->getConstraints()->getPosition();
+    // traverse through children
+//    for (Container *c : component->SortChildrenByLayer(true)) {
+    for (Container *c : component->getChildren()) {
+        // get adjustments made by parent. (initialization)
+        glm::vec2 adjustments(0.0f);
+
+        // add the child's constraints to the parent's constraints (relativity)
+        if (component->getConstraints() != nullptr) {
+            glm::vec2 parentPosition = component->getConstraints()->getPosition();
+            if (component->getConstraints()->hasAdjustedPosition()) {
+                parentPosition = component->getConstraints()->getAdjustedPosition();
             }
+            adjustments += parentPosition;
+            std::cout << adjustments.x << ", " << adjustments.y << " is the new `adjustments` variable." << std::endl;
+        }
 
-            // check to see which type the component is: and perform the action based on that.
-            switch (c->getType()) {
-                case Container::IMAGE: {
-                    auto *p = dynamic_cast<GuiTexture *>(c);
-                    p->getPosition() += cPos;
-                    break;
-                }
-                case Container::TEXT: {
-                    auto *p = dynamic_cast<GUIText *>(c);
-                    p->getPosition() += cPos;
-                    break;
-                }
-                case Container::COLORED_BOX: {
-                    auto *p = dynamic_cast<GuiRect *>(c);
-                    if (c->getConstraints() == nullptr) {
-                        std::cout << "contraints null on colored box";
-                    }
-                    p->getPosition() += c->getConstraints()->getPosition();
-                    break;
-                }
-                case Container::CONTAINER: {
-                    auto *p = dynamic_cast<GuiComponent *>(c);
-                    glm::vec2 currentPosition = p->getConstraints()->getPosition();
-                    glm::vec2 addPosition = c->getConstraints()->getPosition();
-                    auto newPosition = currentPosition += addPosition;
-                    p->setConstraints(new UiConstraints(newPosition, min(p->getConstraints()->getSize(),
-                                                                         c->getConstraints()->getSize())));
-                    break;
-                }
+        // check to see which type the component is: and perform the action based on that.
+        switch (c->getType()) {
+            case Container::IMAGE: {
+                auto *p = dynamic_cast<GuiTexture *>(c);
+
+                // adds parent adjustment, plus their original position.
+                const glm::vec2 &totalAdjustment = adjustments + p->getPosition();
+                p->getConstraints()->setPositionAdjustment(totalAdjustment);
+                break;
             }
-            if (!c->isSterile()) {
-                UiMaster::applyConstraints(dynamic_cast<GuiComponent *>(c));
+            case Container::TEXT: {
+                auto *p = dynamic_cast<GUIText *>(c);
+                const glm::vec2 &totalAdjustment = adjustments * glm::vec2(DisplayManager::Width()) + p->getPosition();
+                p->getConstraints()->setPositionAdjustment(totalAdjustment);
+                break;
+            }
+            case Container::COLORED_BOX: {
+                auto *p = dynamic_cast<GuiRect *>(c);
+                const glm::vec2 &totalAdjustment = adjustments + p->getPosition();
 
-                // adds this ordered child to the render queue.
-                UiMaster::addToLayerQueue(dynamic_cast<GuiComponent *>(c));
+                p->getConstraints()->setPositionAdjustment(totalAdjustment);
+                break;
+            }
+            case Container::CONTAINER: {
+                auto *p = dynamic_cast<GuiComponent *>(c);
+                p->setConstraints(new UiConstraints(adjustments, min(p->getConstraints()->getSize(),
+                                                                     c->getConstraints()->getSize())));
+                break;
             }
         }
+        GuiComponent *pComponent = dynamic_cast<GuiComponent *>(c);
+        if (pComponent != nullptr) {
+            UiMaster::applyConstraints(pComponent);
+        }
+    }
+}
+
+/**
+ * @brief This function is to be utilized for children only. Said, the original parent is the master parent, and has
+ *        simply master attributes. Anything to be done to the master parent is NOT to be done or called in this fn.
+ *
+ * @param component
+ */
+void UiMaster::createRenderQueue(GuiComponent *component) {
+    // iterate through children of this component and apply the constraints to them.
+    for (Container *c : component->SortChildrenByLayer(true)) {
+        UiMaster::addToLayerQueue(dynamic_cast<GuiComponent *>(c));
+        UiMaster::createRenderQueue(dynamic_cast<GuiComponent *>(c));
+        std::cout << "Added layer to queue" << std::endl;
     }
 }
 

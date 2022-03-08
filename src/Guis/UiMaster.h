@@ -52,6 +52,10 @@ public:
      */
     static void applyConstraints(GuiComponent *component);
 
+    static void applyConstraints();
+
+    static void createRenderQueue(GuiComponent *component);
+
     /**
      * @brief Gets the constraints of the master UiComponent (the container of all UI components).
      *

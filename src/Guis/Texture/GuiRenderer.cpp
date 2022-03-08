@@ -60,7 +60,7 @@ void GuiRenderer::cleanUp() {
  * @param gui
  */
 void GuiRenderer::prepareInstance(GuiTexture *gui) {
-    glm::mat4 matrix = Maths::createTransformationMatrix(gui->getPosition(), gui->getScale());
+    glm::mat4 matrix = Maths::createTransformationMatrix(gui->getConstraints()->getAdjustedPosition(), gui->getScale());
     shader->loadTransformationMatrix(matrix);
 }
 
