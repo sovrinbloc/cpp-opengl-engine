@@ -3,6 +3,7 @@
 //
 
 #include "UiConstraints.h"
+#include "../Util/CommonHeader.h"
 
 UiConstraints::UiConstraints(float x, float y, float width, float height) : position(glm::vec2(x,y)), size(glm::vec2(width, height)) {}
 
@@ -42,25 +43,43 @@ void UiConstraints::setHeight(float height) {
 
 UiConstraints::UiConstraints() {}
 
-glm::vec2 &UiConstraints::getPosition() {
+
+
+
+
+
+glm::vec2 UiConstraints::getConstraintPosition() {
     return position;
 }
 
-void UiConstraints::setPosition(const glm::vec2 &position) {
+void UiConstraints::setConstraintPosition(glm::vec2 position) {
     UiConstraints::position = position;
 }
 
-glm::vec2 UiConstraints::getAdjustedPosition() {
-    return positionAdjustment + position;
+void UiConstraints::addConstraintPosition(glm::vec2 position) {
+    this->position += position;
 }
 
-void UiConstraints::setPositionAdjustment(glm::vec2 position) {
-    this->positionAdjustment = position;
-    adjusted = true; // flag to see if we need to grab a different position
+/**
+ * @brief Gets the relative position plus the original position.
+ *
+ * @return
+ */
+glm::vec2 UiConstraints::getCalculatedRelativePosition() {
+    return parentPosition + position;
 }
 
-bool UiConstraints::hasAdjustedPosition() {
-    return adjusted;
+void UiConstraints::setParentPosition(glm::vec2 position) {
+    this->parentPosition = position;
+}
+
+/**
+ * @brief Gets the relativity of the parent.
+ *
+ * @return
+ */
+glm::vec2 UiConstraints::getParentPosition() {
+    return parentPosition;
 }
 
 const glm::vec2 &UiConstraints::getSize() const {

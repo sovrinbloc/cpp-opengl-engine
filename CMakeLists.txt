@@ -9,7 +9,8 @@ set(CMAKE_CXX_VISIBILITY_PRESET)
 add_executable(engine
         src/main.cpp
         src/RenderEngine/DisplayManager.h
-        src/EngineTester/MainGameLoop.h
+        src/EngineTester/Main/MainGameLoop.h
+        src/EngineTester/Main/MainGameLoop.cpp
         src/Entities/Camera.h
         src/Models/RawModel.h
         src/RenderEngine/Loader.h
@@ -36,7 +37,6 @@ add_executable(engine
         src/RenderEngine/TerrainRenderer.h
         src/RenderEngine/RenderStyle.h
         src/Entities/Camera.cpp
-        src/EngineTester/MainGameLoop.cpp
         src/RenderEngine/DisplayManager.cpp
         src/Entities/CameraInput.cpp
         src/Terrain/Terrain.cpp
@@ -161,7 +161,10 @@ add_executable(engine
         src/Guis/Rect/RectShader.cpp
         src/Guis/Rect/RectShader.h
         src/Guis/Rect/GuiRect.cpp
-        src/Guis/Rect/GuiRect.h)
+        src/Guis/Rect/GuiRect.h
+        src/Toolbox/Logger/Log.h
+        src/Toolbox/Logger/ANSI.hpp
+        src/EngineTester/GUI/MainGuiLoop.cpp src/EngineTester/GUI/MainGuiLoop.h)
 
 if (EXISTS deps/glrequired)
     message(STATUS "Requiring OpenGL")

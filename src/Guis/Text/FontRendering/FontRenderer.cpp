@@ -49,7 +49,7 @@ void FontRenderer::render(std::map<FontType *, std::vector<GUIText *>> *texts) {
 void FontRenderer::renderTextMesh(GUIText *text) {
     auto meshData = TextMeshCreator::createTextMesh(text);
 
-    // if we want to hardcode the x and y positions, set x = text.getPosition.x, etc.
+    // if we want to hardcode the x and y positions, set x = text.getConstraintPosition.x, etc.
     float x = 0;
     float y = 0;
 
@@ -117,7 +117,7 @@ void FontRenderer::prepare() {
  * @param text
  */
 void FontRenderer::prepareText(GUIText *text) {
-    glm::mat4 matrix = Maths::createTransformationMatrix(text->getConstraints()->getAdjustedPosition(), glm::vec2(1.0f));
+    glm::mat4 matrix = Maths::createTransformationMatrix(text->getConstraints()->getCalculatedRelativePosition(), glm::vec2(1.0f));
     shader->loadTransformationMatrix(matrix);
 }
 

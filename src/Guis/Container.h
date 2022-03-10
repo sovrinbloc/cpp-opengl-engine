@@ -16,7 +16,7 @@ public:
         COLORED_BOX,
         CONTAINER
     };
-protected:
+public:
     Container *parent = nullptr;
     GuiType type;
     std::string name;
@@ -25,7 +25,7 @@ protected:
     std::vector<Container *> children;
     std::vector<Container *> childrenToAdd;
     std::vector<Container *> childrenToRemove;
-    UiConstraints *constraints = new UiConstraints();
+    UiConstraints *constraints;
 public:
 
 protected:
@@ -41,7 +41,7 @@ public:
      * @param sterile
      */
     explicit Container(GuiType type, bool sterile, std::string name = "component") : type(type), sterile(sterile),
-                                                                                     name(name) {
+                                                                                     name(name), constraints(new UiConstraints()) {
         childrenToRemove = std::vector<Container *>();
         children = std::vector<Container *>();
         childrenToAdd = std::vector<Container *>();

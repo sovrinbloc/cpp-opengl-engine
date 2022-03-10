@@ -6,8 +6,8 @@
 #define CRAFTPROJ_MAINGAMELOOP_H
 
 
-#include "../Terrain/Terrain.h"
-#include "../Guis/Text/FontMeshCreator/GUIText.h"
+#include "../../Terrain/Terrain.h"
+#include "../../Guis/Text/FontMeshCreator/GUIText.h"
 
 class MainGameLoop {
 public:

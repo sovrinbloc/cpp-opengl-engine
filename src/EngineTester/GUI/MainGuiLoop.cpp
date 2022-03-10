@@ -1,0 +1,372 @@
+//
+// Created by Joseph Alai on 3/9/22.
+//
+
+#include "MainGuiLoop.h"
+
+#include "../../Util/FileSystem.h"
+#include "../../Util/Utils.h"
+#include "../../Util/LightUtil.h"
+#include "../../RenderEngine/DisplayManager.h"
+#include "../../RenderEngine/EntityRenderer.h"
+#include "../../RenderEngine/ObjLoader.h"
+#include "../../RenderEngine/MasterRenderer.h"
+#include "../../Guis/Texture/GuiTexture.h"
+#include "../../Guis/Texture/GuiRenderer.h"
+#include "../../Guis/Rect/RectRenderer.h"
+#include "../../Toolbox/MousePicker.h"
+#include <ft2build.h>
+#include FT_FREETYPE_H
+#include "../../Guis/Text/FontRendering/FontRenderer.h"
+#include "../../Util/ColorName.h"
+#include "../../Guis/Text/FontRendering/TextMaster.h"
+#include "../../Toolbox/TerrainPicker.h"
+#include "../../RenderEngine/FrameBuffers.h"
+#include "../../Interaction/InteractiveModel.h"
+#include "../../Util/CommonHeader.h"
+#include "../../Guis/UiMaster.h"
+
+// test to load objects.
+#include <thread>
+
+void MainGuiLoop::main() {
+
+    // Initialite Display
+    DisplayManager::createDisplay();
+
+    // Initialize VAO / VBO Loader
+    auto loader = new Loader();
+
+    /**
+     * Loader Textures and Models
+     */
+    ModelData stallData;
+    BoundingBoxData stallBbData;
+
+    /**
+     * Load the models concurrently
+     */
+    auto f = [](ModelData *pModelData, BoundingBoxData *pBbData, const std::string &filename) {
+        *pModelData = OBJLoader::loadObjModel(filename);
+        *pBbData = OBJLoader::loadBoundingBox(*pModelData, ClickBoxTypes::BOX, BoundTypes::AABB);
+    };
+
+    std::vector<std::thread> vThreads;
+
+    std::vector<const std::string> modelFiles = {"Stall"};
+    std::vector<ModelData *> modelDatas = {&stallData};
+    std::vector<BoundingBoxData *> bbDatas = {&stallBbData};
+
+    for (int i = 0; i < modelDatas.size(); ++i) {
+        std::thread thread(f, modelDatas[i], bbDatas[i], modelFiles[i]);
+        vThreads.push_back(std::move(thread));
+    }
+
+    for (auto &&modelThread : vThreads) {
+        (modelThread).join();
+    }
+
+    /**
+     * End loading the models concurrently.
+     */
+    // load bb version 1
+
+    const Material material = Material{
+            .shininess = 2.0f,
+            .reflectivity = 2.0f
+    };
+
+    RawBoundingBox *pStallBox = loader->loadToVAO(stallBbData);
+    auto staticStall = new TexturedModel(loader->loadToVAO(stallData),
+                                         new ModelTexture("stallTexture", PNG, material));
+
+    /**
+     * Entity holders to be rendered
+     */
+    std::vector<Terrain *> allTerrains;
+    std::vector<Light *> lights;
+    std::vector<Entity *> entities;
+    std::vector<Interactive *> allBoxes;
+
+    /**
+     * Terrain Generation
+     */
+    auto backgroundTexture = new TerrainTexture(loader->loadTexture("MultiTextureTerrain/grass")->getId());
+    auto rTexture = new TerrainTexture(loader->loadTexture("MultiTextureTerrain/dirt")->getId());
+    auto gTexture = new TerrainTexture(loader->loadTexture("MultiTextureTerrain/blueflowers")->getId());
+    auto bTexture = new TerrainTexture(loader->loadTexture("MultiTextureTerrain/brickroad")->getId());
+    auto texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
+    auto blendMap = new TerrainTexture(loader->loadTexture("MultiTextureTerrain/blendMap")->getId());
+    auto terrain = new Terrain(0, -1, loader, texturePack, blendMap, "heightMap");
+
+    /**
+     * Push back all terrains into the array
+     */
+    allTerrains.push_back(terrain);
+
+    /**
+     * Light Generation
+     */
+    auto d = LightUtil::AttenuationDistance(65);
+    Lighting l = Lighting{glm::vec3(0.2f, 0.2f, 0.2f), glm::vec3(0.5f, 0.5f, 0.5f), d.x, d.y, d.z};
+    lights.push_back(new Light(glm::vec3(0.0, 1000., -7000.0f), glm::vec3(0.4f, 0.4f, 0.4f), {
+            .ambient =  glm::vec3(0.2f, 0.2f, 0.2f),
+            .diffuse =  glm::vec3(0.5f, 0.5f, 0.5f),
+            .constant = Light::kDirectional,
+    }));
+
+    /**
+     * Player Creation
+     */
+    RawModel *playerModel = loader->loadToVAO(stallData);
+    auto playerOne = new TexturedModel(playerModel, new ModelTexture(
+            "stallTexture", PNG));
+
+    auto player = new Player(playerOne, new BoundingBox(pStallBox, BoundingBoxIndex::genUniqueId()),
+                             glm::vec3(100.0f, 3.0f, -50.0f),
+                             glm::vec3(0.0f, 180.0f, 0.0f), 1.0f);
+
+    InteractiveModel::setInteractiveBox(player);
+    entities.push_back(player);
+    auto playerCamera = new PlayerCamera(player);
+
+
+
+
+    /**
+     * Renderers
+     */
+    auto fontRenderer = new FontRenderer();
+    auto renderer = new MasterRenderer(playerCamera, loader);
+    auto guiRenderer = new GuiRenderer(loader);
+    auto rectRenderer = new RectRenderer(loader);
+
+
+    /**
+     * GUI Creation
+     */
+    // initializes the UiMaster with these renderers.
+    UiMaster::initialize(loader, guiRenderer, fontRenderer, rectRenderer);
+
+    std::vector<GuiTexture *> guis = std::vector<GuiTexture *>();
+    auto *guiLife1 = new GuiTexture(loader->loadTexture("gui/lifebar")->getId(), glm::vec2(-0.72f, 0.9f),
+                                    glm::vec2(0.290f, 0.0900f));
+    auto *guiLife2 = new GuiTexture(loader->loadTexture("gui/green")->getId(), glm::vec2(-0.7f, 0.9f),
+                                    glm::vec2(0.185f, 0.070f));
+    auto *guiLife3 = new GuiTexture(loader->loadTexture("gui/heart")->getId(), glm::vec2(-0.9f, 0.9f),
+                                    glm::vec2(0.075f, 0.075f));
+
+    auto sampleModifiedGui = new GuiTexture(loader->loadTexture("gui/lifebar")->getId(), glm::vec2(-0.72f, 0.3f),
+                                            glm::vec2(0.290f, 0.0900f) / 3.0f);
+
+
+    std::vector<GuiRect *> rects = std::vector<GuiRect *>();
+    glm::vec3 color = glm::vec3(ColorName::Cyan.getR(), ColorName::Cyan.getG(), ColorName::Cyan.getB());
+    glm::vec2 position = glm::vec2(-0.75f, 0.67f);
+    glm::vec2 size = glm::vec2(0.290f, 0.0900f);
+    glm::vec2 scale = glm::vec2(0.25f, 0.33f);
+    float alpha = 0.33f;
+
+    auto *guiRect = new GuiRect(color, position, size, scale, alpha);
+    glm::vec2 position2 = glm::vec2(-0.55f, 0.37f);
+    glm::vec3 color2 = glm::vec3(ColorName::Green.getR(), ColorName::Green.getG(),
+                                 ColorName::Green.getB());
+    auto *guiRect2 = new GuiRect(color2, position2, size, scale, alpha);
+    rects.push_back(guiRect);
+
+    sampleModifiedGui->addChild(sampleModifiedGui, new UiConstraints(0, 0, 200, 200));
+
+    /**
+    * Font Configuration
+    */
+    // Initialize Texting
+    TextMaster::init(loader);
+
+    const std::string &ARIAL = "arial";
+    const std::string &NOODLE = "noodle";
+
+    FontType arialFont = TextMeshData::loadFont(ARIAL, 48);
+    FontType noodleFont = TextMeshData::loadFont(NOODLE, 48);
+
+
+    FontModel *fontLoaded = loader->loadFontVAO();
+    auto *text1 = new GUIText(
+            "This is a sample of a mutliline text. This is a sample of a mutliline text. This is a sample of a mutliline text. This is a sample of a mutliline text. This is a sample of a mutliline text. This is a sample of a mutliline text. This is a sample of a mutliline text. This is a sample of a mutliline text. This is a sample of a mutliline text. This is a sample of a mutliline text. This is a sample of a mutliline text. This is a sample of a mutliline text. This is a sample of a mutliline text. This is a sample of a mutliline text. ",
+            0.50f, fontLoaded, &noodleFont, glm::vec2(25.0f, 225.0f), ColorName::Whitesmoke,
+            0.50f * static_cast<float>(DisplayManager::Width()),
+            false);
+    auto *text2 = new GUIText("Joseph Alai MCMXII", 0.5f, fontLoaded, &arialFont, glm::vec2(540.0f, 50.0f),
+                              ColorName::Cyan,
+                              0.75f * static_cast<float>(DisplayManager::Width()), false);
+    GUIText *text3 = text2;
+    auto clickColorText = new GUIText("Color: ", 0.5f, fontLoaded, &arialFont, glm::vec2(10.0f, 20.0f),
+                                      ColorName::Whitesmoke,
+                                      0.75f * static_cast<float>(DisplayManager::Width()), false);
+
+
+    GuiComponent *masterContainer = UiMaster::getMasterComponent();
+
+    auto *parent = new GuiComponent(Container::CONTAINER, new UiConstraints(0.01f, -0.01f, 50, 50));
+    parent->setName("Parent");
+    masterContainer->setName("Master Container");
+
+    guiLife1->setName("gui/lifebar");
+    guiLife2->setName("gui/green");
+    guiLife3->setName("gui/heart");
+
+    masterContainer->addChild(guiRect, new UiConstraints(0.70f, -0.9f, 50, 50));
+    masterContainer->addChild(guiRect2, new UiConstraints(0.50f, -0.4f, 50, 50));
+    masterContainer->addChild(parent, new UiConstraints(0.102f, -0.5f, 50, 50));
+
+    parent->addChild(guiLife1, new UiConstraints(0.033f, -0.2f, 50, 50));
+    parent->addChild(guiLife2, new UiConstraints(0.002f, -0.1f, 50, 50));
+    parent->addChild(guiLife3, new UiConstraints(0.001f, -0.3f, 50, 50));
+    parent->addChild(text1, new UiConstraints(0.00f, 150.1f, 50, 50));
+    parent->addChild(text2, new UiConstraints(0.00f, 150.1f, 50, 50));
+
+    parent->addChild(clickColorText, new UiConstraints(0.00f, 300.1f, 50, 50));
+    guiLife1->addChild(text3, new UiConstraints(500.00f, 240.1f, 50, 50));
+
+    guiRect->setName("GuiRect");
+    guiRect2->setName("GuiRect2");
+
+    masterContainer->initialize();
+
+    UiMaster::createRenderQueue(masterContainer);
+    UiMaster::applyConstraints(masterContainer);
+
+    /**
+     * Framebuffers
+     */
+    auto reflectFbo = new FrameBuffers();
+    auto gui = new GuiTexture(reflectFbo->getReflectionTexture(), glm::vec2(0.75f, 0.75f), glm::vec2(0.2f));
+    guis.push_back(gui);
+
+    /**
+     * Mouse Picker
+     */
+    auto picker = new TerrainPicker(playerCamera, renderer->getProjectionMatrix(), terrain);
+
+    for (auto e: entities) {
+        if (e->getBoundingBox() != nullptr) {
+            allBoxes.push_back(e);
+        }
+    }
+
+    allBoxes.reserve(entities.size());
+    allBoxes.insert(allBoxes.end(), entities.begin(), entities.end());
+
+    /**
+     * Main Game Loop
+     */
+    int sin = 0;
+    while (DisplayManager::stayOpen()) {
+        playerCamera->move(terrain);
+        picker->update();
+
+        /*
+         * After the user has clicked, render the bounding boxes off-screen, and grab the pixel color of where their
+         * mouse is. This color is the Hash ID generated which points to a specific object. So it returns the object.
+         */
+        if (InputMaster::hasPendingClick()) {
+            if (InputMaster::mouseClicked(LeftClick)) {
+                renderer->renderBoundingBoxes(allBoxes);
+                Color clickColor = Picker::getColor();
+                int element = BoundingBoxIndex::getIndexByColor(clickColor);
+                Interactive *pClickedModel = InteractiveModel::getInteractiveBox(
+                        BoundingBoxIndex::getIndexByColor(clickColor));
+                if (pClickedModel != nullptr) {
+                    if (auto a = dynamic_cast<Player *>(pClickedModel)) {
+                        if (!a->hasMaterial()) {
+                            a->setMaterial({500.0f, 500.0f});
+                            a->activateMaterial();
+                        } else {
+                            a->disableMaterial();
+                        }
+                    }
+                    printf("position: x, y, z: (%f, %f, %f)\n", pClickedModel->getPosition().x,
+                           pClickedModel->getPosition().y, pClickedModel->getPosition().z);
+                }
+                const string &renderString =
+                        ColorName::toString(clickColor) + ", Element: " + std::to_string(element);
+                *clickColorText = GUIText(renderString,
+                                          0.5f, fontLoaded, &noodleFont, glm::vec2(10.0f, 20.0f), clickColor,
+                                          0.75f * static_cast<float>(DisplayManager::Width()), false);
+                InputMaster::resetClick();
+            }
+        }
+
+        sampleModifiedGui->getPosition() += glm::vec2(0.001f, 0.001f);
+
+        // framebuffer only
+        reflectFbo->bindReflectionFrameBuffer();
+        {
+            renderer->renderBoundingBoxes(allBoxes);
+        }
+        reflectFbo->unbindCurrentFrameBuffer();
+
+        // non framebuffer
+        renderer->renderScene(entities, std::vector<AssimpEntity *>(), allTerrains, lights);
+        text3->getPosition() += glm::vec2(.1f);
+
+        // moves everything to the right
+        UiMaster::getMasterComponent()->constraints->position += glm::vec2(0.001f, 0.0f);
+        UiMaster::applyConstraints(masterContainer);
+
+        parent->constraints->position += glm::vec2(0.00f, 0.002f);
+        UiMaster::applyConstraints(parent);
+
+        UiMaster::render();
+
+        DisplayManager::updateDisplay();
+    }
+
+    /**
+     * Clean up renderers and loaders
+     */
+    reflectFbo->cleanUp();
+    TextMaster::cleanUp();
+    fontRenderer->cleanUp();
+    guiRenderer->cleanUp();
+    rectRenderer->cleanUp();
+    renderer->cleanUp();
+    loader->cleanUp();
+
+    /**
+     * Close display
+     */
+    DisplayManager::closeDisplay();
+}
+
+glm::vec3 MainGuiLoop::generateRandomPosition(Terrain *terrain, float yOffset) {
+    glm::vec3 positionVector(0.0f);
+    positionVector.x = floor(Utils::randomFloat() * 1500 - 800);
+    positionVector.z = floor(Utils::randomFloat() * -800);
+    positionVector.y = terrain->getHeightOfTerrain(positionVector.x, positionVector.z) + yOffset;
+    return positionVector;
+}
+
+glm::vec3 MainGuiLoop::generateRandomRotation() {
+    float rx, ry, rz;
+    rx = 0;
+    ry = Utils::randomFloat() * 100 - 50;
+    rz = 0;
+    glm::vec3 rot(rx, ry, rz);
+    rot = rot * 180.0f;
+    return rot;
+}
+
+float MainGuiLoop::generateRandomScale(float min = 0.75, float max = 1.50) {
+    float multiplier = 1;
+    if (max > 1) {
+        multiplier = ceil(max);
+    }
+    auto r = Utils::randomFloat() * multiplier;
+    if (r < min) {
+        r = min;
+    }
+    if (r > max) {
+        r = max;
+    }
+    return r;
+}

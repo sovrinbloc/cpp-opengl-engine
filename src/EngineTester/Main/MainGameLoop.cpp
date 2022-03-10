@@ -3,28 +3,30 @@
 //
 
 #include "MainGameLoop.h"
-#include "../Util/FileSystem.h"
-#include "../Util/Utils.h"
-#include "../Util/LightUtil.h"
-#include "../RenderEngine/DisplayManager.h"
-#include "../RenderEngine/EntityRenderer.h"
-#include "../RenderEngine/ObjLoader.h"
-#include "../RenderEngine/MasterRenderer.h"
-#include "../Guis/Texture/GuiTexture.h"
-#include "../Guis/Texture/GuiRenderer.h"
-#include "../Guis/Rect/RectRenderer.h"
-#include "../Toolbox/MousePicker.h"
+#include "../../Util/FileSystem.h"
+#include "../../Util/Utils.h"
+#include "../../Util/LightUtil.h"
+#include "../../RenderEngine/DisplayManager.h"
+#include "../../RenderEngine/EntityRenderer.h"
+#include "../../RenderEngine/ObjLoader.h"
+#include "../../RenderEngine/MasterRenderer.h"
+#include "../../Guis/Texture/GuiTexture.h"
+#include "../../Guis/Texture/GuiRenderer.h"
+#include "../../Guis/Rect/RectRenderer.h"
+#include "../../Toolbox/MousePicker.h"
 #include <ft2build.h>
-#include FT_FREETYPE_H
-#include "../Guis/Text/FontRendering/FontRenderer.h"
-#include "../Util/ColorName.h"
-#include "../Guis/Text/FontRendering/TextMaster.h"
-#include "../Toolbox/TerrainPicker.h"
-#include "../RenderEngine/FrameBuffers.h"
-#include "../Interaction/InteractiveModel.h"
-#include "../Util/CommonHeader.h"
+#include FT_FREETYPE_H"include/freetype/freetype.h"
+#include "../../Guis/Text/FontRendering/FontRenderer.h"
+#include "../../Util/ColorName.h"
+#include "../../Guis/Text/FontRendering/TextMaster.h"
+#include "../../Toolbox/TerrainPicker.h"
+#include "../../RenderEngine/FrameBuffers.h"
+#include "../../Interaction/InteractiveModel.h"
+#include "../../Util/CommonHeader.h"
+
 // test to load objects.
 #include <thread>
+
 
 void testCraftStuff(float x, float y, float z) {
     float result;
@@ -64,10 +66,10 @@ void testCraftStuff(float x, float y, float z) {
     }
 }
 
-#include "../World/Block.h"
-#include "../Guis/GuiComponent.h"
-#include "../Guis/UiMaster.h"
-#include "../Guis/Rect/GuiRect.h"
+#include "../../World/Block.h"
+#include "../../Guis/GuiComponent.h"
+#include "../../Guis/UiMaster.h"
+#include "../../Guis/Rect/GuiRect.h"
 
 void testMap() {
     std::map<int, Block> a;
@@ -360,7 +362,7 @@ void MainGameLoop::main() {
     GuiRect *guiRect = new GuiRect(color, position, size, scale, alpha);
     glm::vec2 position2 = glm::vec2(-0.55f, 0.37f);
     glm::vec3 color2 = glm::vec3(ColorName::Green.getR(), ColorName::Green.getG(),
-                                                    ColorName::Green.getB());
+                                 ColorName::Green.getB());
     GuiRect *guiRect2 = new GuiRect(color2, position2, size, scale, alpha);
     rects.push_back(guiRect);
 
@@ -387,7 +389,6 @@ void MainGameLoop::main() {
     t1->setName("gui/lifebar");
     t2->setName("gui/green");
     t3->setName("gui/heart");
-
 
 
     masterContainer->addChild(guiRect, new UiConstraints(0.0f, -0.1f, 50, 50));
@@ -501,8 +502,31 @@ void MainGameLoop::main() {
 //        guiRenderer->render(guis);
 //        rectRenderer->render(rects);
         UiMaster::render();
-        UiMaster::getMasterComponent()->getConstraints()->getPosition() += glm::vec2(0.001f, 0.0f);
+
+
+
+        // should move everything to the right
+        std::cout << std::endl << "Master Component Apply Constraints" << std::endl;
+        UiMaster::getMasterComponent()->getConstraints()->getConstraintPosition() += glm::vec2(0.001f, 0.0f);
         UiMaster::applyConstraints(masterContainer);
+
+        std::cout << "t1 position after master constraint: " << t1->getConstraints()->getCalculatedRelativePosition().x << ", "
+                  << t1->getConstraints()->getCalculatedRelativePosition().y;
+        std::cout << std::endl << std::endl;
+
+
+
+
+        // fixme: for some reason, parent is being over-written so the adjustments made below are not sticking
+        std::cout << std::endl << "Parent Apply Constraints" << std::endl;
+
+        // should move everything except the colored_cout gui rectangles up
+        parent->getConstraints()->getConstraintPosition() += glm::vec2(-0.001f, 0.001f);
+        UiMaster::applyConstraints(parent);
+        std::cout << "t1 position after parent constraint: " << t1->getConstraints()->getCalculatedRelativePosition().x << ", "
+                  << t1->getConstraints()->getCalculatedRelativePosition().y;
+        std::cout << std::endl << std::endl << std::endl;
+
         DisplayManager::updateDisplay();
 
 

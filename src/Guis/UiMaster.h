@@ -48,9 +48,9 @@ public:
     /**
      * @brief applies the constraints to the children. This is to keep the UI as groups.
      *
-     * @param component must be the master PARENT component.
+     * @param parentComponent must be the master PARENT parentComponent.
      */
-    static void applyConstraints(GuiComponent *component);
+    static void applyConstraints(GuiComponent *parentComponent);
 
     static void applyConstraints();
 
@@ -76,6 +76,10 @@ public:
     static void render();
 
     static void cleanUp();
+
+    static void printComponentPosition(Container *childComponent);
+
+    static void  printComponentInformation(GuiComponent *parentComponent);
 };
 
 
