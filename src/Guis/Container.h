@@ -32,7 +32,7 @@ protected:
     bool sterile = false;
 
     int layer = -1;
-    bool hidden;
+    bool hidden = false;
 public:
     /**
      * @brief Initializes a basic container, which is similar to a linked list. Specifies what type of container it is,
@@ -112,7 +112,7 @@ public:
         }
         childrenToAdd.clear();
         std::cout << "added: " << children.size() << std::endl;
-        SortChildrenByLayer();
+//        SortChildrenByLayer(true);
     }
 
     /**

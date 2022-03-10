@@ -161,11 +161,11 @@ void MainGuiLoop::main() {
 
 
     std::vector<GuiRect *> rects = std::vector<GuiRect *>();
-    glm::vec3 color = glm::vec3(ColorName::Cyan.getR(), ColorName::Cyan.getG(), ColorName::Cyan.getB());
+    glm::vec3 color = glm::vec3(ColorName::Whitesmoke.getR(), ColorName::Whitesmoke.getG(), ColorName::Whitesmoke.getB());
     glm::vec2 position = glm::vec2(-0.75f, 0.67f);
     glm::vec2 size = glm::vec2(0.290f, 0.0900f);
     glm::vec2 scale = glm::vec2(0.25f, 0.33f);
-    float alpha = 0.33f;
+    float alpha = 0.66f;
 
     auto *guiRect = new GuiRect(color, position, size, scale, alpha);
     glm::vec2 position2 = glm::vec2(-0.55f, 0.37f);
@@ -232,8 +232,8 @@ void MainGuiLoop::main() {
 
     masterContainer->initialize();
 
-    UiMaster::createRenderQueue(masterContainer);
     UiMaster::applyConstraints(masterContainer);
+    UiMaster::createRenderQueue(masterContainer);
 
     /**
      * Framebuffers
@@ -290,7 +290,7 @@ void MainGuiLoop::main() {
                 const string &renderString =
                         ColorName::toString(clickColor) + ", Element: " + std::to_string(element);
                 *clickColorText = GUIText(renderString,
-                                          0.5f, fontLoaded, &noodleFont, glm::vec2(10.0f, 20.0f), clickColor,
+                                          0.5f, fontLoaded, &noodleFont, glm::vec2(InputMaster::mouseX, InputMaster::mouseY), clickColor,
                                           0.75f * static_cast<float>(DisplayManager::Width()), false);
                 InputMaster::resetClick();
             }
@@ -316,6 +316,13 @@ void MainGuiLoop::main() {
         parent->constraints->position += glm::vec2(0.00f, 0.002f);
         UiMaster::applyConstraints(parent);
 
+        guiLife1->constraints->position += glm::vec2 (0.00f, -0.001f);
+        UiMaster::applyConstraints(guiLife1);
+
+//        guiRect->constraints->position += glm::vec2 (0.00f, -0.005f);
+//        UiMaster::applyConstraints(guiRect);
+
+
         UiMaster::render();
 
         DisplayManager::updateDisplay();
@@ -336,37 +343,4 @@ void MainGuiLoop::main() {
      * Close display
      */
     DisplayManager::closeDisplay();
-}
-
-glm::vec3 MainGuiLoop::generateRandomPosition(Terrain *terrain, float yOffset) {
-    glm::vec3 positionVector(0.0f);
-    positionVector.x = floor(Utils::randomFloat() * 1500 - 800);
-    positionVector.z = floor(Utils::randomFloat() * -800);
-    positionVector.y = terrain->getHeightOfTerrain(positionVector.x, positionVector.z) + yOffset;
-    return positionVector;
-}
-
-glm::vec3 MainGuiLoop::generateRandomRotation() {
-    float rx, ry, rz;
-    rx = 0;
-    ry = Utils::randomFloat() * 100 - 50;
-    rz = 0;
-    glm::vec3 rot(rx, ry, rz);
-    rot = rot * 180.0f;
-    return rot;
-}
-
-float MainGuiLoop::generateRandomScale(float min = 0.75, float max = 1.50) {
-    float multiplier = 1;
-    if (max > 1) {
-        multiplier = ceil(max);
-    }
-    auto r = Utils::randomFloat() * multiplier;
-    if (r < min) {
-        r = min;
-    }
-    if (r > max) {
-        r = max;
-    }
-    return r;
 }

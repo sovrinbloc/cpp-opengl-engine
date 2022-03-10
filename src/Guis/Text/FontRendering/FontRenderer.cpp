@@ -117,7 +117,7 @@ void FontRenderer::prepare() {
  * @param text
  */
 void FontRenderer::prepareText(GUIText *text) {
-    glm::mat4 matrix = Maths::createTransformationMatrix(text->getConstraints()->getCalculatedRelativePosition(), glm::vec2(1.0f));
+    glm::mat4 matrix = Maths::createTransformationMatrix(text->getConstraints()->getCalculatedRelativePosition() * text->getFontSize(), glm::vec2(1.0f));
     shader->loadTransformationMatrix(matrix);
 }
 

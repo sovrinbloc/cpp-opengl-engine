@@ -137,9 +137,11 @@ void UiMaster::addToLayerQueue(GuiComponent *component) {
  * This is what was just added, thus we should test this by removing the render of the other components.
  */
 void UiMaster::render() {
+    int i = 0;
     for (Container *c: renderOrder) {
         {
             if (c->isHidden()) {
+                std::cout << c->getName() << " is hidden" << std::endl;
                 continue;
             }
 

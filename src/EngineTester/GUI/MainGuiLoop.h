@@ -11,12 +11,6 @@
 class MainGuiLoop {
 public:
     static void main();
-
-    static glm::vec3 generateRandomPosition(Terrain *terrain, float yOffset = 0.0f);
-
-    static glm::vec3 generateRandomRotation();
-
-    static float generateRandomScale(float min, float max);
 };
 
 
