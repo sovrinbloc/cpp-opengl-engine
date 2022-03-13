@@ -7,7 +7,7 @@
 
 
 #include "../../Terrain/Terrain.h"
-#include "../../Guis/Text/FontMeshCreator/GUIText.h"
+#include "../../Guis/Text/GUIText.h"
 
 class MainGameLoop {
 public:

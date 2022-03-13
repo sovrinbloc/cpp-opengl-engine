@@ -6,7 +6,7 @@
 #define ENGINE_MAINGUILOOP_H
 
 #include "../../Terrain/Terrain.h"
-#include "../../Guis/Text/FontMeshCreator/GUIText.h"
+#include "../../Guis/Text/GUIText.h"
 
 class MainGuiLoop {
 public:

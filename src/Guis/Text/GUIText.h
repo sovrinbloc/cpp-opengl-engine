@@ -7,10 +7,10 @@
 
 #include <iostream>
 #include "glm/glm.hpp"
-#include "TextMeshData.h"
-#include "FontModel.h"
-#include "../../../Toolbox/Color.h"
-#include "../../GuiComponent.h"
+#include "FontMeshCreator/TextMeshData.h"
+#include "FontMeshCreator/FontModel.h"
+#include "../../Toolbox/Color.h"
+#include "../GuiComponent.h"
 
 class GUIText : public GuiComponent {
 private:

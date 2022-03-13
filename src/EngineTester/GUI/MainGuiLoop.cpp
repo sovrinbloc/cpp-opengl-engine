@@ -12,19 +12,21 @@
 #include "../../RenderEngine/ObjLoader.h"
 #include "../../RenderEngine/MasterRenderer.h"
 #include "../../Guis/Texture/GuiTexture.h"
-#include "../../Guis/Texture/GuiRenderer.h"
-#include "../../Guis/Rect/RectRenderer.h"
+#include "../../Guis/Texture/Rendering/GuiRenderer.h"
+#include "../../Guis/Rect/Rendering/RectRenderer.h"
 #include "../../Toolbox/MousePicker.h"
 #include <ft2build.h>
 #include FT_FREETYPE_H
-#include "../../Guis/Text/FontRendering/FontRenderer.h"
+#include "../../Guis/Text/Rendering/FontRenderer.h"
 #include "../../Util/ColorName.h"
-#include "../../Guis/Text/FontRendering/TextMaster.h"
+#include "../../Guis/Text/Rendering/TextMaster.h"
 #include "../../Toolbox/TerrainPicker.h"
 #include "../../RenderEngine/FrameBuffers.h"
 #include "../../Interaction/InteractiveModel.h"
 #include "../../Util/CommonHeader.h"
 #include "../../Guis/UiMaster.h"
+#include "../../Guis/Constraints/UiPercentConstraint.h"
+#include "../../Guis/Constraints/UiPixelConstraint.h"
 
 // test to load objects.
 #include <thread>
@@ -149,22 +151,23 @@ void MainGuiLoop::main() {
     UiMaster::initialize(loader, guiRenderer, fontRenderer, rectRenderer);
 
     std::vector<GuiTexture *> guis = std::vector<GuiTexture *>();
-    auto *guiLife1 = new GuiTexture(loader->loadTexture("gui/lifebar")->getId(), glm::vec2(-0.72f, 0.9f),
-                                    glm::vec2(0.290f, 0.0900f));
-    auto *guiLife2 = new GuiTexture(loader->loadTexture("gui/green")->getId(), glm::vec2(-0.7f, 0.9f),
-                                    glm::vec2(0.185f, 0.070f));
-    auto *guiLife3 = new GuiTexture(loader->loadTexture("gui/heart")->getId(), glm::vec2(-0.9f, 0.9f),
-                                    glm::vec2(0.075f, 0.075f));
+    auto *guiHeart1 = new GuiTexture(loader->loadTexture("gui/lifebar")->getId(), glm::vec2(-0.72f, 0.9f),
+                                     glm::vec2(0.290f, 0.0900f));
+    auto *guiGreenBar = new GuiTexture(loader->loadTexture("gui/green")->getId(), glm::vec2(-0.7f, 0.9f),
+                                       glm::vec2(0.185f, 0.070f));
+    auto *guiHeart2 = new GuiTexture(loader->loadTexture("gui/heart")->getId(), glm::vec2(-0.9f, 0.9f),
+                                     glm::vec2(0.075f, 0.075f));
 
     auto sampleModifiedGui = new GuiTexture(loader->loadTexture("gui/lifebar")->getId(), glm::vec2(-0.72f, 0.3f),
                                             glm::vec2(0.290f, 0.0900f) / 3.0f);
 
 
     std::vector<GuiRect *> rects = std::vector<GuiRect *>();
-    glm::vec3 color = glm::vec3(ColorName::Whitesmoke.getR(), ColorName::Whitesmoke.getG(), ColorName::Whitesmoke.getB());
+    glm::vec3 color = glm::vec3(ColorName::Whitesmoke.getR(), ColorName::Whitesmoke.getG(),
+                                ColorName::Whitesmoke.getB());
     glm::vec2 position = glm::vec2(-0.75f, 0.67f);
     glm::vec2 size = glm::vec2(0.290f, 0.0900f);
-    glm::vec2 scale = glm::vec2(0.25f, 0.33f);
+    glm::vec2 scale = glm::vec2(0.275f, 0.270f);
     float alpha = 0.66f;
 
     auto *guiRect = new GuiRect(color, position, size, scale, alpha);
@@ -174,7 +177,8 @@ void MainGuiLoop::main() {
     auto *guiRect2 = new GuiRect(color2, position2, size, scale, alpha);
     rects.push_back(guiRect);
 
-    sampleModifiedGui->addChild(sampleModifiedGui, new UiConstraints(0, 0, 200, 200));
+    sampleModifiedGui->addChild(sampleModifiedGui, new UiConstraints(new UiPercentConstraint(XAxis, 0.0f),
+                                                                     new UiPercentConstraint(YAxis, 0.0f), 200, 200));
 
     /**
     * Font Configuration
@@ -206,26 +210,47 @@ void MainGuiLoop::main() {
 
     GuiComponent *masterContainer = UiMaster::getMasterComponent();
 
-    auto *parent = new GuiComponent(Container::CONTAINER, new UiConstraints(0.01f, -0.01f, 50, 50));
+    auto *parent = new GuiComponent(Container::CONTAINER, new UiConstraints(new UiPercentConstraint(XAxis, 0.01f),
+                                                                            new UiPercentConstraint(YAxis, -0.01f), 50,
+                                                                            50));
     parent->setName("Parent");
     masterContainer->setName("Master Container");
 
-    guiLife1->setName("gui/lifebar");
-    guiLife2->setName("gui/green");
-    guiLife3->setName("gui/heart");
+    guiHeart1->setName("gui/lifebar");
+    guiGreenBar->setName("gui/green");
+    guiHeart2->setName("gui/heart");
 
-    masterContainer->addChild(guiRect, new UiConstraints(0.70f, -0.9f, 50, 50));
-    masterContainer->addChild(guiRect2, new UiConstraints(0.50f, -0.4f, 50, 50));
-    masterContainer->addChild(parent, new UiConstraints(0.102f, -0.5f, 50, 50));
+    masterContainer->addChild(guiRect, new UiConstraints(new UiPercentConstraint(XAxis, 0.70f),
+                                                         new UiPercentConstraint(YAxis, -0.9f), 50, 50));
+    masterContainer->addChild(guiRect2, new UiConstraints(new UiPercentConstraint(XAxis, 0.50f),
+                                                          new UiPercentConstraint(YAxis, -0.4f), 50, 50));
+    masterContainer->addChild(parent, new UiConstraints(new UiPercentConstraint(XAxis, 0.102f),
+                                                        new UiPercentConstraint(YAxis, -0.5f), 50, 50));
 
-    parent->addChild(guiLife1, new UiConstraints(0.033f, -0.2f, 50, 50));
-    parent->addChild(guiLife2, new UiConstraints(0.002f, -0.1f, 50, 50));
-    parent->addChild(guiLife3, new UiConstraints(0.001f, -0.3f, 50, 50));
-    parent->addChild(text1, new UiConstraints(0.00f, 150.1f, 50, 50));
-    parent->addChild(text2, new UiConstraints(0.00f, 150.1f, 50, 50));
+    parent->addChild(guiHeart1,
+                     new UiConstraints(new UiPercentConstraint(XAxis, 0.033f), new UiPercentConstraint(YAxis, -0.2f),
+                                       50, 50));
+    parent->addChild(guiGreenBar,
+                     new UiConstraints(new UiPixelConstraint(XAxis, -600), new UiPixelConstraint(YAxis, 300),
+                                       50, 50));
+    parent->addChild(guiHeart2,
+                     new UiConstraints(new UiPercentConstraint(XAxis, 0.001f), new UiPercentConstraint(YAxis, -0.3f),
+                                       50, 50));
+    parent->addChild(text1,
+                     new UiConstraints(new UiPercentConstraint(XAxis, 0.00f), new UiPercentConstraint(YAxis, .7), 50,
+                                       50));
+    parent->addChild(text2,
+                     new UiConstraints(new UiPercentConstraint(XAxis, 0.00f), new UiPercentConstraint(YAxis, .7), 50,
+                                       50));
 
-    parent->addChild(clickColorText, new UiConstraints(0.00f, 300.1f, 50, 50));
-    guiLife1->addChild(text3, new UiConstraints(500.00f, 240.1f, 50, 50));
+
+    parent->addChild(clickColorText,
+                     new UiConstraints(new UiPercentConstraint(XAxis, 0.00f), new UiPercentConstraint(YAxis, 00.1f), 50,
+                                       50));
+    guiHeart1->addChild(text3,
+                        new UiConstraints(new UiPercentConstraint(XAxis, 0.0f), new UiPercentConstraint(YAxis, 0.0f),
+                                          50,
+                                          50));
 
     guiRect->setName("GuiRect");
     guiRect2->setName("GuiRect2");
@@ -290,7 +315,8 @@ void MainGuiLoop::main() {
                 const string &renderString =
                         ColorName::toString(clickColor) + ", Element: " + std::to_string(element);
                 *clickColorText = GUIText(renderString,
-                                          0.5f, fontLoaded, &noodleFont, glm::vec2(InputMaster::mouseX, InputMaster::mouseY), clickColor,
+                                          0.5f, fontLoaded, &noodleFont,
+                                          glm::vec2(InputMaster::mouseX, InputMaster::mouseY), clickColor,
                                           0.75f * static_cast<float>(DisplayManager::Width()), false);
                 InputMaster::resetClick();
             }
@@ -316,11 +342,12 @@ void MainGuiLoop::main() {
         parent->constraints->position += glm::vec2(0.00f, 0.002f);
         UiMaster::applyConstraints(parent);
 
-        guiLife1->constraints->position += glm::vec2 (0.00f, -0.001f);
-        UiMaster::applyConstraints(guiLife1);
+        guiHeart1->constraints->position += glm::vec2(0.00f, -0.001f);
+        UiMaster::applyConstraints(guiHeart1);
 
-//        guiRect->constraints->position += glm::vec2 (0.00f, -0.005f);
-//        UiMaster::applyConstraints(guiRect);
+        guiGreenBar->constraints->position += glm::vec2(0.00f, -0.005f);
+        guiGreenBar->addChild(text1, text1->getConstraints());
+        UiMaster::applyConstraints(guiRect);
 
 
         UiMaster::render();

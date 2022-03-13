@@ -9,7 +9,7 @@
 /**
  * @brief Terrain generates terrain coordinates and Stores them in a Vao, inputs the texturePack
  *        and the blendMap and stores those too. It also stores the height information for x,z,
- *        so that you can get the Y vertex from any X, Z coordinates.
+ *        so that you can get the Y vertex from any XAxis, Z coordinates.
  *        
  *        It loads in a heightMap image, which is converted into a
  *        3d mesh. There is a grid system, wherein if you want to generate multiple terrains,

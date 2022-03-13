@@ -75,7 +75,7 @@ public:
      *  @var charX (character / camera p coordinates)
      *  @var charY (character / camera y coordinates)
      *  @var charZ (character / camera q coordinates)
-     *  @var rx (horizontal rotation axis -> ray toward X)
+     *  @var rx (horizontal rotation axis -> ray toward XAxis)
      *  @var ry (vertical rotation axis -> ray toward Y)
      *  @var bx
      *  @var by

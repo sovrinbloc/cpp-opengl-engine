@@ -4,10 +4,11 @@
 
 #include "UiMaster.h"
 #include "Texture/GuiTexture.h"
-#include "Text/FontMeshCreator/GUIText.h"
-#include "Text/FontRendering/TextMaster.h"
+#include "Text/GUIText.h"
+#include "Text/Rendering/TextMaster.h"
 #include "../Toolbox/Logger/Log.h"
 #include "../Util/CommonHeader.h"
+#include "Constraints/UiPercentConstraint.h"
 
 GuiComponent *UiMaster::masterContainer;
 UiConstraints *UiMaster::masterConstraints;
@@ -106,7 +107,7 @@ UiConstraints *UiMaster::getMasterConstraints() {
 
 void UiMaster::initialize(Loader *loader, GuiRenderer *guiTextureRenderer, FontRenderer *fontRenderer,
                           RectRenderer *rectRenderer) {
-    masterConstraints = new UiConstraints(0.0f, -0.0f,
+    masterConstraints = new UiConstraints(new UiPercentConstraint(XAxis, 0.0f), new UiPercentConstraint(YAxis, 0.0f),
                                           static_cast<float>(DisplayManager::Width()),
                                           static_cast<float>(DisplayManager::Height()));
     masterContainer = new GuiComponent(Container::CONTAINER, masterConstraints);

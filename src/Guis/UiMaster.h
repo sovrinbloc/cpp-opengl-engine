@@ -8,9 +8,9 @@
 
 #include "GuiComponent.h"
 #include "../RenderEngine/DisplayManager.h"
-#include "Rect/RectRenderer.h"
-#include "Texture/GuiRenderer.h"
-#include "Text/FontRendering/FontRenderer.h"
+#include "Rect/Rendering/RectRenderer.h"
+#include "Texture/Rendering/GuiRenderer.h"
+#include "Text/Rendering/FontRenderer.h"
 #include <map>
 
 class UiMaster {

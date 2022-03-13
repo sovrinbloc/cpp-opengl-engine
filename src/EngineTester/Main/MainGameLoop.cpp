@@ -11,14 +11,14 @@
 #include "../../RenderEngine/ObjLoader.h"
 #include "../../RenderEngine/MasterRenderer.h"
 #include "../../Guis/Texture/GuiTexture.h"
-#include "../../Guis/Texture/GuiRenderer.h"
-#include "../../Guis/Rect/RectRenderer.h"
+#include "../../Guis/Texture/Rendering/GuiRenderer.h"
+#include "../../Guis/Rect/Rendering/RectRenderer.h"
 #include "../../Toolbox/MousePicker.h"
 #include <ft2build.h>
 #include FT_FREETYPE_H"include/freetype/freetype.h"
-#include "../../Guis/Text/FontRendering/FontRenderer.h"
+#include "../../Guis/Text/Rendering/FontRenderer.h"
 #include "../../Util/ColorName.h"
-#include "../../Guis/Text/FontRendering/TextMaster.h"
+#include "../../Guis/Text/Rendering/TextMaster.h"
 #include "../../Toolbox/TerrainPicker.h"
 #include "../../RenderEngine/FrameBuffers.h"
 #include "../../Interaction/InteractiveModel.h"
@@ -70,6 +70,8 @@ void testCraftStuff(float x, float y, float z) {
 #include "../../Guis/GuiComponent.h"
 #include "../../Guis/UiMaster.h"
 #include "../../Guis/Rect/GuiRect.h"
+#include "../../Guis/Constraints/UiPercentConstraint.h"
+#include "../../Guis/Constraints/UiPixelConstraint.h"
 
 void testMap() {
     std::map<int, Block> a;
@@ -367,7 +369,7 @@ void MainGameLoop::main() {
     rects.push_back(guiRect);
 
 
-    sampleModifiedGui->addChild(sampleModifiedGui, new UiConstraints(0, 0, 200, 200));
+    sampleModifiedGui->addChild(sampleModifiedGui, new UiConstraints(new UiPercentConstraint(XAxis, 0), new UiPercentConstraint(YAxis, 0), 200, 200));
 
 
     /**
@@ -382,7 +384,7 @@ void MainGameLoop::main() {
 
     GuiComponent *masterContainer = UiMaster::getMasterComponent();
 
-    GuiComponent *parent = new GuiComponent(Container::CONTAINER, new UiConstraints(0.01f, -0.01f, 50, 50));
+    GuiComponent *parent = new GuiComponent(Container::CONTAINER, new UiConstraints(new UiPercentConstraint(XAxis, 0.01f), new UiPercentConstraint(YAxis, -0.01f), 50, 50));
     parent->setName("Parent");
     masterContainer->setName("Master Container");
 
@@ -391,17 +393,17 @@ void MainGameLoop::main() {
     t3->setName("gui/heart");
 
 
-    masterContainer->addChild(guiRect, new UiConstraints(0.0f, -0.1f, 50, 50));
-    masterContainer->addChild(guiRect2, new UiConstraints(0.0f, -0.1f, 50, 50));
-    masterContainer->addChild(parent, new UiConstraints(0.02f, -0.1f, 50, 50));
-    parent->addChild(t1, new UiConstraints(0.00f, -0.1f, 50, 50));
-    parent->addChild(t2, new UiConstraints(0.00f, -0.1f, 50, 50));
-    parent->addChild(t3, new UiConstraints(0.00f, -0.1f, 50, 50));
-    parent->addChild(text1, new UiConstraints(0.00f, -0.1f, 50, 50));
-    parent->addChild(text2, new UiConstraints(0.00f, -0.1f, 50, 50));
-    parent->addChild(clickColorText, new UiConstraints(0.00f, -0.1f, 50, 50));
+    masterContainer->addChild(guiRect, new UiConstraints(new UiPercentConstraint(XAxis, 0.0f), new UiPercentConstraint(YAxis, -0.1f), 50, 50));
+    masterContainer->addChild(guiRect2, new UiConstraints(new UiPercentConstraint(XAxis, 0.0f), new UiPercentConstraint(YAxis, -0.1f), 50, 50));
+    masterContainer->addChild(parent, new UiConstraints(new UiPercentConstraint(XAxis, 0.02f), new UiPercentConstraint(YAxis, -0.1f), 50, 50));
+    parent->addChild(t1, new UiConstraints(new UiPercentConstraint(XAxis, 0.0f), new UiPercentConstraint(YAxis, -0.1f), 50, 50));
+    parent->addChild(t2, new UiConstraints(new UiPercentConstraint(XAxis, 0.0f), new UiPercentConstraint(YAxis, -0.1f), 50, 50));
+    parent->addChild(t3, new UiConstraints(new UiPercentConstraint(XAxis, 0.0f), new UiPercentConstraint(YAxis, -0.1f), 50, 50));
+    parent->addChild(text1, new UiConstraints(new UiPercentConstraint(XAxis, 0.0f), new UiPercentConstraint(YAxis, -0.1f), 50, 50));
+    parent->addChild(text2, new UiConstraints(new UiPercentConstraint(XAxis, 0.0f), new UiPercentConstraint(YAxis, -0.1f), 50, 50));
+    parent->addChild(clickColorText, new UiConstraints(new UiPercentConstraint(XAxis, 0.0f), new UiPercentConstraint(YAxis, -0.1f), 50, 50));
 
-    t1->addChild(pNameText, new UiConstraints(-500.00f, 40.1f, 50, 50));
+    t1->addChild(pNameText, new UiConstraints(new UiPixelConstraint(XAxis, -500.0f), new UiPixelConstraint(YAxis, 40.0f), 50, 50));
 
 //    masterContainer->addChild(t1, new UiConstraints(0.0f, -0.1f, 50, 50));
 //    masterContainer->addChild(t2, new UiConstraints(0.0f, -0.1f, 50, 50));
@@ -552,7 +554,7 @@ void MainGameLoop::newUiComponent(Loader *loader, GUIText *text) {
     std::cout << "I am in the loading of the new UiComponent... So this is what it is." << std::endl;
     auto lifeBar = new GuiComponent(Container::CONTAINER);
     lifeBar->setParent(lifeBar);
-    lifeBar->setConstraints(new UiConstraints(0.25, 1, 800, 800));
+    lifeBar->setConstraints(new UiConstraints(new UiPercentConstraint(XAxis, 0.25f), new UiPercentConstraint(YAxis, 1.f), 800, 800));
     auto lifebar = new GuiTexture(loader->loadTexture("gui/lifebar")->getId(), glm::vec2(-0.72f, 0.9f),
                                   glm::vec2(0.290f, 0.0900f));
     auto green = new GuiTexture(loader->loadTexture("gui/green")->getId(), glm::vec2(-0.7f, 0.9f),
@@ -562,9 +564,9 @@ void MainGameLoop::newUiComponent(Loader *loader, GUIText *text) {
     FontType arial = TextMeshData::loadFont("arial", 48);
 
     lifeBar->addChild(lifebar, new UiConstraints(0, 0, 120, 43));
-    lifeBar->addChild(green, new UiConstraints(10, 10, 110, 22));
-    lifeBar->addChild(heart, new UiConstraints(30, 40, 100, 52));
-    lifeBar->addChild(text, new UiConstraints(30, 40, 100, 52));
+    lifeBar->addChild(green, new UiConstraints(new UiPercentConstraint(XAxis, 10.f), new UiPercentConstraint(YAxis, 10.1f), 110, 22));
+    lifeBar->addChild(heart, new UiConstraints( new UiPercentConstraint(XAxis, 30.f), new UiPercentConstraint(YAxis, 40.f), 100, 52));
+    lifeBar->addChild(text, new UiConstraints( new UiPercentConstraint(XAxis, 30.f), new UiPercentConstraint(YAxis, 40.f), 100, 52));
     lifeBar->initialize();
 
 

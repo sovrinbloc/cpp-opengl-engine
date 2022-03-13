@@ -7,20 +7,30 @@
 
 
 #include "glm/glm.hpp"
+#include "UiConstraint.h"
 
 class UiConstraints {
 
 public:
     glm::vec2 position = glm::vec2(0.0f);
 
+    UiConstraint *cx;
+
+    UiConstraint *cy;
+
     // the parent's position modification
     glm::vec2 parentPosition = glm::vec2(0.0f);
 
     glm::vec2 size = glm::vec2(0.0f);
+
+    bool scale = false;
+
 public:
     UiConstraints();
 
-    UiConstraints(float x, float y, float width, float height);
+//    UiConstraints(float x, float y, float width, float height);
+
+    UiConstraints(UiConstraint *x, UiConstraint *y, float width, float height);
 
     UiConstraints(glm::vec2 position, glm::vec2 size);
 

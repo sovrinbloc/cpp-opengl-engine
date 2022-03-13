@@ -69,10 +69,10 @@ add_executable(engine
         src/RenderEngine/AssimpEntityLoader.cpp
         src/Guis/Texture/GuiTexture.h
         src/Guis/Texture/GuiTexture.cpp
-        src/Guis/Texture/GuiRenderer.cpp
-        src/Guis/Texture/GuiRenderer.h
-        src/Guis/Texture/GuiShader.cpp
-        src/Guis/Texture/GuiShader.h
+        src/Guis/Texture/Rendering/GuiRenderer.cpp
+        src/Guis/Texture/Rendering/GuiRenderer.h
+        src/Guis/Texture/Rendering/GuiShader.cpp
+        src/Guis/Texture/Rendering/GuiShader.h
         src/Util/LightUtil.h
         src/Skybox/SkyboxShader.cpp
         src/Skybox/SkyboxShader.h
@@ -83,20 +83,20 @@ add_executable(engine
         src/Toolbox/MousePicker.h
         src/Guis/Text/FontMeshCreator/TextMeshData.cpp
         src/Guis/Text/FontMeshCreator/TextMeshData.h
-        src/Guis/Text/FontRendering/FontShader.cpp
-        src/Guis/Text/FontRendering/FontShader.h
-        src/Guis/Text/FontRendering/FontRenderer.cpp
-        src/Guis/Text/FontRendering/FontRenderer.h
-        src/Guis/Text/FontMeshCreator/GUIText.cpp
-        src/Guis/Text/FontMeshCreator/GUIText.h
+        src/Guis/Text/Rendering/FontShader.cpp
+        src/Guis/Text/Rendering/FontShader.h
+        src/Guis/Text/Rendering/FontRenderer.cpp
+        src/Guis/Text/Rendering/FontRenderer.h
+        src/Guis/Text/GUIText.cpp
+        src/Guis/Text/GUIText.h
         src/Guis/Text/FontMeshCreator/Character.h
         src/Guis/Text/FontMeshCreator/Word.cpp
         src/Guis/Text/FontMeshCreator/Word.h
         src/Guis/Text/FontMeshCreator/Line.cpp
         src/Guis/Text/FontMeshCreator/Line.h
         src/Guis/Text/FontMeshCreator/FontModel.h
-        src/Guis/Text/FontRendering/TextMaster.cpp
-        src/Guis/Text/FontRendering/TextMaster.h
+        src/Guis/Text/Rendering/TextMaster.cpp
+        src/Guis/Text/Rendering/TextMaster.h
         src/Guis/Text/FontMeshCreator/TextMeshCreator.cpp
         src/Guis/Text/FontMeshCreator/TextMeshCreator.h
         src/BoundingBox/RawBoundingBox.h
@@ -146,8 +146,8 @@ add_executable(engine
         src/Collision/AABB.cpp
         src/Collision/AABB.h
         src/Toolbox/Noise.h
-        src/Guis/UiConstraints.cpp
-        src/Guis/UiConstraints.h
+        src/Guis/Constraints/UiConstraints.cpp
+        src/Guis/Constraints/UiConstraints.h
         src/Guis/Alpha.cpp
         src/Guis/Alpha.h
         src/Guis/UiContainer.h
@@ -156,15 +156,15 @@ add_executable(engine
         src/Guis/GuiComponent.h
         src/Guis/UiMaster.cpp
         src/Guis/UiMaster.h
-        src/Guis/Rect/RectRenderer.cpp
-        src/Guis/Rect/RectRenderer.h
-        src/Guis/Rect/RectShader.cpp
-        src/Guis/Rect/RectShader.h
+        src/Guis/Rect/Rendering/RectRenderer.cpp
+        src/Guis/Rect/Rendering/RectRenderer.h
+        src/Guis/Rect/Rendering/RectShader.cpp
+        src/Guis/Rect/Rendering/RectShader.h
         src/Guis/Rect/GuiRect.cpp
         src/Guis/Rect/GuiRect.h
         src/Toolbox/Logger/Log.h
         src/Toolbox/Logger/ANSI.hpp
-        src/EngineTester/GUI/MainGuiLoop.cpp src/EngineTester/GUI/MainGuiLoop.h)
+        src/EngineTester/GUI/MainGuiLoop.cpp src/EngineTester/GUI/MainGuiLoop.h src/Guis/Components/ButtonUi.cpp src/Guis/Components/ButtonUi.h src/Guis/Constraints/UiConstraint.cpp src/Guis/Constraints/UiConstraint.h src/Guis/Constraints/UiPercentConstraint.h src/Guis/Constraints/UiPixelConstraint.h src/Guis/Constraints/Tools.h)
 
 if (EXISTS deps/glrequired)
     message(STATUS "Requiring OpenGL")

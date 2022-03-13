@@ -3,9 +3,9 @@
 //
 
 #include "UiConstraints.h"
-#include "../Util/CommonHeader.h"
+#include "../../Util/CommonHeader.h"
 
-UiConstraints::UiConstraints(float x, float y, float width, float height) : position(glm::vec2(x,y)), size(glm::vec2(width, height)) {}
+//UiConstraints::UiConstraints(float x, float y, float width, float height) : position(glm::vec2(x,y)), size(glm::vec2(width, height)) {}
 
 UiConstraints::UiConstraints(glm::vec2 position, glm::vec2 size) : position(position), size(size) {}
 
@@ -88,4 +88,8 @@ const glm::vec2 &UiConstraints::getSize() const {
 
 void UiConstraints::setSize(const glm::vec2 &size) {
     UiConstraints::size = size;
+}
+
+UiConstraints::UiConstraints(UiConstraint *x, UiConstraint *y, float width, float height) : cx(x), cy(y), size(glm::vec2(width, height)) {
+    this->position = glm::vec2(x->getDecimalValue(), y->getDecimalValue());
 }
