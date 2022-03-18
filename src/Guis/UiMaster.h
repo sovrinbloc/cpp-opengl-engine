@@ -17,7 +17,6 @@ class UiMaster {
 private:
     static UiConstraints *masterConstraints;
     static GuiComponent *masterContainer;
-    static std::vector<Container *> renderOrder;
 
     // try to move everything GUI related into this renderer
     static Loader *loader;
@@ -56,6 +55,8 @@ public:
 
     static void createRenderQueue(GuiComponent *component);
 
+    static void createRenderQueue();
+
     /**
      * @brief Gets the constraints of the master UiComponent (the container of all UI components).
      *
@@ -80,6 +81,8 @@ public:
     static void printComponentPosition(Container *childComponent);
 
     static void  printComponentInformation(GuiComponent *parentComponent);
+
+    static std::vector<Container *> renderOrder;
 };
 
 

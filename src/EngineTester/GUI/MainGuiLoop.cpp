@@ -23,10 +23,11 @@
 #include "../../Toolbox/TerrainPicker.h"
 #include "../../RenderEngine/FrameBuffers.h"
 #include "../../Interaction/InteractiveModel.h"
-#include "../../Util/CommonHeader.h"
 #include "../../Guis/UiMaster.h"
 #include "../../Guis/Constraints/UiPercentConstraint.h"
 #include "../../Guis/Constraints/UiPixelConstraint.h"
+#include "../../Guis/Constraints/UiNormalizedConstraint.h"
+#include "../../Guis/Text/FontMeshCreator/FontNames.h"
 
 // test to load objects.
 #include <thread>
@@ -150,115 +151,103 @@ void MainGuiLoop::main() {
     // initializes the UiMaster with these renderers.
     UiMaster::initialize(loader, guiRenderer, fontRenderer, rectRenderer);
 
-    std::vector<GuiTexture *> guis = std::vector<GuiTexture *>();
-    auto *guiHeart1 = new GuiTexture(loader->loadTexture("gui/lifebar")->getId(), glm::vec2(-0.72f, 0.9f),
-                                     glm::vec2(0.290f, 0.0900f));
-    auto *guiGreenBar = new GuiTexture(loader->loadTexture("gui/green")->getId(), glm::vec2(-0.7f, 0.9f),
-                                       glm::vec2(0.185f, 0.070f));
-    auto *guiHeart2 = new GuiTexture(loader->loadTexture("gui/heart")->getId(), glm::vec2(-0.9f, 0.9f),
-                                     glm::vec2(0.075f, 0.075f));
+    std::vector<Container *> containers = std::vector<Container *>();
 
+    std::vector<GuiTexture *> guis = std::vector<GuiTexture *>();
+
+
+    auto *guiRedHeart = new GuiTexture(loader->loadTexture("gui/heart")->getId(), glm::vec2(-0.0f, 0.0f),
+                                       glm::vec2(0.075f, 0.075f));
+    guiRedHeart->setName("gui/heart");
+
+    // sample to see if we can move it.
     auto sampleModifiedGui = new GuiTexture(loader->loadTexture("gui/lifebar")->getId(), glm::vec2(-0.72f, 0.3f),
                                             glm::vec2(0.290f, 0.0900f) / 3.0f);
 
 
-    std::vector<GuiRect *> rects = std::vector<GuiRect *>();
-    glm::vec3 color = glm::vec3(ColorName::Whitesmoke.getR(), ColorName::Whitesmoke.getG(),
-                                ColorName::Whitesmoke.getB());
-    glm::vec2 position = glm::vec2(-0.75f, 0.67f);
+
+
+
+
+    // background of inventoryParent slot (rect)
+    Color color = ColorName::Whitesmoke;
+    glm::vec2 position = glm::vec2(0.0f, 0.0f);
     glm::vec2 size = glm::vec2(0.290f, 0.0900f);
-    glm::vec2 scale = glm::vec2(0.275f, 0.270f);
+    glm::vec2 scale = glm::vec2(0.25f, 0.25f);
     float alpha = 0.66f;
+    // fixme: position is not accounted for
+    auto *guiRect = new GuiRect(ColorName::Black, position, size, scale, alpha);
+    guiRect->setName("guiRect");
 
-    auto *guiRect = new GuiRect(color, position, size, scale, alpha);
-    glm::vec2 position2 = glm::vec2(-0.55f, 0.37f);
-    glm::vec3 color2 = glm::vec3(ColorName::Green.getR(), ColorName::Green.getG(),
-                                 ColorName::Green.getB());
-    auto *guiRect2 = new GuiRect(color2, position2, size, scale, alpha);
-    rects.push_back(guiRect);
+    glm::vec2 position2 = glm::vec2(-0.85f, 0.37f);
+    glm::vec3 color2 = glm::vec3(ColorName::Green.getR(), ColorName::Green.getG(), ColorName::Green.getB());
 
-    sampleModifiedGui->addChild(sampleModifiedGui, new UiConstraints(new UiPercentConstraint(XAxis, 0.0f),
-                                                                     new UiPercentConstraint(YAxis, 0.0f), 200, 200));
 
     /**
     * Font Configuration
     */
+
     // Initialize Texting
     TextMaster::init(loader);
 
-    const std::string &ARIAL = "arial";
-    const std::string &NOODLE = "noodle";
-
-    FontType arialFont = TextMeshData::loadFont(ARIAL, 48);
-    FontType noodleFont = TextMeshData::loadFont(NOODLE, 48);
-
+    FontType arialFont = TextMeshData::loadFont(FontNames::ARIAL, 48);
+    FontType noodleFont = TextMeshData::loadFont(FontNames::NOODLE, 48);
 
     FontModel *fontLoaded = loader->loadFontVAO();
+    // fixme: position is not accounted for
     auto *text1 = new GUIText(
-            "This is a sample of a mutliline text. This is a sample of a mutliline text. This is a sample of a mutliline text. This is a sample of a mutliline text. This is a sample of a mutliline text. This is a sample of a mutliline text. This is a sample of a mutliline text. This is a sample of a mutliline text. This is a sample of a mutliline text. This is a sample of a mutliline text. This is a sample of a mutliline text. This is a sample of a mutliline text. This is a sample of a mutliline text. This is a sample of a mutliline text. ",
-            0.50f, fontLoaded, &noodleFont, glm::vec2(25.0f, 225.0f), ColorName::Whitesmoke,
+            "This is a sample of a mutliline text. This is a sample of a mutliline text. This is a sample of a mutliline text. This is a sample of a mutliline text. This is a sample of a mutliline text.",
+            0.50f, fontLoaded, &noodleFont, glm::vec2(0.0f, 0.0f), ColorName::Whitesmoke,
             0.50f * static_cast<float>(DisplayManager::Width()),
             false);
-    auto *text2 = new GUIText("Joseph Alai MCMXII", 0.5f, fontLoaded, &arialFont, glm::vec2(540.0f, 50.0f),
-                              ColorName::Cyan,
-                              0.75f * static_cast<float>(DisplayManager::Width()), false);
-    GUIText *text3 = text2;
-    auto clickColorText = new GUIText("Color: ", 0.5f, fontLoaded, &arialFont, glm::vec2(10.0f, 20.0f),
-                                      ColorName::Whitesmoke,
-                                      0.75f * static_cast<float>(DisplayManager::Width()), false);
+    text1->setName("multiline text");
 
+    auto *text2 = new GUIText(
+            "Inventory",
+            0.30f, fontLoaded, &arialFont, glm::vec2(0.0f), ColorName::White, 0.50f * static_cast<float>(DisplayManager::Width()),
+            false
+            );
+    text2->setName("Inventory");
+
+    // fixme: position is not accounted for
 
     GuiComponent *masterContainer = UiMaster::getMasterComponent();
-
-    auto *parent = new GuiComponent(Container::CONTAINER, new UiConstraints(new UiPercentConstraint(XAxis, 0.01f),
-                                                                            new UiPercentConstraint(YAxis, -0.01f), 50,
-                                                                            50));
-    parent->setName("Parent");
     masterContainer->setName("Master Container");
 
-    guiHeart1->setName("gui/lifebar");
-    guiGreenBar->setName("gui/green");
-    guiHeart2->setName("gui/heart");
-
-    masterContainer->addChild(guiRect, new UiConstraints(new UiPercentConstraint(XAxis, 0.70f),
-                                                         new UiPercentConstraint(YAxis, -0.9f), 50, 50));
-    masterContainer->addChild(guiRect2, new UiConstraints(new UiPercentConstraint(XAxis, 0.50f),
-                                                          new UiPercentConstraint(YAxis, -0.4f), 50, 50));
-    masterContainer->addChild(parent, new UiConstraints(new UiPercentConstraint(XAxis, 0.102f),
-                                                        new UiPercentConstraint(YAxis, -0.5f), 50, 50));
-
-    parent->addChild(guiHeart1,
-                     new UiConstraints(new UiPercentConstraint(XAxis, 0.033f), new UiPercentConstraint(YAxis, -0.2f),
-                                       50, 50));
-    parent->addChild(guiGreenBar,
-                     new UiConstraints(new UiPixelConstraint(XAxis, -600), new UiPixelConstraint(YAxis, 300),
-                                       50, 50));
-    parent->addChild(guiHeart2,
-                     new UiConstraints(new UiPercentConstraint(XAxis, 0.001f), new UiPercentConstraint(YAxis, -0.3f),
-                                       50, 50));
-    parent->addChild(text1,
-                     new UiConstraints(new UiPercentConstraint(XAxis, 0.00f), new UiPercentConstraint(YAxis, .7), 50,
-                                       50));
-    parent->addChild(text2,
-                     new UiConstraints(new UiPercentConstraint(XAxis, 0.00f), new UiPercentConstraint(YAxis, .7), 50,
-                                       50));
+    // simple container called inventoryParent.
+    auto *inventoryParent = new GuiComponent(Container::CONTAINER, new UiConstraints(new UiNormalizedConstraint(XAxis, 0.00f),
+                                                                                     new UiNormalizedConstraint(YAxis, 0.0f), 50,
+                                                                                     50));
+    // inventoryParent is the main container for the inventoryParent
+    inventoryParent->setName("Inventory Parent");
+    masterContainer->addChild(inventoryParent, new UiConstraints(new UiNormalizedConstraint(XAxis, 0.00f),
+                                                                 new UiNormalizedConstraint(YAxis, 0.0f), 50, 50));
 
 
-    parent->addChild(clickColorText,
-                     new UiConstraints(new UiPercentConstraint(XAxis, 0.00f), new UiPercentConstraint(YAxis, 00.1f), 50,
-                                       50));
-    guiHeart1->addChild(text3,
-                        new UiConstraints(new UiPercentConstraint(XAxis, 0.0f), new UiPercentConstraint(YAxis, 0.0f),
-                                          50,
-                                          50));
+    inventoryParent->addChild(guiRect, new UiConstraints(new UiNormalizedConstraint(XAxis, 0.00f),
+                                                         new UiNormalizedConstraint(YAxis, 0.0f), 50, 50));
+    inventoryParent->setLayer(2);
+    text1->setLayer(2);
+    text2->setLayer(2);
+    guiRedHeart->setLayer(2);
+    guiRect->setLayer(1);
+
+    inventoryParent->addChild(text1,
+                              new UiConstraints(new UiNormalizedConstraint(XAxis, 0.00f),
+                                                new UiNormalizedConstraint(YAxis, 0.0f), 50, 50));
+    inventoryParent->addChild(text2,
+                              new UiConstraints(new UiNormalizedConstraint(XAxis, 0.0f),
+                                                new UiNormalizedConstraint(YAxis, 0.2f), 50, 50));
+    inventoryParent->addChild(guiRedHeart,
+                              new UiConstraints(new UiNormalizedConstraint(XAxis, 0.00f),
+                                                new UiNormalizedConstraint(YAxis, 0.0f), 50, 50));
 
     guiRect->setName("GuiRect");
-    guiRect2->setName("GuiRect2");
 
     masterContainer->initialize();
 
-    UiMaster::applyConstraints(masterContainer);
-    UiMaster::createRenderQueue(masterContainer);
+    UiMaster::applyConstraints();
+    UiMaster::createRenderQueue();
 
     /**
      * Framebuffers
@@ -314,10 +303,6 @@ void MainGuiLoop::main() {
                 }
                 const string &renderString =
                         ColorName::toString(clickColor) + ", Element: " + std::to_string(element);
-                *clickColorText = GUIText(renderString,
-                                          0.5f, fontLoaded, &noodleFont,
-                                          glm::vec2(InputMaster::mouseX, InputMaster::mouseY), clickColor,
-                                          0.75f * static_cast<float>(DisplayManager::Width()), false);
                 InputMaster::resetClick();
             }
         }
@@ -333,21 +318,21 @@ void MainGuiLoop::main() {
 
         // non framebuffer
         renderer->renderScene(entities, std::vector<AssimpEntity *>(), allTerrains, lights);
-        text3->getPosition() += glm::vec2(.1f);
+//        text3->getPosition() += glm::vec2(.1f);
 
         // moves everything to the right
-        UiMaster::getMasterComponent()->constraints->position += glm::vec2(0.001f, 0.0f);
-        UiMaster::applyConstraints(masterContainer);
+//        UiMaster::getMasterComponent()->constraints->position += glm::vec2(0.001f, 0.0f);
+//        UiMaster::applyConstraints(masterContainer);
 
-        parent->constraints->position += glm::vec2(0.00f, 0.002f);
-        UiMaster::applyConstraints(parent);
-
-        guiHeart1->constraints->position += glm::vec2(0.00f, -0.001f);
-        UiMaster::applyConstraints(guiHeart1);
-
-        guiGreenBar->constraints->position += glm::vec2(0.00f, -0.005f);
-        guiGreenBar->addChild(text1, text1->getConstraints());
-        UiMaster::applyConstraints(guiRect);
+//        inventoryParent->constraints->position += glm::vec2(0.00f, 0.002f);
+//        UiMaster::applyConstraints(inventoryParent);
+//
+//        guiLifeBarHolder->constraints->position += glm::vec2(0.00f, -0.001f);
+//        UiMaster::applyConstraints(guiLifeBarHolder);
+//
+//        guiGreenBar->constraints->position += glm::vec2(0.00f, -0.005f);
+//        guiGreenBar->addChild(text1, text1->getConstraints());
+//        UiMaster::applyConstraints(guiRect);
 
 
         UiMaster::render();

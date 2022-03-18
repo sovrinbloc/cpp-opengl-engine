@@ -164,7 +164,17 @@ add_executable(engine
         src/Guis/Rect/GuiRect.h
         src/Toolbox/Logger/Log.h
         src/Toolbox/Logger/ANSI.hpp
-        src/EngineTester/GUI/MainGuiLoop.cpp src/EngineTester/GUI/MainGuiLoop.h src/Guis/Components/ButtonUi.cpp src/Guis/Components/ButtonUi.h src/Guis/Constraints/UiConstraint.cpp src/Guis/Constraints/UiConstraint.h src/Guis/Constraints/UiPercentConstraint.h src/Guis/Constraints/UiPixelConstraint.h src/Guis/Constraints/Tools.h)
+        src/EngineTester/GUI/MainGuiLoop.cpp
+        src/EngineTester/GUI/MainGuiLoop.h
+        src/Guis/Components/ButtonUi.cpp
+        src/Guis/Components/ButtonUi.h
+        src/Guis/Constraints/UiConstraint.cpp
+        src/Guis/Constraints/UiConstraint.h
+        src/Guis/Constraints/UiPercentConstraint.h
+        src/Guis/Constraints/UiPixelConstraint.h
+        src/Guis/Constraints/Tools.h
+        src/Guis/Constraints/UiNormalizedConstraint.h
+        src/Guis/Text/FontMeshCreator/FontNames.h)
 
 if (EXISTS deps/glrequired)
     message(STATUS "Requiring OpenGL")

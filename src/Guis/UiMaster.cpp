@@ -9,6 +9,7 @@
 #include "../Toolbox/Logger/Log.h"
 #include "../Util/CommonHeader.h"
 #include "Constraints/UiPercentConstraint.h"
+#include "Constraints/UiNormalizedConstraint.h"
 
 GuiComponent *UiMaster::masterContainer;
 UiConstraints *UiMaster::masterConstraints;
@@ -41,34 +42,36 @@ void UiMaster::applyConstraints(GuiComponent *parentComponent) {
 
         childComponent->constraints->parentPosition =
                 parentComponent->constraints->parentPosition + parentComponent->constraints->position;
+        std::cout << "Position of " << childComponent->getName() << " is " << childComponent->constraints->parentPosition.x << ", " << childComponent->constraints->parentPosition.y << std::endl ;
+        std::cout << "PARENT of ^^ : " << childComponent->getParent()->getName() << " is " << childComponent->getParent()->constraints->parentPosition.x << ", " << childComponent->getParent()->constraints->parentPosition.y << std::endl ;
 
         // check to see which type the parentComponent is: and perform the action based on that.
         switch (childComponent->getType()) {
             case Container::IMAGE: {
                 auto *p = dynamic_cast<GuiTexture *>(childComponent);
                 p->constraints->parentPosition =
-                        parentComponent->constraints->position + parentComponent->constraints->parentPosition;
+                        parentComponent->constraints->parentPosition + parentComponent->constraints->position;
 
                 break;
             }
             case Container::TEXT: {
                 auto *p = dynamic_cast<GUIText *>(childComponent);
                 p->constraints->parentPosition =
-                        parentComponent->constraints->position + parentComponent->constraints->parentPosition;
+                        parentComponent->constraints->parentPosition + parentComponent->constraints->position;
 
                 break;
             }
             case Container::COLORED_BOX: {
                 auto *p = dynamic_cast<GuiRect *>(childComponent);
                 p->constraints->parentPosition =
-                        parentComponent->constraints->position + parentComponent->constraints->parentPosition;
+                        parentComponent->constraints->parentPosition + parentComponent->constraints->position;
 
                 break;
             }
             case Container::CONTAINER: {
                 auto *p = dynamic_cast<GuiComponent *>(childComponent);
                 p->constraints->parentPosition =
-                        parentComponent->constraints->position + parentComponent->constraints->parentPosition;
+                        parentComponent->constraints->parentPosition + parentComponent->constraints->position;
 
                 break;
             }
@@ -90,10 +93,10 @@ void UiMaster::applyConstraints(GuiComponent *parentComponent) {
  */
 void UiMaster::createRenderQueue(GuiComponent *component) {
     // iterate through children of this component and apply the constraints to them.
+    int i = 0;
     for (Container *c : component->SortChildrenByLayer(true)) {
         UiMaster::addToLayerQueue(dynamic_cast<GuiComponent *>(c));
         UiMaster::createRenderQueue(dynamic_cast<GuiComponent *>(c));
-        std::cout << "Added layer to queue" << std::endl;
     }
 }
 
@@ -107,7 +110,7 @@ UiConstraints *UiMaster::getMasterConstraints() {
 
 void UiMaster::initialize(Loader *loader, GuiRenderer *guiTextureRenderer, FontRenderer *fontRenderer,
                           RectRenderer *rectRenderer) {
-    masterConstraints = new UiConstraints(new UiPercentConstraint(XAxis, 0.0f), new UiPercentConstraint(YAxis, 0.0f),
+    masterConstraints = new UiConstraints(new UiNormalizedConstraint(XAxis, 0.0f), new UiNormalizedConstraint(YAxis, 0.0f),
                                           static_cast<float>(DisplayManager::Width()),
                                           static_cast<float>(DisplayManager::Height()));
     masterContainer = new GuiComponent(Container::CONTAINER, masterConstraints);
@@ -139,7 +142,13 @@ void UiMaster::addToLayerQueue(GuiComponent *component) {
  */
 void UiMaster::render() {
     int i = 0;
+
+    std::sort(renderOrder.begin(), renderOrder.end(),
+              [](Container * a, Container * b) -> bool
+              { return a->getLayer() < b->getLayer(); } );
+
     for (Container *c: renderOrder) {
+        std::cout << "renderOrder: " << c->getName() << ", " << c->getLayer() << std::endl;
         {
             if (c->isHidden()) {
                 std::cout << c->getName() << " is hidden" << std::endl;
@@ -187,4 +196,8 @@ void UiMaster::setGroup(int group, Container *container) {
 
 const Container *UiMaster::getGroupMap(int group) {
     return groupMap[group];
+}
+
+void UiMaster::createRenderQueue() {
+    createRenderQueue(getMasterComponent());
 }

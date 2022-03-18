@@ -355,17 +355,14 @@ void MainGameLoop::main() {
     guis.push_back(sampleModifiedGui);
 
     std::vector<GuiRect *> rects = std::vector<GuiRect *>();
-    glm::vec3 color = glm::vec3(ColorName::Cyan.getR(), ColorName::Cyan.getG(), ColorName::Cyan.getB());
     glm::vec2 position = glm::vec2(-0.75f, 0.67f);
     glm::vec2 size = glm::vec2(0.290f, 0.0900f);
     glm::vec2 scale = glm::vec2(0.25f, 0.33f);
     float alpha = 0.33f;
 
-    GuiRect *guiRect = new GuiRect(color, position, size, scale, alpha);
+    GuiRect *guiRect = new GuiRect(ColorName::Cyan, position, size, scale, alpha);
     glm::vec2 position2 = glm::vec2(-0.55f, 0.37f);
-    glm::vec3 color2 = glm::vec3(ColorName::Green.getR(), ColorName::Green.getG(),
-                                 ColorName::Green.getB());
-    GuiRect *guiRect2 = new GuiRect(color2, position2, size, scale, alpha);
+    GuiRect *guiRect2 = new GuiRect(ColorName::Green, position2, size, scale, alpha);
     rects.push_back(guiRect);
 
 
@@ -498,7 +495,7 @@ void MainGameLoop::main() {
             renderer->renderScene(entities, scenes, allTerrains, lights);
         }
 
-        pNameText->getPosition() += glm::vec2(.1f);
+        pNameText->position += glm::vec2(.1f);
 
 //        TextMaster::render();
 //        guiRenderer->render(guis);

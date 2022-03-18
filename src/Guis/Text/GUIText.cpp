@@ -46,10 +46,6 @@ FontType *GUIText::getFontType() {
     return this->fontType;
 }
 
-glm::vec2 &GUIText::getPosition() {
-    return this->position;
-}
-
 float GUIText::getFontSize() const {
     return this->fontSize;
 }

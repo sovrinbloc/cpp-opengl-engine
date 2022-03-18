@@ -1,24 +1,23 @@
 //
-// Created by Joseph Alai on 3/12/22.
+// Created by Joseph Alai on 3/13/22.
 //
 
-#ifndef ENGINE_UIPIXELCONSTRAINT_H
-#define ENGINE_UIPIXELCONSTRAINT_H
-
+#ifndef ENGINE_UINORMALIZEDCONSTRAINT_H
+#define ENGINE_UINORMALIZEDCONSTRAINT_H
 #include "UiConstraint.h"
 #include "Tools.h"
 
-class UiPixelConstraint : public UiConstraint {
+class UiNormalizedConstraint : public UiConstraint {
 private:
     const ConstraintType constraintType = Relative;
-    const PositionType positionType = Pixel;
+    const PositionType positionType = Normalized;
+
 public:
-    UiPixelConstraint(Axis axis, int value, ConstraintType constraintType = Relative)
+    UiNormalizedConstraint(Axis axis, float value, ConstraintType constraintType = Relative)
             : constraintType(constraintType) {
         this->axis = axis;
         this->value = value;
-
-        this->updateNormalizedValue();
+        this->normalizedValue = value;
     }
 
     /**
@@ -45,7 +44,7 @@ public:
      * @return
      */
     float getPercentValue() override {
-        return Tools::getDecimalValueFromNormalizedCoord(value) * 100;
+        return Tools::getDecimalValueFromNormalizedCoord(value) * 100.0f;
     }
 
     /**
@@ -64,8 +63,9 @@ public:
      * @return
      */
     int getPixelValue() override {
-        return value;
+        return Tools::getPixelValueFromNormalizedCoord(axis, value);
     }
+
 
     float getValue() {
         return value;
@@ -77,24 +77,19 @@ public:
      *        time the positioning is updated.
      */
     void updateNormalizedValue() override {
-        this->normalizedValue = Tools::getNormalizedValueFromPixelCoord(axis, value);
-        std::cout << "value: " << this->normalizedValue << "out of " << DisplayManager::Width() << std::endl;
+        this->normalizedValue = value;
     }
 
     void addPixel(float pixelVal) override {
-        this->value += pixelVal;
-        updateNormalizedValue();
+        this->value += Tools::getNormalizedValueFromPixelCoord(axis, pixelVal);
     }
 
     void addPercent(float percentVal) override {
-        this->value += Tools::getPixelValueFromDecimalCoord(axis, percentVal / 100.0f);
-        updateNormalizedValue();
+        this->value += Tools::getNormalizedValueFromPercentageCoord(percentVal);
     }
 
-    void addNormalized(float normalVal) override {
-        this->value += Tools::getPixelValueFromNormalizedCoord(axis, normalVal);
-        updateNormalizedValue();
+    void addNormalized(float normalizedVal) override {
+        this->value += normalizedVal;
     }
 };
-
-#endif //ENGINE_UIPIXELCONSTRAINT_H
+#endif //ENGINE_UINORMALIZEDCONSTRAINT_H

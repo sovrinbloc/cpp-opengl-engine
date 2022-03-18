@@ -67,5 +67,5 @@ TextMeshData *TextMeshCreator::createQuadVertices(GUIText *text, std::vector<Lin
         line.setOffset(cursorX, cursorY);
 
     }
-    return new TextMeshData(text->getPosition(), *lines, lineHeight);
+    return new TextMeshData(text->position, *lines, lineHeight);
 }

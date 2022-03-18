@@ -46,6 +46,10 @@ public:
         children = std::vector<Container *>();
         childrenToAdd = std::vector<Container *>();
     }
+
+    explicit Container(int layer) {
+        this->layer = layer;
+    }
     virtual ~Container() {}
     const std::string &getName() const {
         return name;
@@ -224,25 +228,25 @@ public:
         Container::layer = layer;
     }
 
-    /**
-     * @brief Comparatory "less than" function for sort.
-     *
-     * @param other
-     * @return
-     */
-    bool operator<(const Container &other) const {
-        return layer < other.layer;
+
+    static bool sortByName(Container *A, Container *B) //function to sort fruits by names
+    {
+        return (A->name < B->name);
     }
 
-    /**
-     * @brief Comparatory "greater than" function, for sort.
-     * @param other
-     *
-     * @return
-     */
-    bool operator>(const Container &other) const {
-        return layer > other.layer;
+    bool operator < (const Container &a) const{
+        return layer <a.layer;
     }
+
+//    /**
+//     * @brief Comparatory "greater than" function, for sort.
+//     * @param other
+//     *
+//     * @return
+//     */
+//    bool operator>(const Container &other) const {
+//        return layer > other.layer;
+//    }
 
     /**
      * @brief Sorts the children by layer.

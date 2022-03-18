@@ -4,6 +4,7 @@
 
 #include "UiConstraints.h"
 #include "../../Util/CommonHeader.h"
+#include "../Constraints/Tools.h"
 
 //UiConstraints::UiConstraints(float x, float y, float width, float height) : position(glm::vec2(x,y)), size(glm::vec2(width, height)) {}
 
@@ -43,11 +44,6 @@ void UiConstraints::setHeight(float height) {
 
 UiConstraints::UiConstraints() {}
 
-
-
-
-
-
 glm::vec2 UiConstraints::getConstraintPosition() {
     return position;
 }
@@ -66,7 +62,8 @@ void UiConstraints::addConstraintPosition(glm::vec2 position) {
  * @return
  */
 glm::vec2 UiConstraints::getCalculatedRelativePosition() {
-    return parentPosition + position;
+    const glm::vec2 &x = parentPosition + position;
+    return x;
 }
 
 void UiConstraints::setParentPosition(glm::vec2 position) {
@@ -91,5 +88,5 @@ void UiConstraints::setSize(const glm::vec2 &size) {
 }
 
 UiConstraints::UiConstraints(UiConstraint *x, UiConstraint *y, float width, float height) : cx(x), cy(y), size(glm::vec2(width, height)) {
-    this->position = glm::vec2(x->getDecimalValue(), y->getDecimalValue());
+    this->position = glm::vec2(x->getNormalizedValue(), y->getNormalizedValue());
 }

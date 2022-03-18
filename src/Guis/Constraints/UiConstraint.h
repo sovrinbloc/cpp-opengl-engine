@@ -17,13 +17,15 @@ enum ConstraintType {
 
 enum PositionType {
     Percent,
-    Pixel
+    Pixel,
+    Normalized
 };
 
 
 class UiConstraint {
 protected:
-    float value;
+    float value = 0.0f;
+    float normalizedValue = 0.0f;
     Axis axis;
 public:
     virtual ConstraintType getConstraintType() const = 0;
@@ -32,7 +34,15 @@ public:
 
     virtual float getPercentValue() = 0;
 
-    virtual float getDecimalValue() = 0;
+    virtual float getNormalizedValue() = 0;
+
+    virtual void updateNormalizedValue() = 0;
+
+    virtual void addPixel(float pixelVal) = 0;
+
+    virtual void addPercent(float percentVal) = 0;
+
+    virtual void addNormalized(float normalizedVal) = 0;
 
     virtual int getPixelValue() = 0;
 

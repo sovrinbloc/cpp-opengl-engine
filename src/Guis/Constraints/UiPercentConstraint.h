@@ -4,6 +4,7 @@
 
 #ifndef ENGINE_UIPERCENTCONSTRAINT_H
 #define ENGINE_UIPERCENTCONSTRAINT_H
+
 #include "UiConstraint.h"
 #include "Tools.h"
 
@@ -11,11 +12,13 @@ class UiPercentConstraint : public UiConstraint {
 private:
     const ConstraintType constraintType = Relative;
     const PositionType positionType = Percent;
+
 public:
     UiPercentConstraint(Axis axis, float value, ConstraintType constraintType = Relative)
-    : constraintType(constraintType) {
-            this->axis = axis;
-            this->value = value;
+            : constraintType(constraintType) {
+        this->axis = axis;
+        this->value = value;
+        this->updateNormalizedValue();
     }
 
     /**
@@ -42,7 +45,7 @@ public:
      * @return
      */
     float getPercentValue() override {
-        return value * 100;
+        return value;
     }
 
     /**
@@ -50,8 +53,9 @@ public:
      *
      * @return
      */
-    float getDecimalValue() override {
-        return value;
+    float getNormalizedValue() override {
+        this->updateNormalizedValue();
+        return normalizedValue;
     }
 
     /**
@@ -60,12 +64,32 @@ public:
      * @return
      */
     int getPixelValue() override {
-        return Tools::getPixelValueFromDecimalPercentage(axis, value);
+        return Tools::getPixelValueFromNormalizedCoord(axis, this->normalizedValue);
     }
-
 
     float getValue() {
         return value;
     }
+
+    void updateNormalizedValue() override {
+        this->normalizedValue = Tools::getNormalizedValueFromPercentageCoord(value);
+        std::cout << "normalized value : " << normalizedValue << std::endl;
+    }
+
+    void addPixel(float pixel) override {
+        this->value += (Tools::getDecimalValueFromPixelCoord(axis, pixel) * 100.0f);
+        updateNormalizedValue();
+    }
+
+    void addPercent(float percent) override {
+        this->value += percent;
+        updateNormalizedValue();
+    }
+
+    void addNormalized(float pixel) override {
+        this->value += (Tools::getDecimalValueFromNormalizedCoord(pixel) * 100.0f);
+        updateNormalizedValue();
+    }
 };
+
 #endif //ENGINE_UIPERCENTCONSTRAINT_H
