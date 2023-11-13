@@ -1,0 +1,111 @@
+
+# Contents Overview
+This contains the overview of the contents of this project.
+
+## Game Overview
+- 3D
+- RPG
+- Online
+- Cross between Star Wars Galaxies (PCU) & RuneScape
+- F2P &amp; P2P
+
+
+## Game Component Overview 
+- UI Package
+- Game Physics Package
+- Game World
+   - Editor
+      - World Chunk Creation and Management
+      - Game World Visualization 
+      - Navigation
+      - Element Selection
+      - Layers / Grouping of Elements
+      - Element Properties
+        - Attributes of the Selected Element(s)
+      - Object Placement and Alignment Aids
+         - Orientation
+         - Grid Snapping
+         - Alignment
+      - Special Object Types
+         - Lights
+         - Particle Emitters
+         - Sound Sources
+         - Regions / Boundaries
+         - Nav-meshes for AI
+            - Paths for NPC, etc.
+      - Saving &amp; Loading World Chunks
+         - Save each chunk in its' own file
+         - Save it in JSON format
+      - Rapid Iteration
+         - The editor either is run inside the running game
+         - You can see the effects of the modifications quickly.
+      - Integrated Asset Management Tools
+         - Modifying elements within the engine modifies them inside the database, and thus when the game is loaded, the modifications are immediately seen all around the game itself.
+      - Data Processing Costs
+   - Dynamic Gameplay Software Subsystems
+      - Runtime game object model
+      - World Chunking
+        -  This system loads and unloads the con- tents of the virtual worlds in which gameplay takes place.
+      - Object Updating
+        - In order to permit the game objects in the world to behave autonomously, each object must be updated periodically.
+      - Interaction, Messaging & Event Handling
+        - Most game objects need to communicate with one another. This is usually done via an abstract messaging system. Inter-object messages often signal changes in the state of the game world called events.
+      - Scripting
+      - Objectives &amp; Gameflow Management (Spine)
+         - This subsystem manages the player’s objectives and the overall flow of the game.
+   - Runtime game object model.
+      - Spawning and destroying game objects dynamically
+         - The dynamic elements in a game world often need to come and go during gameplay.
+         - System for managing the memory and other re- sources associated with dynamically spawned game objects
+     - Real-time simulation of object behaviors
+         -  game engine needs to update the states of all the game objects dynamically over time
+     - Ability to define new game object types
+     - Unique object ids
+     - Game object queries
+         - The gameplay foundation system must provide some means of finding objects within the game world
+     - Game object references
+        - Once we’ve found the objects, we need some mechanism for holding references to them, either briefly within a single function or for much longer periods of time. An object reference might be as simple as a pointer to a C++ class instance, or it might be something more sophisticated, like a handle or a reference-counted smart pointer.
+     - Network replication
+        - The state of a particular game object is usually owned and managed by one machine, however, that object’s state must also be replicated (communicated) to the other machines involved in the multiplayer game so that all players have a consistent view of the object.
+     - Saving and loading / object persistence
+        -
+
+   - Elements
+      - Static (Non-Interactive)
+         - Buildings
+         - Terrain
+         - Fences
+      - Dynamic (Interactive &amp; Alive)
+         - Characters
+         - NPCs
+         - Items
+         - Objects
+         - Triggers
+         - Lighting
+         - NPC Paths
+   - Skilling
+   - Interaction
+   - Cut Scenes
+   - Automatic Generation
+   - Boundaries &amp; Barriers
+- Graphics Package
+   - Models
+   - Motion
+- Audio Loading & Triggers
+- Map Streaming
+- Networking Package
+   - Ticks & Timing
+   - Packet Distribution
+- Game Scripting
+   - Questing
+   - NPC Loot
+   - Object Functionality
+   - Game Interaction
+   - Item Functionality
+   - Skills &amp; Skill Functionality
+   - Combat Functions
+- Database &amp; Persistent Storage
+- Combat System
+- Item System
+- Questing System
+

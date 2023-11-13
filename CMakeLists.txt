@@ -187,6 +187,10 @@ include_directories(deps/glfw)
 add_subdirectory(deps/glfw)
 include_directories(deps/glfw/GLFW/include)
 
+include_directories(/usr/local/Cellar/harfbuzz/8.2.2/include/harfbuzz)
+target_link_libraries(engine /usr/local/Cellar/harfbuzz/8.2.2/lib/libharfbuzz.dylib)
+
+
 include_directories(deps/freetype2)
 add_subdirectory(deps/freetype2)
 include_directories(deps/freetype2/include)

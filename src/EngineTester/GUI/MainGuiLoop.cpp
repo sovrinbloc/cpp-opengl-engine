@@ -156,9 +156,13 @@ void MainGuiLoop::main() {
     std::vector<GuiTexture *> guis = std::vector<GuiTexture *>();
 
 
-    auto *guiRedHeart = new GuiTexture(loader->loadTexture("gui/heart")->getId(), glm::vec2(-0.0f, 0.0f),
+    TextureLoader *heartTexture = loader->loadTexture("gui/heart");
+    auto *guiRedHeart = new GuiTexture(heartTexture->getId(), glm::vec2(-0.0f, 0.0f),
+                                       glm::vec2(0.075f, 0.075f));
+    auto *guiRedHeart2 = new GuiTexture(heartTexture->getId(), glm::vec2(-0.0f, 0.0f),
                                        glm::vec2(0.075f, 0.075f));
     guiRedHeart->setName("gui/heart");
+    guiRedHeart2->setName("gui/heart2");
 
     // sample to see if we can move it.
     auto sampleModifiedGui = new GuiTexture(loader->loadTexture("gui/lifebar")->getId(), glm::vec2(-0.72f, 0.3f),
@@ -176,7 +180,7 @@ void MainGuiLoop::main() {
     glm::vec2 scale = glm::vec2(0.25f, 0.25f);
     float alpha = 0.66f;
     // fixme: position is not accounted for
-    auto *guiRect = new GuiRect(ColorName::Black, position, size, scale, alpha);
+    auto *guiRect = new GuiRect(ColorName::Whitesmoke, position, size, scale, alpha);
     guiRect->setName("guiRect");
 
     glm::vec2 position2 = glm::vec2(-0.85f, 0.37f);
@@ -209,6 +213,13 @@ void MainGuiLoop::main() {
             );
     text2->setName("Inventory");
 
+    auto *inventoryCount = new GUIText(
+            "217",
+            0.23f, fontLoaded, &arialFont, glm::vec2(0.0f), ColorName::Yellow, 0.50f * static_cast<float>(DisplayManager::Width()),
+            false
+            );
+    inventoryCount->setName("Count");
+
     // fixme: position is not accounted for
 
     GuiComponent *masterContainer = UiMaster::getMasterComponent();
@@ -220,27 +231,35 @@ void MainGuiLoop::main() {
                                                                                      50));
     // inventoryParent is the main container for the inventoryParent
     inventoryParent->setName("Inventory Parent");
+    inventoryParent->setLayer(2);
+    text1->setLayer(2);
+    guiRedHeart->setLayer(2);
+    guiRedHeart2->setLayer(2);
+    text2->setLayer(3);
+    inventoryCount->setLayer(3);
+    guiRect->setLayer(1);
     masterContainer->addChild(inventoryParent, new UiConstraints(new UiNormalizedConstraint(XAxis, 0.00f),
                                                                  new UiNormalizedConstraint(YAxis, 0.0f), 50, 50));
 
 
     inventoryParent->addChild(guiRect, new UiConstraints(new UiNormalizedConstraint(XAxis, 0.00f),
                                                          new UiNormalizedConstraint(YAxis, 0.0f), 50, 50));
-    inventoryParent->setLayer(2);
-    text1->setLayer(2);
-    text2->setLayer(2);
-    guiRedHeart->setLayer(2);
-    guiRect->setLayer(1);
 
     inventoryParent->addChild(text1,
                               new UiConstraints(new UiNormalizedConstraint(XAxis, 0.00f),
-                                                new UiNormalizedConstraint(YAxis, 0.0f), 50, 50));
-    inventoryParent->addChild(text2,
-                              new UiConstraints(new UiNormalizedConstraint(XAxis, 0.0f),
-                                                new UiNormalizedConstraint(YAxis, 0.2f), 50, 50));
+                                                new UiNormalizedConstraint(YAxis, 0.4f), 50, 50));
     inventoryParent->addChild(guiRedHeart,
                               new UiConstraints(new UiNormalizedConstraint(XAxis, 0.00f),
                                                 new UiNormalizedConstraint(YAxis, 0.0f), 50, 50));
+    inventoryParent->addChild(guiRedHeart2,
+                              new UiConstraints(new UiNormalizedConstraint(XAxis, 0.15f),
+                                                new UiNormalizedConstraint(YAxis, 0.0f), 50, 50));
+    inventoryParent->addChild(text2,
+                              new UiConstraints(new UiNormalizedConstraint(XAxis, -0.075f),
+                                                new UiNormalizedConstraint(YAxis, -0.04f), 50, 50));
+    inventoryParent->addChild(inventoryCount,
+                              new UiConstraints(new UiNormalizedConstraint(XAxis, -0.019f),
+                                                new UiNormalizedConstraint(YAxis, 0.03f), 50, 50));
 
     guiRect->setName("GuiRect");
 
