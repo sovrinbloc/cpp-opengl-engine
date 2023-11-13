@@ -11,10 +11,14 @@
 #include "../Entities/CameraInput.h"
 #include "EntityRenderer.h"
 #include "TerrainRenderer.h"
-#include "SceneRenderer.h"
-#include "../Shaders/ModelShader.h"
-#include "SceneLoader.h"
+#include "AssimpEntityRenderer.h"
+#include "../Shaders/AssimpStaticShader.h"
+#include "AssimpEntityLoader.h"
 #include "../Entities/PlayerCamera.h"
+#include "../Skybox/SkyboxRenderer.h"
+#include "../BoundingBox/BoundingBoxShader.h"
+#include "../BoundingBox/BoundingBoxRenderer.h"
+#include "../Toolbox/Color.h"
 
 static const float FOVY = 45.0f;
 static const float NEAR_PLANE = 0.1f;
@@ -22,23 +26,27 @@ static const float FAR_PLANE = 1000;
 
 class MasterRenderer {
 private:
-    StaticShader *shader;
-    EntityRenderer *renderer;
-    glm::mat4 projectionMatrix;
     PlayerCamera *camera;
 
-    TerrainRenderer *terrainRenderer;
+    StaticShader *shader;
+    AssimpStaticShader *sceneShader;
     TerrainShader *terrainShader;
+    BoundingBoxShader *bShader;
+
+    EntityRenderer *renderer;
+    SkyboxRenderer *skyboxRenderer;
+    TerrainRenderer *terrainRenderer;
+    AssimpEntityRenderer *sceneRenderer;
+    BoundingBoxRenderer *bRenderer;
+
+    std::map<RawBoundingBox *, std::vector<Interactive *>> *boxes;
     std::map<TexturedModel *, std::vector<Entity *>> *entities;
-    std::map<Model *, std::vector<Scene *>> *scenes;
+    std::map<AssimpMesh *, std::vector<AssimpEntity *>> *scenes;
     std::vector<Terrain *> *terrains;
 
-    SceneRenderer *assimpRenderer;
-    ModelShader *modelShader;
-    std::vector<Model *> *models;
-
+    glm::mat4 projectionMatrix;
 public:
-    explicit MasterRenderer(PlayerCamera *cameraInput);
+    explicit MasterRenderer(PlayerCamera *cameraInput, Loader *loader);
 
     void cleanUp();
 
@@ -47,7 +55,9 @@ public:
      */
     void prepare();
 
-    void render(Light *sun);
+    static Color skyColor;
+
+    void render(const std::vector<Light *> &sun);
 
     void processTerrain(Terrain *terrain);
 
@@ -57,11 +67,18 @@ public:
 
     void processEntity(Entity *entity);
 
-    void processModel(Model *model);
+    void processAssimpEntity(AssimpEntity *scene);
 
-    void processScenes(Scene *scene);
+    void processBoundingBox(Interactive *entityWithBox);
 
-    void updatePerspective(float width, float height);
+    void renderScene(std::vector<Entity *> entities, std::vector<AssimpEntity *> aEntities,
+                     std::vector<Terrain *> terrains, std::vector<Light *> lights);
+
+    void renderBoundingBoxes(std::vector<Interactive *> boxes);
+
+    void prepareBoundingBoxRender();
+
+    void render();
 
 };
 

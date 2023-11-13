@@ -4,7 +4,9 @@
 
 #ifndef ENGINE_PLAYERCAMERA_H
 #define ENGINE_PLAYERCAMERA_H
+
 #include "Camera.h"
+#include "CameraInput.h"
 
 class PlayerCamera : public CameraInput {
 public:
@@ -13,71 +15,41 @@ public:
     float distanceFromPlayer = 55.0f;
     float angleAroundPlayer = 0.0f;
 
-    PlayerCamera(Player *player) : player(player), CameraInput(){
+    /**
+     * @brief PlayerCamera (extending CameraInput), is modified based on the player's movements.
+     *        This in turn updates vectors and matrices in CameraInput, which then modifies the
+     *        vectors and matrices in Camera, which ultimately, later is retrieved by:
+     *        getViewMatrix(), loaded into a shader, and rendered on the screen.
+     *
+     *        When the player modifies the vectors (transformations), by the keyboad and mouse,
+     *        the camera actually modifies itself based on those movements. Again, this is all
+     *        just manipulation of vectors. Nothing is being rendered yet.
+     *
+     * @param player
+     */
+    explicit PlayerCamera(Player *player) : player(player), CameraInput() {
         Pitch = -20.0f;
     }
 
-    void move() {
-        this->processInput(DisplayManager::window);
-        DisplayManager::uniformMovement();
-        updateCameraVectors();
-        calculateAngleAroundPlayer();
-        player->move();
-        float horizontalDistance = calculateHorizontalDistance();
-        float verticalDistance = calculateVerticalDistance();
-        calculateCameraPosition(horizontalDistance, verticalDistance);
-    }
+    void move(Terrain *terrain);
 
-    void calculateCameraPosition(float horizDistance, float verticDistance) {
-        float theta = player->getRotation().y + angleAroundPlayer;
-        float offsetX = horizDistance * sin(glm::radians(theta));
-        float offsetZ = horizDistance * cos(glm::radians(theta));
-        Position.x = player->getPosition().x - offsetX;
-        Position.z = player->getPosition().z - offsetZ;
-        Position.y = player->getPosition().y - verticDistance + 4;
-
-        if (glfwGetMouseButton(DisplayManager::window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS || cursorInvisible) {
-            Yaw = int(180 - player->getRotation().y + angleAroundPlayer - 90) % 360;
-        }
-    }
+    void calculateCameraPosition(float horizDistance, float verticDistance) const;
 
     // returns the view matrix calculated using Euler Angles and the LookAt Matrix
-    glm::mat4 GetViewMatrix() {
-        glm::vec3  front;
-        front.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
-        front.y = sin(glm::radians(Pitch));
-        front.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
-        return glm::lookAt(this->Position, player->getPosition(), this->Up);
-    }
+    glm::mat4 getViewMatrix() override;
 
-    void calculateAngleAroundPlayer(){
-        if (glfwGetMouseButton(DisplayManager::window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS || cursorInvisible) {
-            float angleChange = mouseDX * 0.1f;
-            angleAroundPlayer -= angleChange;
-        }
-    }
+    void calculateAngleAroundPlayer();
+
 private:
-    float calculateHorizontalDistance() {
-        return (float) (distanceFromPlayer * cos(glm::radians(Pitch + 4)));
-    }
-    float calculateVerticalDistance() {
-        return (float) (distanceFromPlayer * sin(glm::radians(Pitch + 4)));
-    }
+    float calculateHorizontalDistance() const;
 
-    void updateCameraVectors() {
-        Front = glm::vec3(0, 0, 1);
-        Up = glm::vec3(0, 1, 0);
-        Right = glm::vec3(1, 0, 0);
-    }
+    float calculateVerticalDistance() const;
 
-    void calculateZoom(){
-        float zoomLevel = ZoomOffset * 0.03f;
-        distanceFromPlayer -= zoomLevel;
-        if(distanceFromPlayer<5){
-            distanceFromPlayer = 5;
-        }
-    }
+    void updateCameraVectors() override;
+
+    void calculateZoom();
 
 
 };
+
 #endif //ENGINE_PLAYERCAMERA_H

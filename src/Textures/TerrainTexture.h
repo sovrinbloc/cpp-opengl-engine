@@ -5,15 +5,24 @@
 #ifndef ENGINE_TERRAINTEXTURE_H
 #define ENGINE_TERRAINTEXTURE_H
 
+/**
+ * TerrainTexture simply stores a single Terrain Texture's ID.
+ * It is passed in here by a TextureLoader
+ */
 class TerrainTexture {
 private:
-    int textureID;
-    Material material;
+    unsigned int textureId;
 public:
-    TerrainTexture(int textureID) : textureID(textureID) {}
+    /**
+     * @brief stores the textureId of the image (from textureLoader)
+     *        Each texture has it's own unique ID, and they are always
+     *        incrementing.
+     * @param textureID
+     */
+    explicit TerrainTexture(unsigned int textureID) : textureId(textureID) {}
 
-    int getTextureID() {
-        return this->textureID;
+    unsigned int getTextureId() const {
+        return this->textureId;
     }
 };
 

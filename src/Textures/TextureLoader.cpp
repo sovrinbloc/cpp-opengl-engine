@@ -3,14 +3,20 @@
 //
 
 #include "TextureLoader.h"
+
 #define STB_IMAGE_IMPLEMENTATION
+
 #include "../Libraries/images/stb_image.h"
 #include "png.h"
 
-
+/**
+ * @brief loads a image file as a texture to opengl, and stores the
+ *        textureId.
+ * @param filename
+ * @param type
+ */
 TextureLoader::TextureLoader(std::string filename, ImageType type) {
-    this->id = 0;
-    this->bound = false;
+    this->textureId = 0;
     switch (type) {
         case JPG:
             this->loadJpgTexture(filename.c_str());
@@ -24,16 +30,13 @@ TextureLoader::TextureLoader(std::string filename, ImageType type) {
     }
 }
 
-void TextureLoader::bindTexture() {
-//        glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, this->id);
-    bound = true;
-}
-
+/**
+ * @brief opens and stores a texture to the buffer.
+ * @param file_name
+ */
 void TextureLoader::loadJpgTexture(const char *file_name) {
-    glGenTextures(1, &this->id);
-//        glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, this->id);
+    glGenTextures(1, &this->textureId);
+    glBindTexture(GL_TEXTURE_2D, this->textureId);
     // set the texture wrapping/filtering options (on the currently bound texture object)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -64,14 +67,13 @@ void TextureLoader::loadPngTexture(const char *file_name) {
     unsigned char *image = stbi_load(file_name, &w, &h, &comp, STBI_rgb_alpha);
 
     if (image == nullptr) {
-        printf("Failed to load texture");
+        printf("Failed to load texture %s\n", file_name);
         return;
     }
 
-    glGenTextures(1, &this->id);
-//        glActiveTexture(GL_TEXTURE0);
+    glGenTextures(1, &this->textureId);
 
-    glBindTexture(GL_TEXTURE_2D, this->id);
+    glBindTexture(GL_TEXTURE_2D, this->textureId);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -1);

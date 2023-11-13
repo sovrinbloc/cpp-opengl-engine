@@ -5,29 +5,37 @@
 #include "MasterRenderer.h"
 #include "DisplayManager.h"
 #include "RenderStyle.h"
-#include "SceneLoader.h"
+#include "AssimpEntityLoader.h"
+#include "../Util/ColorName.h"
+#include "../OpenGLWrapper/OpenGLUtils.h"
 
-MasterRenderer::MasterRenderer(PlayerCamera *cameraInput) : shader(new StaticShader()),
-                                                           renderer(new EntityRenderer(shader)),
-                                                           camera(cameraInput), projectionMatrix(
-                Maths::createProjectionMatrix(FOVY, (float)DisplayManager::SRC_WIDTH, (float)DisplayManager::SRC_HEIGHT, NEAR_PLANE, FAR_PLANE)),
-                                                           terrainShader(new TerrainShader()),
-                                                           modelShader(new ModelShader())
-                                                           {
+MasterRenderer::MasterRenderer(PlayerCamera *cameraInput, Loader *loader) : shader(new StaticShader()),
+                                                            renderer(new EntityRenderer(shader)),
+                                                            camera(cameraInput), projectionMatrix(
+                Maths::createProjectionMatrix(FOVY, static_cast<float>(DisplayManager::Width()),
+                                              static_cast<float>(DisplayManager::Height()), NEAR_PLANE, FAR_PLANE)),
+                                                            terrainShader(new TerrainShader()),
+                                                            sceneShader(new AssimpStaticShader()),
+                                                            bShader(new BoundingBoxShader()){
     RenderStyle::enableCulling();
     entities = new std::map<TexturedModel *, std::vector<Entity *>>;
-    scenes = new std::map<Model *, std::vector<Scene *>>;
+    scenes = new std::map<AssimpMesh *, std::vector<AssimpEntity *>>;
     terrains = new std::vector<Terrain *>;
-    models = new std::vector<Model *>;
+    boxes = new std::map<RawBoundingBox *, std::vector<Interactive *>>;
     terrainRenderer = new TerrainRenderer(terrainShader, this->projectionMatrix);
-    assimpRenderer = new SceneRenderer(modelShader);
+    sceneRenderer = new AssimpEntityRenderer(sceneShader);
+    skyboxRenderer = new SkyboxRenderer(loader, this->projectionMatrix, &skyColor);
+    bRenderer = new BoundingBoxRenderer(bShader, this->projectionMatrix);
 }
 
 void MasterRenderer::cleanUp() {
     shader->cleanUp();
     terrainShader->cleanUp();
-    modelShader->cleanUp();
+    sceneShader->cleanUp();
+    bShader->cleanUp();
 }
+
+Color MasterRenderer::skyColor = const_cast<Color &>(ColorName::Skyblue);
 
 /**
  * @brief prepares and clears buffer and screen for each iteration of loop
@@ -35,64 +43,67 @@ void MasterRenderer::cleanUp() {
 void MasterRenderer::prepare() {
     // render
     // ------
-    glClearColor(.529, .808, .98, 1);
-    shader->loadSkyColorVariable(glm::vec3(.529, .808, .98));
-    terrainShader->loadSkyColorVariable(glm::vec3(.529, .808, .98));
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    shader->loadSkyColorVariable(skyColor);
+    terrainShader->loadSkyColorVariable(skyColor);
+    OpenGLUtils::clearFrameBuffer(skyColor);
 
 }
 
-void MasterRenderer::render(Light *sun) {
+void MasterRenderer::render(const std::vector<Light *>&suns) {
     this->prepare();
+
     shader->start();
-    shader->loadSkyColorVariable(glm::vec3(.529, .808, .98));
-    shader->loadLight(sun);
+
+    shader->loadSkyColorVariable(skyColor);
+    shader->loadLight(suns);
     shader->loadViewPosition(camera);
-    shader->loadViewMatrix(camera->GetViewMatrix());
+    shader->loadViewMatrix(camera->getViewMatrix());
     shader->loadProjectionMatrix(MasterRenderer::createProjectionMatrix());
     renderer->render(entities);
 
+    entities->clear();
     shader->stop();
 
-    modelShader->start();
+    sceneShader->start();
+    sceneShader->loadSkyColorVariable(skyColor);
+    sceneShader->loadLight(suns);
+    sceneShader->loadViewPosition(camera);
+    sceneShader->loadViewMatrix(camera->getViewMatrix());
+    sceneShader->loadProjectionMatrix(MasterRenderer::createProjectionMatrix());
+    sceneRenderer->render(scenes);
 
-    modelShader->loadViewPosition(camera);
-    modelShader->loadViewMatrix(camera->GetViewMatrix());
-    modelShader->loadProjectionMatrix(MasterRenderer::createProjectionMatrix());
-    assimpRenderer->render(scenes);
-    modelShader->stop();
+    scenes->clear();
+    sceneShader->stop();
 
 
     terrainShader->start();
-    terrainShader->loadSkyColorVariable(glm::vec3(.529, .808, .98));
-    terrainShader->loadLight(sun);
+
+    terrainShader->loadSkyColorVariable(skyColor);
+    terrainShader->loadLight(suns);
     terrainShader->loadViewPosition(camera);
-    terrainShader->loadViewMatrix(camera->GetViewMatrix());
+    terrainShader->loadViewMatrix(camera->getViewMatrix());
     terrainShader->loadProjectionMatrix(MasterRenderer::createProjectionMatrix());
     terrainRenderer->render(terrains);
+
     terrains->clear();
     terrainShader->stop();
+    skyboxRenderer->render(camera);
 
-    entities->clear();
-    scenes->clear();
 }
 
 void MasterRenderer::processTerrain(Terrain *terrain) {
     terrains->push_back(terrain);
 }
 
-void MasterRenderer::processModel(Model *model) {
-    models->push_back(model);
-}
-
 glm::mat4 MasterRenderer::createProjectionMatrix() {
     // my additions
-    return Maths::createProjectionMatrix(PlayerCamera::Zoom, (GLfloat)DisplayManager::SRC_WIDTH, (GLfloat)DisplayManager::SRC_HEIGHT, NEAR_PLANE,
+    return Maths::createProjectionMatrix(PlayerCamera::Zoom, static_cast<GLfloat>(DisplayManager::Width()),
+                                         static_cast<GLfloat>(DisplayManager::Height()), NEAR_PLANE,
                                          FAR_PLANE);
 }
 
 glm::mat4 MasterRenderer::getProjectionMatrix() {
-    return this->projectionMatrix;
+    return projectionMatrix;
 }
 
 void MasterRenderer::processEntity(Entity *entity) {
@@ -107,19 +118,82 @@ void MasterRenderer::processEntity(Entity *entity) {
     }
 }
 
-void MasterRenderer::processScenes(Scene *scene) {
-    Model *model = scene->getModel();
+void MasterRenderer::processAssimpEntity(AssimpEntity *scene) {
+    AssimpMesh *model = scene->getModel();
     auto batchIterator = scenes->find(model);
     if (batchIterator != scenes->end()) {
         batchIterator->second.push_back(scene);
     } else {
-        std::vector<Scene *> newBatch;
+        std::vector<AssimpEntity *> newBatch;
         newBatch.push_back(scene);
         (*scenes)[model] = newBatch;
     }
 }
 
-void MasterRenderer::updatePerspective(float width, float height) {
-    DisplayManager::SRC_WIDTH = (GLint)width;
-    DisplayManager::SRC_HEIGHT = (GLint)height;
+void MasterRenderer::processBoundingBox(Interactive *entityWithBox) {
+    auto coloredBox = entityWithBox->getBoundingBox()->getRawBoundingBox();
+    auto itBoxes = boxes->find(coloredBox);
+    if (itBoxes != boxes->end()) {
+        itBoxes->second.push_back(entityWithBox);
+    } else {
+        std::vector<Interactive *> newBatch;
+        newBatch.push_back(entityWithBox);
+        (*boxes)[coloredBox] = newBatch;
+    }
+}
+
+void MasterRenderer::renderScene(std::vector<Entity *> entities, std::vector<AssimpEntity *> aEntities,
+                                 std::vector<Terrain *> terrains, std::vector<Light *> lights) {
+    for (Terrain *ter : terrains) {
+        processTerrain(ter);
+    }
+
+    for (Entity *ent : entities) {
+        processEntity(ent);
+    }
+
+    for (AssimpEntity *scene : aEntities) {
+        processAssimpEntity(scene);
+    }
+
+    render(lights);
+}
+
+/**
+ * Renders Bounding Boxes
+ *
+ * Inputs a variety of Interactive objects, which means each of them have bounding boxes. Then the bounding boxes
+ * are rendered with each of their colors.
+ *
+ * @param boxes
+ */
+void MasterRenderer::renderBoundingBoxes(std::vector<Interactive*> boxes) {
+    for (Interactive *entity : boxes) {
+        if (entity->getBoundingBox() != nullptr) {
+            processBoundingBox(entity);
+        }
+    }
+    render();
+}
+
+void MasterRenderer::render() {
+    this->prepareBoundingBoxRender();
+    bShader->start();
+
+    bShader->loadViewPosition(camera);
+    bShader->loadViewMatrix(camera->getViewMatrix());
+    bShader->loadProjectionMatrix(MasterRenderer::createProjectionMatrix());
+    bRenderer->render(boxes);
+
+    boxes->clear();
+    bShader->stop();
+}
+
+/**
+ * @brief prepares and clears buffer and screen for each iteration of loop
+ */
+void MasterRenderer::prepareBoundingBoxRender() {
+    // render
+    // ------
+    OpenGLUtils::clearFrameBuffer(Color(1.0f));
 }

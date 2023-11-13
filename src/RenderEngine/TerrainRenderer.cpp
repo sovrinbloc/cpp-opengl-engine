@@ -28,7 +28,7 @@ void TerrainRenderer::prepareTerrain(Terrain *terrain) {
     RawModel *rawModel = terrain->getModel();
 
     // bind the current vao
-    glBindVertexArray(rawModel->getVaoID());
+    glBindVertexArray(rawModel->getVaoId());
 
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
@@ -37,18 +37,23 @@ void TerrainRenderer::prepareTerrain(Terrain *terrain) {
     shader->loadMaterial(terrain->getTexturePack()->getMaterial());
 }
 
+/**
+ * @brief Binds the textures from the TexturePack to blend them together
+ *
+ * @param terrain
+ */
 void TerrainRenderer::bindTextures(Terrain *terrain) {
     TerrainTexturePack *texturePack = terrain->getTexturePack();
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texturePack->getBackgroundTexture()->getTextureID());
+    glBindTexture(GL_TEXTURE_2D, texturePack->getBackgroundTexture()->getTextureId());
     glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, texturePack->getRTexture()->getTextureID());
+    glBindTexture(GL_TEXTURE_2D, texturePack->getRTexture()->getTextureId());
     glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_2D, texturePack->getGTexture()->getTextureID());
+    glBindTexture(GL_TEXTURE_2D, texturePack->getGTexture()->getTextureId());
     glActiveTexture(GL_TEXTURE3);
-    glBindTexture(GL_TEXTURE_2D, texturePack->getBTexture()->getTextureID());
+    glBindTexture(GL_TEXTURE_2D, texturePack->getBTexture()->getTextureId());
     glActiveTexture(GL_TEXTURE4);
-    glBindTexture(GL_TEXTURE_2D, terrain->getBlendMap()->getTextureID());
+    glBindTexture(GL_TEXTURE_2D, terrain->getBlendMap()->getTextureId());
 }
 
 void TerrainRenderer::unbindTexturedModel() {

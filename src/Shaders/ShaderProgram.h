@@ -2,7 +2,7 @@
 #define SHADER_H
 #define GL_SILENCE_DEPRECATION
 
-#include "../Toolbox/FileSystem.h"
+#include "../Util/FileSystem.h"
 #define GLFW_INCLUDE_GLCOREARB
 #include "GLFW/glfw3.h"
 #include <glm/glm.hpp>
@@ -18,7 +18,6 @@ typedef enum {
 class Shader {
 public:
     unsigned int shaderId;
-    char *file;
 
     Shader(std::string file, ShaderType type);
 
@@ -28,6 +27,8 @@ private:
     // utility function for checking shader compilation/linking errors.
     // ------------------------------------------------------------------------
     void checkCompileErrors(GLuint shader, std::string type);
+
+    const std::string &fileName;
 };
 
 class ShaderProgram {
@@ -57,18 +58,21 @@ public:
 
     GLuint getAttribute(std::string variableName);
 
-    // activate the shader
+    // textureActivated the shader
     // ------------------------------------------------------------------------
     void start();
 
     void stop();
 
+    /**
+     * @brief Delete and detach Shader program.
+     */
     void cleanUp();
 
     // utility uniform functions with a string.
     // ------------------------------------------------------------------------
     void setBool(const std::string &name, bool value) const {
-        glUniform1i(glGetUniformLocation(programID, name.c_str()), (int) value);
+        glUniform1i(glGetUniformLocation(programID, name.c_str()), static_cast<int>(value));
     }
 
     // ------------------------------------------------------------------------
@@ -128,7 +132,7 @@ public:
     // utility uniform functions
     // ------------------------------------------------------------------------
     void setBool(GLuint location, bool value) const {
-        glUniform1i(location, (int) value);
+        glUniform1i(location, static_cast<int>(value));
     }
 
     // ------------------------------------------------------------------------
@@ -185,7 +189,7 @@ public:
 
 protected:
 
-    int getUniformLocation(std::string uniformName) {
+    int getUniformLocation(const std::string& uniformName) const {
         return glGetUniformLocation(this->programID, uniformName.c_str());
     }
     // implementation inside child class

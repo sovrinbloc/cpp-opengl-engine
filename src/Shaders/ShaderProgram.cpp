@@ -5,7 +5,7 @@
 #include "ShaderProgram.h"
 
 
-Shader::Shader(std::string file, ShaderType type) {
+Shader::Shader(std::string file, ShaderType type) : fileName(std::move(file)){
     loadShader(file, type);
 }
 
@@ -45,6 +45,7 @@ void Shader::loadShader(std::string path, ShaderType type) {
     glShaderSource(shaderId, 1, &vShaderCode, NULL);
     glCompileShader(shaderId);
     checkCompileErrors(shaderId, debugType);
+    printf("finished compiling process: %s\n", path.c_str());
 }
 
 // utility function for checking shader compilation/linking errors.
@@ -66,6 +67,9 @@ void Shader::checkCompileErrors(GLuint shader, std::string type) {
             std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog
                       << "\n -- --------------------------------------------------- -- " << std::endl;
         }
+    }
+    if (!success) {
+        std::cout << "ERROR ON " + fileName << std::endl;
     }
 }
 
@@ -109,7 +113,7 @@ GLuint ShaderProgram::getAttribute(std::string variableName) {
     return glGetAttribLocation(programID, variableName.c_str());
 }
 
-// activate the shader
+// textureActivated the shader
 // ------------------------------------------------------------------------
 void ShaderProgram::start() {
     glUseProgram(programID);

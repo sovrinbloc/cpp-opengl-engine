@@ -5,45 +5,36 @@
 #ifndef ENGINE_MODELDATA_H
 #define ENGINE_MODELDATA_H
 
-class ModelData {
+#include "glm/glm.hpp"
+#include "MeshData.h"
+#include <iostream>
+#include <utility>
+#include <vector>
 
-private:
+struct BoxData {
+    glm::vec3 vLowerLeftFront = glm::vec3((float) (~0));
+    glm::vec3 vUpperRightBack = glm::vec3(-(float) (~0));
+    std::vector<int> indices =
+            {
+                    0, 1, 2, 3, 8, // Front wall
+                    4, 5, 6, 7, 8, // Back wall
+                    4, 0, 6, 2, 8, // Left wall
+                    1, 5, 3, 7, 8, // Right wall
+                    2, 3, 6, 7, 8, // Top wall
+                    0, 1, 4, 5     // Bottom wall
+            };
     std::vector<float> vertices;
-    std::vector<float> textureCoords;
-    std::vector<float> normals;
-    std::vector<int> indices;
-    float furthestPoint;
+};
 
+class ModelData : public MeshData {
 public:
-    ModelData(std::vector<float> vertices, std::vector<float> textureCoords, std::vector<float> normals, std::vector<int> indices,
-              float furthestPoint) {
-        this->vertices = vertices;
-        this->textureCoords = textureCoords;
-        this->normals = normals;
-        this->indices = indices;
-        this->furthestPoint = furthestPoint;
+    ModelData(std::vector<float> vertices, std::vector<float> textureCoords, std::vector<float> normals,
+              std::vector<int> indices, glm::vec3 min, glm::vec3 max) :
+            MeshData(std::move(vertices), std::move(textureCoords), std::move(normals),
+                     std::move(indices), min, max) {
     }
 
-    std::vector<float> getVertices() {
-        return vertices;
-    }
-
-    std::vector<float> getTextureCoords() {
-        return textureCoords;
-    }
-
-    std::vector<float> getNormals() {
-        return normals;
-    }
-
-    std::vector<int> getIndices() {
-        return indices;
-    }
-
-    float getFurthestPoint() {
-        return furthestPoint;
-    }
-
+    ModelData() = default;
 };
 
 #endif //ENGINE_MODELDATA_H

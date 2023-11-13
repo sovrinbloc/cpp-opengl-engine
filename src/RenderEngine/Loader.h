@@ -7,19 +7,39 @@
 
 #include <vector>
 #include "../Models/RawModel.h"
+#include "../BoundingBox/RawBoundingBox.h"
 #include "../Textures/TextureLoader.h"
 #include "ModelData.h"
+#include "ModelData.h"
 #define GL_SILENCE_DEPRECATION
-#define GLFW_INCLUDE_GLCOREARB
 #include <GLFW/glfw3.h>
+#include "../Guis/Text/FontMeshCreator/FontModel.h"
+#include "BoundingBoxData.h"
 
 class Loader {
 public:
-    RawModel *loadToVAO(std::vector<GLfloat> positions, std::vector<GLfloat> textureCoords, std::vector<GLfloat> normals, std::vector<GLint> indices);
+    RawModel *loadToVAO(std::vector<GLfloat> positions, std::vector<GLfloat> textureCoords, std::vector<GLfloat> normals, const std::vector<GLint>& indices);
 
-    RawModel *loadToVAO(ModelData *data);
+    /**
+     * @brief loadToVAO inputs all the positions, kBboxIndices, textureCoords, and normals inside an object
+     * @param data
+     * @return
+     */
+    RawModel *loadToVAO(MeshData &data);
+
+    // for GUI rendering: we only need a 2d square with things rendered on it.
+    RawModel *loadToVAO(const std::vector<float>& positions, int dimensions);
+
+    // for Bounding Boxes for clicking
+    RawBoundingBox *loadToVAO(BoxData box);
+
+    RawBoundingBox *loadToVAO(BoundingBoxData box);
+
+    FontModel *loadFontVAO();
 
     TextureLoader *loadTexture(std::string fileName);
+
+    unsigned int loadCubeMap(std::vector<std::string> faces);
 
     void cleanUp();
 
@@ -34,8 +54,11 @@ private:
 
     void bindIndicesBuffer(std::vector<GLint> indices);
 
+    void initDynamicAttributeList(GLuint vboNumber);
+
     void unbindVAO();
 
+    GLuint createVBO();
 };
 
 #endif //ENGINE_LOADER_H

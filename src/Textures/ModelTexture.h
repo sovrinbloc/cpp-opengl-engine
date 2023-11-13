@@ -9,35 +9,51 @@
 #include "glm/glm.hpp"
 
 struct Material {
-    glm::vec3 ambient;
-    glm::vec3 diffuse;
-    glm::vec3 specular;
     float shininess;
+    float reflectivity;
 };
 
+/**
+ * ModelTexture is a child of TextureLoader, which ultimately
+ * just loads a texture, but also specifies other details, such as
+ * how many textures in an atlas (if so chosen), using fake lighting,
+ * transparency, and materials.
+ */
 class ModelTexture : public TextureLoader {
 public:
+    /**
+     * @brief ModelTexture is a child of TextureLoader, which then ultimately
+     *        adds more features for loading and returning the textureIds of
+     *        images. But in this case, it also allows for texture atlases,
+     *        materials, decisions of fake lighting, and transparency.
+     * @param filename
+     * @param type
+     * @param materials
+     */
     ModelTexture(std::string filename, ImageType type,
-                 Material
-
-                 materials = Material{
-                         .ambient =  glm::vec3(1.0f),
-                         .diffuse =  glm::vec3(1.0f),
-                         .specular =  glm::vec3(1.0f),
-                         .shininess = 32.0f}
-    ) ;
+                 Material materials = Material{
+                         .shininess = 1.0f,
+                         .reflectivity = 0.5f
+                 });
+    ModelTexture(std::string filename, ImageType type,
+                 bool useTransparency, bool useFakeLighting,
+                 Material materials = Material{
+                         .shininess = 1.0f,
+                         .reflectivity = 0.5f
+                 });
 
 private:
-    float shineDamper = 1;
-    float reflectivity = 0.5;
-    float ambient = 0.1;
     bool hasTransparency = false;
     bool useFakeLighting = false;
+    int numberOfRows = 1;
     Material material;
-
 public:
+    int getNumberOfRows() const;
 
-    Material getMaterial() const {
+    void setNumberOfRows(int numberOfRows);
+
+
+    Material &getMaterial() {
         return material;
     }
 
@@ -59,30 +75,6 @@ public:
 
     void setHasTransparency(bool hasTransparency) {
         ModelTexture::hasTransparency = hasTransparency;
-    }
-
-    float getAmbient() {
-        return ambient;
-    }
-
-    void setAmbient(float ambient) {
-        this->ambient = ambient;
-    }
-
-    float getShineDamper() const {
-        return shineDamper;
-    }
-
-    void setShineDamper(float shineDamper) {
-        ModelTexture::shineDamper = shineDamper;
-    }
-
-    float getReflectivity() const {
-        return reflectivity;
-    }
-
-    void setReflectivity(float reflectivity) {
-        this->reflectivity = reflectivity;
     }
 
 };

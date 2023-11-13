@@ -5,6 +5,7 @@
 #include "EntityRenderer.h"
 #include "RenderStyle.h"
 #include "../Toolbox/Maths.h"
+
 EntityRenderer::EntityRenderer(StaticShader *shader) {
     this->shader = shader;
 }
@@ -42,7 +43,7 @@ void EntityRenderer::prepareTexturedModel(TexturedModel *model) {
     RawModel *rawModel = model->getRawModel();
 
     // bind the current vao
-    glBindVertexArray(rawModel->getVaoID());
+    glBindVertexArray(rawModel->getVaoId());
 
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
@@ -50,13 +51,15 @@ void EntityRenderer::prepareTexturedModel(TexturedModel *model) {
 
     ModelTexture *texture = model->getModelTexture();
 
+    shader->loadNumberOfRows(texture->getNumberOfRows());
+
     if (texture->isHasTransparency()) {
         RenderStyle::disableCulling();
     }
     shader->loadFakeLightingVariable(texture->isUseFakeLighting());
     glActiveTexture(GL_TEXTURE0);
     // bind texture
-    model->getModelTexture()->bindTexture();
+    glBindTexture(GL_TEXTURE_2D, model->getModelTexture()->getId());
 }
 
 /**
@@ -80,5 +83,6 @@ void EntityRenderer::prepareInstance(Entity *entity) {
     glm::mat4 transformationMatrix = Maths::createTransformationMatrix(entity->getPosition(), entity->getRotation(),
                                                                        entity->getScale());
     shader->loadTransformationMatrix(transformationMatrix);
-    shader->loadMaterial(entity->getModel()->getModelTexture()->getMaterial());
+    shader->loadMaterial(entity->getMaterial());
+    shader->loadOffset(entity->getTextureXOffset(), entity->getTextureYOffset());
 }

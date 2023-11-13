@@ -4,9 +4,32 @@
 
 #include "ModelTexture.h"
 
-ModelTexture::ModelTexture(std::string filename, ImageType type,
-                           Material materials
-) :
-        TextureLoader(filename, type) {
-    this->material = materials;
+#include <utility>
+#include "../Util/FileSystem.h"
+
+/**
+ * @brief ModelTexture is a child of TextureLoader, which then ultimately
+ *        adds more features for loading and returning the textureIds of
+ *        images. But in this case, it also allows for texture atlases,
+ *        materials, decisions of fake lighting, and transparency.
+ *        It loads the image, by type, and materials, and stores the textureId.
+ * @param filename std::string
+ * @param type (PNG | JPG)
+ * @param materials
+ */
+ModelTexture::ModelTexture(std::string filename, ImageType type, Material materials) :
+        material(materials) ,TextureLoader(FileSystem::Texture(std::move(filename)), type) {}
+
+int ModelTexture::getNumberOfRows() const {
+    return numberOfRows;
+}
+
+void ModelTexture::setNumberOfRows(int numberOfRows) {
+    ModelTexture::numberOfRows = numberOfRows;
+}
+
+ModelTexture::ModelTexture(std::string filename, ImageType type, bool useTransparency, bool useFakeLighting,
+                           Material materials) :
+        material(materials), hasTransparency(useTransparency), useFakeLighting(useFakeLighting), TextureLoader(FileSystem::Texture(std::move(filename)), type) {
+
 }

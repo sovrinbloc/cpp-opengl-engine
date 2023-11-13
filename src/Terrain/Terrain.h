@@ -4,23 +4,29 @@
 
 #ifndef ENGINE_TERRAIN_H
 #define ENGINE_TERRAIN_H
+
 #include "../Models/RawModel.h"
 #include "../Textures/ModelTexture.h"
 #include "../RenderEngine/Loader.h"
 #include "../Textures/TerrainTexturePack.h"
+#include "HeightMap.h"
 
 class Terrain {
 private:
-    const float SIZE = 800;
-    const int VERTEX_COUNT = 128;
+    const float kTerrainSize = 800;
 
     float x;
     float z;
     RawModel *model;
     TerrainTexturePack *texturePack;
     TerrainTexture *blendMap;
-
+    Heightmap heightMap;
 public:
+
+    Heightmap getHeightMap();
+
+    std::vector<std::vector<float>> heights;
+
     float getX() const {
         return x;
     }
@@ -53,9 +59,16 @@ public:
         return this->blendMap;
     }
 
-    Terrain(int gridX, int gridZ, Loader *loader, TerrainTexturePack *texturePack, TerrainTexture *blendMap);
+    float getHeightOfTerrain(float worldX, float worldZ);
+
+    Terrain(int gridX, int gridZ, Loader *loader, TerrainTexturePack *texturePack, TerrainTexture *blendMap,
+            const std::string &heightMap);
 
 private:
-    RawModel *generateTerrain(Loader *loader, std::string heightMap);
+
+    RawModel *generateTerrain(Loader *loader);
+
+    glm::vec3 calculateNormal(int x, int z);
 };
+
 #endif //ENGINE_TERRAIN_H

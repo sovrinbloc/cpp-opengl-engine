@@ -4,10 +4,15 @@
 
 #include "HeightMap.h"
 
+const float Heightmap::MAX_HEIGHT = 40.0f;
+const float Heightmap::MIN_HEIGHT = -40.0f;
+const float Heightmap::MAX_COLOR_VALUE = 256 * 256 * 256;
+
 Heightmap::Heightmap(const std::string &fileName) {
     this->fileName = fileName;
+    imageInfo = ImageInfo{.filename = fileName};
     calculateMapFromImage();
-    if (heightData.size() == 0) {
+    if (heightData.empty()) {
         return;
     }
 }
@@ -15,7 +20,7 @@ Heightmap::Heightmap(const std::string &fileName) {
 void Heightmap::calculateMapFromImage() {
     stbi_set_flip_vertically_on_load(1);
     int bytesPerPixel;
-    const auto imageData = stbi_load(fileName.c_str(), &width, &height, &bytesPerPixel, 0);
+    const auto imageData = stbi_load(fileName.c_str(), &imageInfo.width, &imageInfo.height, &bytesPerPixel, 0);
     if (imageData == nullptr) {
 
         // Return empty vector in case of failure
@@ -23,28 +28,30 @@ void Heightmap::calculateMapFromImage() {
         return;
     }
 
-    std::vector<std::vector<float>> result(height, std::vector<float>(width));
+    std::vector<std::vector<float>> result(imageInfo.height, std::vector<float>(imageInfo.width));
     auto pixelPtr = &imageData[0];
-    for (auto i = 0; i < height; i++) {
-        for (auto j = 0; j < width; j++) {
-            result[i][j] = float(*pixelPtr) / 255.0f;
+    for (auto i = 0; i < imageInfo.height; i++) {
+        for (auto j = 0; j < imageInfo.width; j++) {
+            result[i][j] = static_cast<float>(*pixelPtr) / 255.0f;
             pixelPtr += bytesPerPixel;
         }
     }
-
     heightData = result;
     stbi_image_free(imageData);
 }
 
-int Heightmap::getWidth() const {
-    return width;
+float Heightmap::getHeight(int x, int z) {
+    if (x < 0 || z < 0 || x >= imageInfo.height || z >= imageInfo.height) {
+        return 0;
+    }
+    return (heightData[x][z] - 0.5f) * 2 * MAX_HEIGHT;
 }
 
-int Heightmap::getHeight() const {
-    return height;
+ImageInfo Heightmap::getImageInfo() {
+    return imageInfo;
 }
 
-const std::vector<std::vector<float>> Heightmap::getHeightData() {
+std::vector<std::vector<float>> Heightmap::getHeightData() {
     return heightData;
 }
 

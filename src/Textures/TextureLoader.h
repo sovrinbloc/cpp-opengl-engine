@@ -6,8 +6,10 @@
 #define CRAFT_UTIL_H
 
 #include <string>
+
 #define GL_SILENCE_DEPRECATION
 #define GLFW_INCLUDE_GLCOREARB
+
 #include <GLFW/glfw3.h>
 
 typedef enum {
@@ -17,20 +19,18 @@ typedef enum {
 
 class TextureLoader {
 public:
-    GLuint id;
-    int bound;
-    TextureLoader(std::string filename, ImageType type) ;
+    TextureLoader(std::string filename, ImageType type);
 
-    GLuint getId() {
-        return this->id;
+    GLuint getId() const {
+        return this->textureId;
     }
 
-    /**
-     * @brief binds the texture to true
-     */
-    void bindTexture();
-
 private:
+
+    /**
+     * stores the ID of the texture
+     */
+    GLuint textureId;
     /**
      * @brief create a 2d texture by loading the jpeg file
      *
@@ -44,7 +44,7 @@ private:
      *
      * @param file_name
      */
-    void loadPngTexture(const char *file_name) ;
+    void loadPngTexture(const char *file_name);
 
 };
 

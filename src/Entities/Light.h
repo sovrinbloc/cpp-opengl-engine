@@ -7,54 +7,58 @@
 
 #include "glm/glm.hpp"
 
-using namespace glm;
-
 struct Lighting {
-    vec3 position;
+    glm::vec3 ambient;
+    glm::vec3 diffuse;
 
-    vec3 ambient;
-    vec3 diffuse;
-    vec3 specular;
+    float constant;
+    float linear;
+    float quadratic;
 };
 
 class Light {
 private:
-    vec3 position;
-    vec3 color;
+    glm::vec3 position;
+
+    glm::vec3 color;
+
     Lighting lighting;
+
 public:
-    explicit Light(const vec3 position = vec3(1.2f, 1.0f, 2.0f), const vec3 color = vec3(1.0f, 1.0f, 1.0f),
-          Lighting lighting = {
-            .ambient =  glm::vec3(0.2f, 0.2f, 0.2f),
-            .diffuse =  glm::vec3(1.0f, 1.0f, 1.0f),
-            .specular =  glm::vec3(1.0f, 1.0f, 1.0f)})
-            : position(position), color(color), lighting(lighting) {
-        lighting.position = this->position;
-    }
 
-    Lighting getLighting() const {
-        return lighting;
-    }
+    constexpr static float kDirectional = -1.0f;
 
-    void setLighting(const Lighting &lighting) {
-        this->lighting = lighting;
-    }
+public:
+    /**
+     * @brief Light stores the details of each light. Position, color, and if it's a spot or
+     *        directional light.
+     * @param position
+     * @param color
+     * @param lighting
+     */
+    explicit Light(glm::vec3 position = glm::vec3(1.2f, 1.0f, 2.0f), glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f),
+                   Lighting lighting = {
+                           .ambient =  glm::vec3(0.2f, 0.2f, 0.2f),
+                           .diffuse =  glm::vec3(0.5f),
+                           .constant = 1.0f,
+                           .linear = 0.09f,
+                           .quadratic = 0.032f
+                   });
 
-    vec3 getPosition() {
-        return this->lighting.position;
-    }
+    Lighting getLighting();
 
-    void setPosition(vec3 position) {
-        this->lighting.position = position;
-    }
+    void setLighting(const Lighting &lighting);
 
-    vec3 getColor() const {
-        return color;
-    }
+    glm::vec3 &getPosition();
 
-    void setColor(vec3 color) {
-        this->color = color;
-    }
+    void setPosition(glm::vec3 position);
+
+    void addToPosition(glm::vec3 position);
+
+    glm::vec3 &getColor();
+
+    void setColor(glm::vec3 color);
+
 };
 
 #endif //ENGINE_LIGHT_H

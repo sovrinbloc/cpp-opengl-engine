@@ -2,14 +2,20 @@
 // Created by Joseph Alai on 7/6/21.
 //
 
+
 #include <cstdio>
 #include "DisplayManager.h"
+#include "../OpenGLWrapper/OpenGLUtils.h"
+
 GLint DisplayManager::SRC_WIDTH = 800;
 GLint DisplayManager::SRC_HEIGHT = 600;
+GLint DisplayManager::FBO_WIDTH = RETINA_SCALE(SRC_WIDTH);
+GLint DisplayManager::FBO_HEIGHT = RETINA_SCALE(SRC_HEIGHT);
 GLFWwindow *DisplayManager::window;
 
 float DisplayManager::delta;
 float DisplayManager::lastFrameTime;
+bool DisplayManager::resetMouse = true;
 
 int DisplayManager::createDisplay() {
     glfwInit();
@@ -22,17 +28,17 @@ int DisplayManager::createDisplay() {
 #endif
 
     glfwWindowHint(GLFW_SAMPLES, 4);
-
-    window = glfwCreateWindow(SRC_WIDTH, SRC_HEIGHT, "GAME ENGINE: Manifest (Alpha & Omega)", nullptr, nullptr);
+//    window = glfwCreateWindow(Width(), Height(), "GAME ENGINE: Manifest (Alpha & Omega)", nullptr, nullptr);
+    window = glfwCreateWindow(Width(), Height(), "star wars scaperune", nullptr, nullptr);
     if (window == nullptr) {
         printf("Failed to create GLFW window\n");
         glfwTerminate();
         return -1;
     }
-    glEnable(GL_MULTISAMPLE);
+    OpenGLUtils::antialias(true);
     glfwMakeContextCurrent(window);
-    glfwSetFramebufferSizeCallback(window, (GLFWframebuffersizefun) framebuffer_size_callback);
-
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwGetFramebufferSize(DisplayManager::window, &FBO_WIDTH, &FBO_HEIGHT);
 #ifndef __APPLE__
     if (glewInit() != GLEW_OK) {
             return -1;
@@ -41,7 +47,7 @@ int DisplayManager::createDisplay() {
 
     // configure global opengl state
     // -----------------------------
-    glEnable(GL_DEPTH_TEST);
+    OpenGLUtils::enableDepthTest(true);
     return 1;
 }
 
@@ -55,12 +61,12 @@ void DisplayManager::updateDisplay() {
 
 void DisplayManager::uniformMovement() {
     float currentFrame = glfwGetTime();
-    DisplayManager::delta = currentFrame - DisplayManager::lastFrameTime;
-    DisplayManager::lastFrameTime = currentFrame;
+    delta = currentFrame - lastFrameTime;
+    lastFrameTime = currentFrame;
 }
 
 float DisplayManager::getFrameTimeSeconds() {
-    return DisplayManager::delta;
+    return delta;
 }
 
 bool DisplayManager::stayOpen() {
@@ -74,5 +80,32 @@ void DisplayManager::closeDisplay() {
 void DisplayManager::framebuffer_size_callback(GLFWwindow *window, int width, int height) {
     // make sure the viewport matches the new window dimensions; note that width and
     // height will be significantly larger than specified on retina displays.
+    glfwGetFramebufferSize(DisplayManager::window, &width, &height);
     glViewport(0, 0, width, height);
+    updatePerspective(width, height);
+    resetMouse = false;
+}
+
+GLint &DisplayManager::Width() {
+    return SRC_WIDTH;
+}
+
+GLint &DisplayManager::Height() {
+    return SRC_HEIGHT;
+}
+
+void DisplayManager::updatePerspective(int width, int height) {
+    DisplayManager::Width() = static_cast<GLint>(RETINA_DIVIDE(width));
+    DisplayManager::Height() = static_cast<GLint>(RETINA_DIVIDE(height));
+    DisplayManager::FboWidth() = width;
+    DisplayManager::FboHeight() = height;
+
+}
+
+GLint &DisplayManager::FboWidth() {
+    return FBO_WIDTH;
+}
+
+GLint &DisplayManager::FboHeight() {
+    return FBO_HEIGHT;
 }
